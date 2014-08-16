@@ -1,0 +1,50 @@
+#include "Renderable.h"
+#include "Primitive.h"
+using namespace AGE;
+
+Renderable::Renderable() : mMesh(0), mShader(0){
+
+}
+
+Renderable::~Renderable(){
+	if(mMesh)
+		delete mMesh;
+	if(mShader)
+		delete mShader;
+
+	if(mOpenGLRenderData.VertexArrayBufferObject){
+		glDeleteBuffers(4, mOpenGLRenderData.BufferObjects);
+		glBindVertexArray(0);
+		glDeleteVertexArrays(1, &mOpenGLRenderData.VertexArrayBufferObject);
+	}
+}
+
+
+void Renderable::BuildObjects(){
+	glGenVertexArrays(1, &mOpenGLRenderData.VertexArrayBufferObject);
+	glBindVertexArray(mOpenGLRenderData.VertexArrayBufferObject);
+
+	glGenBuffers(4, mOpenGLRenderData.BufferObjects);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[0]);
+	glEnableVertexAttribArray(0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*torusBatch.nNumVerts*3, torusBatch.pVerts, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[2]);
+	glEnableVertexAttribArray(1);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*torusBatch.nNumVerts*3, torusBatch.pNorms, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[2]);
+	glEnableVertexAttribArray(2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*torusBatch.nNumVerts*2, torusBatch.pTexCoords, GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Indexes
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[3]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*torusBatch.nNumIndexes, torusBatch.pIndexes, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+}

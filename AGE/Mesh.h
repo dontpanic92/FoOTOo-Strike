@@ -1,30 +1,26 @@
 #ifndef __AGE_MESH_HEADER__
 #define __AGE_MESH_HEADER__
 
-#include "../3rd/glew-1.10.0/include/GL/glew.h"
-#include "../3rd/glew-1.10.0/include/GL/wglew.h"
+//#include "../3rd/glew-1.10.0/include/GL/glew.h"
+//#include "../3rd/glew-1.10.0/include/GL/wglew.h"
 #include "Math.h"
 
-namespace AGE{
-	
-	class Attachable
-	{
-	public:
-		virtual ~Attachable(){};
-	private:
-		Transform mTransform;
-	};
+#include <GL\glew.h>
 
-	class Mesh : public Attachable
+namespace AGE{
+
+	class Mesh
 	{
 	public:
-		Mesh(GLfloat* vertexArray, int vertexNum, GLushort* indexArray, int indexNum);
+		Mesh(GLfloat* vertexArray, GLfloat* normalArray, int vertexNum, GLushort* indexArray, int indexNum);
 
 		~Mesh();
 
 		const GLfloat* GetVertexData() const{ return mVertexData;}
 
 		const GLushort* GetIndexData() const{ return mIndexData; }
+
+		const GLfloat* GetNormalData() const{ return mNormalData; }
 
 		int GetVertexNum() const{ return mVertexNum; }
 
@@ -35,6 +31,7 @@ namespace AGE{
 		int mIndexNum;
 
 		GLfloat* mVertexData;
+		GLfloat* mNormalData;
 		GLushort* mIndexData;
 	};
 

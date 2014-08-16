@@ -1,17 +1,20 @@
 #include "Engine.h"
+#include "Primitive.h"
+#include "Timer.h"
 using namespace AGE;
 
-Engine::Engine(){
+Engine::Engine():mLastTimeUpdate(0){
 	mScene = new Scene();
+	mGameLogic = new GameLogicImp();
 }
 
 int Engine::StartUp(){
-	mRenderer = new OpenGLRenderer();
 	mApp.StartUp();
+	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
+	Timer::GetInstance()->StartUp();
 
 	mScene->GetRoot()->Attach(mScene->LoadMesh());
 
-	mRenderer->StartUp(mApp.GetMainWindow());
 	return 0;
 }
 
@@ -21,13 +24,25 @@ int Engine::Run(){
 
 Engine::~Engine(){
 	delete mScene;
+	delete mGameLogic;
 }
 
 int Engine::Update(){
-	//static Mesh mesh;
+	/*Vector3f points[4];
+
+	points[0].Set(0.5, 0.5, 0);
+	points[1].Set(0.5, -0.5, 0);
+	points[2].Set(-0.5, 0.5, 0);
+	points[3].Set(-0.5, -0.5, 0);
+	static Renderable* mesh = Primitive::GetInstance()->CreatePlaneUnmanage(points);
 
 	//mRenderer->TestRender();
-	//mRenderer->RenderMesh(&mesh);
-	mRenderer->RenderScene(mScene);
+	mRenderer->RenderMesh(mesh->GetMesh());*/
+	//RenderEngine::GetInstance()->RenderScene(mScene);
+	float now = Timer::GetInstance()->GetTotalSeconds();
+	mGameLogic->Update(now - mLastTimeUpdate);
+	mScene->Render();
+
+	mLastTimeUpdate = now;
 	return 1;
 }

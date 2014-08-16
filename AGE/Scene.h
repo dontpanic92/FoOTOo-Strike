@@ -4,6 +4,8 @@
 #include <vector>
 #include "Mesh.h"
 #include "Math.h"
+#include "Renderable.h"
+#include "Camera.h"
 
 //using std::shared_ptr;
 using std::vector;
@@ -32,10 +34,18 @@ namespace AGE
 		~Scene();
 
 		SceneNode* GetRoot() { return &mRoot; }
-		Mesh* LoadMesh();
+		Renderable* LoadMesh();
+
+		void Render();
+
+		Camera* GetCurrentCamera(){ return &mCamera; }
+		Attachable* GetAttachable() { return mAllAttachable[0]; }
 	private:
 		SceneNode mRoot;
 		vector<Attachable*> mAllAttachable;
+
+		Camera mCamera;
+
 	};
 }
 

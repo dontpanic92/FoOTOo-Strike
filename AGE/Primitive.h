@@ -2,7 +2,7 @@
 #define __AGE_PRIMITIVE_HEADER__
 
 #include "Singleton.h"
-#include "Mesh.h"
+#include "Renderable.h"
 
 namespace AGE
 {
@@ -10,7 +10,7 @@ namespace AGE
 	class Primitive : public Singleton<Primitive>
 	{
 	public:
-		static Mesh* CreatePlaneUnmanage(Vector3f points[4]);
+		static Renderable* CreatePlaneUnmanage(Vector3f points[4]);
 	};
 }
 

@@ -11,7 +11,7 @@ namespace AGE
 	public:
 
 
-		Mesh* LoadMeshUnmanage();
+		Mesh* LoadMesh();
 
 	private:
 		ResourceManager(){}

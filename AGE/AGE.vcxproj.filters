@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="GLTools">
+      <UniqueIdentifier>{94937f22-9a79-4ca1-8e14-85a3b84cd32c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -48,6 +51,27 @@
     <ClInclude Include="Primitive.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Attachable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,5 +98,44 @@
     <ClCompile Include="Primitive.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\GLBatch.cpp">
+      <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\glew.c">
+      <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\GLShaderManager.cpp">
+      <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\GLTools.cpp">
+      <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\GLTriangleBatch.cpp">
+      <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\math3d.cpp">
+      <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

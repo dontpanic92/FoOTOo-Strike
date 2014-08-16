@@ -2,6 +2,6 @@
 
 using namespace AGE;
 
-Mesh* ResourceManager::LoadMeshUnmanage(){
+Mesh* ResourceManager::LoadMesh(){
 	return NULL;//new Mesh();
 }
