@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Primitive.h"
+#include "InputEngine.h"
 #include "Timer.h"
 using namespace AGE;
 
@@ -11,9 +12,13 @@ Engine::Engine():mLastTimeUpdate(0){
 int Engine::StartUp(){
 	mApp.StartUp();
 	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
+	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	Timer::GetInstance()->StartUp();
 
 	mScene->GetRoot()->Attach(mScene->LoadMesh());
+
+
+	mGameLogic->StartUp();
 
 	return 0;
 }
@@ -39,7 +44,8 @@ int Engine::Update(){
 	//mRenderer->TestRender();
 	mRenderer->RenderMesh(mesh->GetMesh());*/
 	//RenderEngine::GetInstance()->RenderScene(mScene);
-	float now = Timer::GetInstance()->GetTotalSeconds();
+	InputEngine::GetInstance()->Update();
+	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	mGameLogic->Update(now - mLastTimeUpdate);
 	mScene->Render();
 

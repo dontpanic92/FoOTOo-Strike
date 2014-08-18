@@ -1,6 +1,8 @@
 #ifndef __AGE_GAMELOGIC_HEADER__
 #define __AGE_GAMELOGIC_HEADER__
 
+#include "InputEngine.h"
+
 namespace AGE
 {
 	class GameLogic
@@ -8,13 +10,22 @@ namespace AGE
 	public:
 		virtual ~GameLogic(){}
 
+		virtual void StartUp() = 0;
 		virtual bool Update(float time) = 0;
 	};
 
-	class GameLogicImp : public GameLogic
+
+	using namespace OIS;
+	class GameLogicImp : public GameLogic, public OIS::MouseListener
 	{
 	public:
+		void StartUp();
+
 		bool Update(float time);
+
+		bool mouseMoved( const MouseEvent &arg );
+		bool mousePressed( const MouseEvent &arg, MouseButtonID id ){return true;}
+		bool mouseReleased( const MouseEvent &arg, MouseButtonID id ){return true;}
 	};
 }
 

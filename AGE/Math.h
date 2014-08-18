@@ -16,6 +16,28 @@ namespace AGE
 	inline float Deg2Rad(float Deg){ return Deg * _PI_DIV_180; }
 	inline float Rad2Deg(float Rad){ return Rad * _180_DIV_PI; }
 
+	class Matrix4x4f;
+	class Matrix3x3f
+	{
+	public:
+		Matrix3x3f(){ MakeIdentity(); }
+		Matrix3x3f(const Matrix4x4f& copy);
+
+		Matrix3x3f& Transpose();
+
+		float* operator[](int index) { return mMatrix[index]; }
+		const float* operator[](int index) const { return mMatrix[index]; }
+
+		bool operator != (const Matrix3x3f& mat);
+		
+		operator float*();
+
+		void MakeIdentity() { memcpy(mMatrix, Identity, sizeof(Identity)); }
+
+		static const float Identity[3][3];
+	private:
+		float mMatrix[3][3];
+	};
 
 	class Vector3f
 	{
@@ -25,6 +47,10 @@ namespace AGE
 
 		float& operator[](int index){ return mVector[index]; }
 		float operator[](int index) const{ return mVector[index]; }
+		Vector3f operator*(const Matrix3x3f& mul);
+		operator float*() { return mVector; }
+		operator const float*() const {return mVector;}
+
 		void Set(float _0, float _1, float _2){ mVector[0] = _0; mVector[1] = _1; mVector[2] = _2; }
 
 		static const Vector3f Zero;
@@ -36,11 +62,15 @@ namespace AGE
 	{
 	public:
 		Matrix4x4f() { MakeIdentity(); }
+		Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector);
 
 		float* operator[](int index) { return mMatrix[index]; }
+		const float* operator[](int index) const { return mMatrix[index]; }
 
 		operator float*();
 		//operator const float*() const{ return (const float*)mMatrix; }
+
+		Matrix4x4f& Transpose();
 
 		Matrix4x4f operator *(const Matrix4x4f& mul);
 
@@ -57,18 +87,20 @@ namespace AGE
 	class Transform
 	{
 	public:
-		enum CoordSystem { World, Local };
+		enum CoordSystem { World, Local};
 
-		void Translate(const Vector3f& translation);
+		void Translate(const Vector3f& translation, CoordSystem coordSystem = Local);
 		void RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem = Local);
-		//void Rotate(const Vector3f& axis, float degree);
 
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 
 		Matrix4x4f GetTransformMatrix(){ return mTransformMatrix; }
+
+		Matrix4x4f GetInverseTransformMatrix();
 	private:
 		Matrix4x4f mTransformMatrix;
 	};
+
 }
 
 #endif

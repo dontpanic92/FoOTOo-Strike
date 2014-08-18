@@ -72,6 +72,9 @@
     <ClInclude Include="Timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="InputEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,9 +119,6 @@
     <ClCompile Include="..\3rd\GLTools\src\GLBatch.cpp">
       <Filter>GLTools</Filter>
     </ClCompile>
-    <ClCompile Include="..\3rd\GLTools\src\glew.c">
-      <Filter>GLTools</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rd\GLTools\src\GLShaderManager.cpp">
       <Filter>GLTools</Filter>
     </ClCompile>
@@ -133,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="GameLogic.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\GLTools\src\glew.c">
+      <Filter>GLTools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

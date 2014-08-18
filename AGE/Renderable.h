@@ -4,7 +4,6 @@
 #include "Attachable.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
-#include <GLTools.h>
 namespace AGE
 {
 
@@ -20,7 +19,7 @@ namespace AGE
 		Renderable();
 		virtual ~Renderable();
 
-		void SetMesh(Mesh* mesh){ mMesh = mesh; gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30); BuildObjects();}
+		void SetMesh(Mesh* mesh){ mMesh = mesh; BuildObjects();}
 
 		void SetShader(ShaderProgram* shader){ mShader = shader; }
 
@@ -36,8 +35,6 @@ namespace AGE
 
 		Mesh* mMesh;
 		ShaderProgram* mShader;
-
-		GLTriangleBatch torusBatch;
 
 		OpenGLRenderData mOpenGLRenderData;
 	};

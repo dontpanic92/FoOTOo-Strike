@@ -1,11 +1,9 @@
 #ifndef __AGE_APPLICATION_HEADER__
 #define __AGE_APPLICATION_HEADER__
 
-
 #include "Window.h"
 #include "Singleton.h"
 #include <Windows.h>
-
 
 namespace AGE
 {

@@ -29,7 +29,7 @@ namespace AGE{
 
 		void Render(Renderable* renderable);
 
-		void Begin(float* mvpMatrix);
+		void Begin();
 
 		void End();
 

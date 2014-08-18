@@ -15,10 +15,10 @@ namespace AGE
 			QueryPerformanceCounter(&mStartCount);
 		}
 
-		float GetTotalSeconds(){
+		float GetTotalMilliSeconds(){
 			LARGE_INTEGER count;
 			QueryPerformanceCounter(&count);
-			return float((count.QuadPart - mStartCount.QuadPart) / float(mFrequency.QuadPart));
+			return float((count.QuadPart - mStartCount.QuadPart) * 1000 / float(mFrequency.QuadPart));
 		}
 
 	private:

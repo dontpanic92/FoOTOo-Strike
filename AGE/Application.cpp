@@ -5,8 +5,6 @@
 using namespace AGE;
 
 int WindowsApplication::MainLoop(){
-	//if(!CreateApplicationWindow())
-		//return 1;
 
 	bool bRunning = true;
 	while(bRunning)
@@ -32,7 +30,8 @@ int WindowsApplication::MainLoop(){
 }
 
 int WindowsApplication::StartUp(){
-	return CreateApplicationWindow();
+	CreateApplicationWindow();
+	return true;
 }
 
 Window WindowsApplication::GetMainWindow(){

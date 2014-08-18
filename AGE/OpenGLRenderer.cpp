@@ -73,17 +73,14 @@ int OpenGLRenderer::StartUp(Window window){
 	return 1;
 }
 
-void OpenGLRenderer::Begin(float* mvpMatrix){
+void OpenGLRenderer::Begin(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	mMVPMatrix = mvpMatrix;
 }
 
 void OpenGLRenderer::Render(Renderable* renderable){
 
 	glBindVertexArray(renderable->GetRenderData()->VertexArrayBufferObject);
-	glDrawElements(GL_TRIANGLES, torusBatch.nNumIndexes, GL_UNSIGNED_SHORT, 0);
-
-	//shader->End();
+	glDrawElements(GL_TRIANGLES, renderable->GetMesh()->GetIndexNum(), GL_UNSIGNED_SHORT, 0);
 }
 
 void OpenGLRenderer::End(){

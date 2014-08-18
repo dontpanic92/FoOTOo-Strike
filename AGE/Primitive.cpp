@@ -1,6 +1,23 @@
 #include "Primitive.h"
 #include "ShaderProgram.h"
+#include <GLTools.h>
 using namespace AGE;
+
+Renderable* Primitive::CreateTorusUnmanage(){
+	GLTriangleBatch torusBatch;
+	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
+
+	Mesh* mesh = new Mesh((GLfloat*)torusBatch.pVerts, (GLfloat*)torusBatch.pNorms, torusBatch.nNumVerts, torusBatch.pIndexes, torusBatch.nNumIndexes);
+	
+	ShaderProgram* shader = new ShaderProgram();
+	shader->LoadAndCompile("../Resources/Shaders/GLSL/Flat.vshader", "../Resources/Shaders/GLSL/Flat.fshader");
+
+	Renderable* newRenderable = new Renderable();
+
+	newRenderable->SetMesh(mesh);
+	newRenderable->SetShader(shader);
+	return newRenderable;
+}
 
 Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4]){
 	GLfloat vertex[12];
@@ -18,7 +35,7 @@ Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4]){
 	GLushort index[6] = {0, 1, 2, 0, 2, 3};
 
 	Mesh* mesh = new Mesh(vertex, normal, 12, index, 6);
-
+	
 	ShaderProgram* shader = new ShaderProgram();
 
 	shader->LoadAndCompile("../Resources/Shaders/GLSL/Flat.vshader", "../Resources/Shaders/GLSL/Flat.fshader");
