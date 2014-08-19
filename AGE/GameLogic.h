@@ -16,12 +16,15 @@ namespace AGE
 
 
 	using namespace OIS;
-	class GameLogicImp : public GameLogic, public OIS::MouseListener
+	class GameLogicImp : public GameLogic, public OIS::MouseListener, public OIS::KeyListener
 	{
 	public:
 		void StartUp();
 
 		bool Update(float time);
+
+		bool keyPressed(const KeyEvent &arg){return false;}
+		bool keyReleased(const KeyEvent &arg){return false;}
 
 		bool mouseMoved( const MouseEvent &arg );
 		bool mousePressed( const MouseEvent &arg, MouseButtonID id ){return true;}

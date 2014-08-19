@@ -104,6 +104,9 @@ bool ShaderProgram::LoadAndCompile(const char* vShaderPath, const char* fShaderP
 	glAttachShader(program, fShader);
 
 	glBindAttribLocation(program, 0, "vVertex");
+	glBindAttribLocation(program, 1, "vNormal");
+	glBindAttribLocation(program, 2, "vTexCoord0");
+
 
 	glLinkProgram(program);
 

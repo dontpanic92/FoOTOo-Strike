@@ -12,7 +12,7 @@ namespace AGE{
 	class Mesh
 	{
 	public:
-		Mesh(GLfloat* vertexArray, GLfloat* normalArray, int vertexNum, GLushort* indexArray, int indexNum);
+		Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum, GLushort* indexArray, int indexNum);
 
 		~Mesh();
 
@@ -21,6 +21,8 @@ namespace AGE{
 		const GLushort* GetIndexData() const{ return mIndexData; }
 
 		const GLfloat* GetNormalData() const{ return mNormalData; }
+
+		const GLfloat* GetTextureData() const{ return mTextureData; }
 
 		int GetVertexNum() const{ return mVertexNum; }
 
@@ -32,6 +34,7 @@ namespace AGE{
 
 		GLfloat* mVertexData;
 		GLfloat* mNormalData;
+		GLfloat* mTextureData;
 		GLushort* mIndexData;
 	};
 

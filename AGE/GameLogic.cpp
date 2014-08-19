@@ -5,6 +5,7 @@ using namespace OIS;
 
 void GameLogicImp::StartUp(){
 	InputEngine::GetInstance()->RegisterMouseListener(this);
+	InputEngine::GetInstance()->RegisterKeyListener(this);
 }
 
 bool GameLogicImp::Update(float time){
@@ -17,7 +18,7 @@ bool GameLogicImp::Update(float time){
 
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
-
+	
 	Transform* cameraTransform = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	float speed = time / 100;
 
@@ -44,7 +45,7 @@ bool GameLogicImp::Update(float time){
 	if(keys[KC_SPACE]){
 		cameraTransform->Translate(Vector3f(0, speed, 0));
 	}
-
+	
 	return true;
 }
 

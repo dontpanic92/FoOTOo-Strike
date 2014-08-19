@@ -4,6 +4,8 @@
 #include "Attachable.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
+#include "Texture2D.h"
+
 namespace AGE
 {
 
@@ -23,9 +25,13 @@ namespace AGE
 
 		void SetShader(ShaderProgram* shader){ mShader = shader; }
 
+		void SetTexture(Texture2D* texture){ mTexture = texture; }
+
 		Mesh* GetMesh(){ return mMesh; }
 
 		ShaderProgram* GetShader(){ return mShader; }
+
+		Texture2D* GetTexture(){ return mTexture; }
 
 		const OpenGLRenderData* GetRenderData() const{ return &mOpenGLRenderData; }
 			
@@ -35,6 +41,7 @@ namespace AGE
 
 		Mesh* mMesh;
 		ShaderProgram* mShader;
+		Texture2D* mTexture;
 
 		OpenGLRenderData mOpenGLRenderData;
 	};

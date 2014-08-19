@@ -21,12 +21,6 @@ namespace AGE{
 
 		int StartUp(Window window);
 
-		void TestRender();
-
-		void RenderMesh(const Mesh* mesh);
-
-		void RenderScene(Scene* scene);
-
 		void Render(Renderable* renderable);
 
 		void Begin();
@@ -34,10 +28,6 @@ namespace AGE{
 		void End();
 
 	protected:
-		GLuint LoadShader(const char* vPath, const char* fPath);
-
-		//GLuint CompileShader(const char )
-
 		int SetupPixelFormat();
 
 	private:

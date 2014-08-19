@@ -8,7 +8,7 @@
 
 namespace AGE
 {
-	struct FlatShader
+	/*struct FlatShader
 	{
 		float* MVPMatrix;
 		float* ColorVector;
@@ -20,6 +20,28 @@ namespace AGE
 
 			iColor = glGetUniformLocation(program, "vColor");
 			glUniform4fv(iColor, 1, ColorVector);
+		}
+	};*/
+
+	struct Shader
+	{
+		float* MVMatrix;
+		float* PMatrix;
+		float* ColorVector;
+
+		void InitUniforms(GLint program) const{
+			GLint iTransform, iProject, iColor, iTextureUnit;
+			iTransform = glGetUniformLocation(program, "mvMatrix");
+			glUniformMatrix4fv(iTransform, 1, GL_FALSE, MVMatrix);
+
+			iProject = glGetUniformLocation(program, "pMatrix");
+			glUniformMatrix4fv(iProject, 1, GL_FALSE, PMatrix);
+
+			iColor = glGetUniformLocation(program, "vColor");
+			glUniform4fv(iColor, 1, ColorVector);
+
+			iTextureUnit = glGetUniformLocation(program, "textureUnit0");
+			glUniform1i(iTextureUnit, 0);
 		}
 	};
 

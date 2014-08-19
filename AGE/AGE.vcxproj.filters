@@ -75,6 +75,9 @@
     <ClInclude Include="InputEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="..\3rd\GLTools\src\glew.c">
       <Filter>GLTools</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

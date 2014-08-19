@@ -59,11 +59,12 @@ void Scene::Render(){
 		ShaderProgram* shader = dynamic_cast<Renderable*>(mAllAttachable[i])->GetShader();
 
 		Transform* translate = mAllAttachable[i]->GetTramsform();
-		GLfloat vBlack[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-		FlatShader shaderData;
+		GLfloat vBlack[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Shader shaderData;
 		shaderData.ColorVector = vBlack;
 
-		shaderData.MVPMatrix = translate->GetTransformMatrix() * mCamera.GetTransform()->GetInverseTransformMatrix() * mCamera.GetProjectMatrix();
+		shaderData.MVMatrix = translate->GetTransformMatrix() * mCamera.GetTransform()->GetInverseTransformMatrix();
+		shaderData.PMatrix = mCamera.GetProjectMatrix();
 
 		shader->Begin(&shaderData);
 

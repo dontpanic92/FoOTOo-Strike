@@ -5,7 +5,6 @@
 using namespace AGE;
 
 int WindowsApplication::MainLoop(){
-
 	bool bRunning = true;
 	while(bRunning)
 	{
@@ -16,8 +15,10 @@ int WindowsApplication::MainLoop(){
 				bRunning = false;
 				break;
 			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			if(msg.message != WM_SYSKEYDOWN){
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
 		}
 
 		if(!Engine::GetInstance()->Update()){
