@@ -7,6 +7,7 @@ namespace AGE
 {
 	typedef unsigned int uint;
 	typedef unsigned long ulong;
+	typedef unsigned short ushort;
 
 	const float PI = 3.14159265f; //3.141592653589793238;
 	const float DOUBLE_PI = 2 * PI;
@@ -91,6 +92,7 @@ namespace AGE
 
 		void Translate(const Vector3f& translation, CoordSystem coordSystem = Local);
 		void RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem = Local);
+		void ClearRotation();
 
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 

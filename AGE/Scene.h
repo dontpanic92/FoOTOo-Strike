@@ -20,11 +20,17 @@ namespace AGE
 
 		SceneNode* CreateNode();
 		void Attach(Attachable* attach);
-		const vector<SceneNode*>& GetChildren() { return mChildrenNodes; }
-		const vector<Attachable*>& GetAttachable() { return mChildrenAttachable; }
+		const vector<SceneNode*>& GetChildren() { return mNodes; }
+		const vector<Attachable*>& GetAttachable() { return mAttachable; }
+
+		void Render();
+
+		Transform* GetTramsform(){ return &mTransform; }
 	private:
-		vector<SceneNode*> mChildrenNodes;
-		vector<Attachable*> mChildrenAttachable;
+		vector<SceneNode*> mNodes;
+		vector<Attachable*> mAttachable;
+
+		Transform mTransform;
 	};
 
 	class Scene
@@ -39,10 +45,10 @@ namespace AGE
 		void Render();
 
 		Camera* GetCurrentCamera(){ return &mCamera; }
-		Attachable* GetAttachable() { return mAllAttachable[0]; }
+		Attachable* GetAttachable() { return mAttachable[0]; }
 	private:
 		SceneNode mRoot;
-		vector<Attachable*> mAllAttachable;
+		vector<Attachable*> mAttachable;
 
 		Camera mCamera;
 

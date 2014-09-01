@@ -9,18 +9,18 @@ void GameLogicImp::StartUp(){
 }
 
 bool GameLogicImp::Update(float time){
-	Renderable* renderable = dynamic_cast<Renderable*>(Engine::GetInstance()->GetScene()->GetAttachable());
-	Transform* translate = renderable->GetTramsform();
+	//Renderable* renderable = dynamic_cast<Renderable*>(Engine::GetInstance()->GetScene()->GetAttachable());
+	//Transform* translate = renderable->GetTramsform();
 
-	float yRot = time * 60.0f / 1000.0f;
+	//float yRot = time * 60.0f / 1000.0f;
 	//translate->Translate(Vector3f(0, 0, -time / 1000), Transform::Local);
-	translate->RotateByRadian(Deg2Rad(yRot), 0, 1, 0);
+	//translate->RotateByRadian(Deg2Rad(yRot), 0, 1, 0);
 
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
-	
+
 	Transform* cameraTransform = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
-	float speed = time / 100;
+	float speed = time / 4;// / 100;
 
 	if(keys[KC_W]){
 		cameraTransform->Translate(Vector3f(0, 0, -speed));
@@ -39,22 +39,41 @@ bool GameLogicImp::Update(float time){
 	}
 
 	if(keys[KC_LCONTROL] || keys[KC_RCONTROL]){
-		cameraTransform->Translate(Vector3f(0, -speed, 0));
+		cameraTransform->Translate(Vector3f(0, -speed, 0), Transform::World);
 	}
 
 	if(keys[KC_SPACE]){
-		cameraTransform->Translate(Vector3f(0, speed, 0));
+		cameraTransform->Translate(Vector3f(0, speed, 0), Transform::World);
 	}
-	
+
 	return true;
 }
 
 bool GameLogicImp::mouseMoved( const MouseEvent &arg ){
 	//printf("abs: %d, rel: %d\n", arg.state.X.abs, arg.state.X.rel);
 	Transform* cameraTransform = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
-	float speed = - arg.state.X.rel / 100.0f;
+	static float pitchDegree = 0.0f;
+	static float yawDegree = 0.0f;
 
-	cameraTransform->RotateByRadian(speed, 0, 1, 0);
+	float speed = - arg.state.X.rel / 5.0f;
+	float yspeed = - arg.state.Y.rel / 5.0f;
+
+	pitchDegree += yspeed;
+	yawDegree += speed;
+	if(pitchDegree >= 90)
+		pitchDegree = 89.9999f;
+	if(pitchDegree <= -90)
+		pitchDegree = -89.9999f;
+
+	while(yawDegree > 360)
+		yawDegree -= 360;
+
+	while(yawDegree < -360)
+		yawDegree += 360;
+
+	cameraTransform->ClearRotation();
+	cameraTransform->RotateByRadian(Deg2Rad(yawDegree), 0, 1, 0);
+	cameraTransform->RotateByRadian(Deg2Rad(pitchDegree), 1, 0, 0);
 
 	return true;
 }

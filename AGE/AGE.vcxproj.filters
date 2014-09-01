@@ -39,9 +39,6 @@
     <ClInclude Include="Singleton.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ObjMeshImporter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -76,6 +73,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSMeshImporter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,6 +144,9 @@
       <Filter>GLTools</Filter>
     </ClCompile>
     <ClCompile Include="Texture2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSMeshImporter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,14 +25,18 @@ namespace AGE
 
 	struct Shader
 	{
-		float* MVMatrix;
+		float* MMatrix;
+		float* VMatrix;
 		float* PMatrix;
 		float* ColorVector;
 
 		void InitUniforms(GLint program) const{
-			GLint iTransform, iProject, iColor, iTextureUnit;
-			iTransform = glGetUniformLocation(program, "mvMatrix");
-			glUniformMatrix4fv(iTransform, 1, GL_FALSE, MVMatrix);
+			GLint iTransform, iView, iProject, iColor, iTextureUnit;
+ 			iTransform = glGetUniformLocation(program, "mMatrix");
+			glUniformMatrix4fv(iTransform, 1, GL_FALSE, MMatrix);
+
+			iView = glGetUniformLocation(program, "vMatrix");
+			glUniformMatrix4fv(iView, 1, GL_FALSE, VMatrix);
 
 			iProject = glGetUniformLocation(program, "pMatrix");
 			glUniformMatrix4fv(iProject, 1, GL_FALSE, PMatrix);

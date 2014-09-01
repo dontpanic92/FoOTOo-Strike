@@ -57,7 +57,7 @@ int OpenGLRenderer::StartUp(Window window){
 	glViewport(0, 0, 800, 600);
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-	//glClearColor(0.8f, 0.8f, 0.8f, 1.0f );
+	glClearColor(0.8f, 0.8f, 0.8f, 1.0f );
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_SMOOTH);//, GL_LINE);
 	return 1;
 }
@@ -67,9 +67,14 @@ void OpenGLRenderer::Begin(){
 }
 
 void OpenGLRenderer::Render(Renderable* renderable){
-	glBindTexture(GL_TEXTURE_2D, renderable->GetTexture()->GetTexture());
 	glBindVertexArray(renderable->GetRenderData()->VertexArrayBufferObject);
-	glDrawElements(GL_TRIANGLES, renderable->GetMesh()->GetIndexNum(), GL_UNSIGNED_SHORT, 0);
+	
+	const Mesh::MaterialCollection& ms = renderable->GetMesh()->GetMaterials();
+	for (uint i = 0; i < ms.size(); i++){
+		ms[i]->Use();
+		glDrawElements(GL_TRIANGLES, ms[i]->GetIndexNum(), GL_UNSIGNED_SHORT, 0);
+	}
+
 }
 
 void OpenGLRenderer::End(){

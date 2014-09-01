@@ -1,6 +1,7 @@
 #version 130
 
-uniform mat4 mvMatrix;
+uniform mat4 mMatrix;
+uniform mat4 vMatrix;
 uniform mat4 pMatrix;
 uniform vec4 vColor;
 
@@ -11,23 +12,26 @@ attribute vec2 vTexCoord0;
 out vec4 vFragColor;
 out vec2 vFragTexCoord;
 
+out vec3 Normal;
+
 void main(void) {
-    vec3 vLightPosition = vec3(0.0, 1.0, 1.0);
-    
-    
-    vec4 vPosition4 = mvMatrix * vVertex; 
-    vec3 vPosition3 = vPosition4.xyz / vPosition4.w;
-
-    vec3 vLightDir = normalize(vLightPosition - vPosition3);
-
+mat4 mvMatrix = vMatrix * mMatrix;
     mat3 mNormalMatrix;
-	mNormalMatrix[0] = mvMatrix[0].xyz;
-	mNormalMatrix[1] = mvMatrix[1].xyz;
-	mNormalMatrix[2] = mvMatrix[2].xyz;
+	mNormalMatrix[0] = mMatrix[0].xyz;
+	mNormalMatrix[1] = mMatrix[1].xyz;
+	mNormalMatrix[2] = mMatrix[2].xyz;
+
+    vec3 vLightDir = vec3(1.0, 1.0, 1.0);
 	vec3 vNorm = normalize(mNormalMatrix * vNormal);
-	
-	float fDot = max(0.0, dot(vNorm, vLightDir));
-	vFragColor.rgb = vColor.rgb * fDot;
+        vec3 vLightDir2 = normalize(mNormalMatrix * vLightDir);
+	//Normal = vNormal;
+
+	float fDot = max(0.3, dot(vNorm, vLightDir));
+//if(vNorm.y > 0)
+	//vFragColor.rgb = vNorm;
+//else
+	//vFragColor.rgb = vec3(0.0, 0.0, 0.0);
+	vFragColor.rgb = vColor.rgb * fDot;// * 0.2;
 	vFragColor.a = vColor.a;
 	vFragTexCoord = vTexCoord0;
 	

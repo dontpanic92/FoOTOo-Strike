@@ -152,6 +152,12 @@ void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSys
 		mTransformMatrix = mTransformMatrix * rotationMatrix;
 }
 
+void Transform::ClearRotation(){
+	mTransformMatrix[0][0] = mTransformMatrix[1][1] = mTransformMatrix[2][2] = 1.0f;
+	mTransformMatrix[0][1] = mTransformMatrix[0][2] = mTransformMatrix[1][0]
+		= mTransformMatrix[1][2] = mTransformMatrix[2][0] = mTransformMatrix[2][1] = 0.0f;
+}
+
 Matrix4x4f Transform::GetInverseTransformMatrix(){
 	/*
 	 * http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html

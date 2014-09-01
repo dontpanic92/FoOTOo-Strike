@@ -9,10 +9,10 @@ Renderable::Renderable() : mMesh(0), mShader(0), mTexture(0){
 Renderable::~Renderable(){
 	if(mMesh)
 		delete mMesh;
-	if(mShader)
-		delete mShader;
-	if(mTexture)
-		delete mTexture;
+	//if(mShader)
+		//delete mShader;
+	//if(mTexture)
+		//delete mTexture;
 
 	if(mOpenGLRenderData.VertexArrayBufferObject){
 		glDeleteBuffers(4, mOpenGLRenderData.BufferObjects);
@@ -45,8 +45,8 @@ void Renderable::BuildObjects(){
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Indexes
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[3]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*mMesh->GetIndexNum(), mMesh->GetIndexData(), GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[3]);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*mMesh->GetIndexNum(), mMesh->GetIndexData(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }

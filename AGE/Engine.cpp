@@ -1,11 +1,10 @@
 #include "Engine.h"
 #include "Primitive.h"
-//#include "InputEngine.h"
+#include "3DSMeshImporter.h"
 #include "Timer.h"
 using namespace AGE;
 
-Engine::Engine():mLastTimeUpdate(0){
-	mScene = new Scene();
+Engine::Engine():mLastTimeUpdate(0), mScene(0){
 	mGameLogic = new GameLogicImp();
 }
 
@@ -15,9 +14,12 @@ int Engine::StartUp(){
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	Timer::GetInstance()->StartUp();
 
-	mScene->GetRoot()->Attach(mScene->LoadMesh());
+	//mScene->GetRoot()->Attach(mScene->LoadMesh());
+	//if (mScene)
+	delete mScene;
 
-
+	AGE3DSMeshImporter importer;
+	mScene = importer.LoadSceneFromFile();
 	mGameLogic->StartUp();
 
 	return 0;
@@ -33,20 +35,13 @@ Engine::~Engine(){
 }
 
 int Engine::Update(){
-	/*Vector3f points[4];
 
-	points[0].Set(0.5, 0.5, 0);
-	points[1].Set(0.5, -0.5, 0);
-	points[2].Set(-0.5, 0.5, 0);
-	points[3].Set(-0.5, -0.5, 0);
-	static Renderable* mesh = Primitive::GetInstance()->CreatePlaneUnmanage(points);
-
-	//mRenderer->TestRender();
-	mRenderer->RenderMesh(mesh->GetMesh());*/
-	//RenderEngine::GetInstance()->RenderScene(mScene);
-	InputEngine::GetInstance()->Update();
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
-	mGameLogic->Update(now - mLastTimeUpdate);
+	float delta = now - mLastTimeUpdate;
+	if (delta < 10)
+		return 1;
+	InputEngine::GetInstance()->Update();
+	mGameLogic->Update(delta);
 	mScene->Render();
 
 	mLastTimeUpdate = now;
