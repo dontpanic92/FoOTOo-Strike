@@ -11,29 +11,25 @@ attribute vec2 vTexCoord0;
 
 out vec4 vFragColor;
 out vec2 vFragTexCoord;
-
-out vec3 Normal;
+out vec3 fNormal;
+out mat3 NormalMatrix;
 
 void main(void) {
 mat4 mvMatrix = vMatrix * mMatrix;
-    mat3 mNormalMatrix;
-	mNormalMatrix[0] = mMatrix[0].xyz;
-	mNormalMatrix[1] = mMatrix[1].xyz;
-	mNormalMatrix[2] = mMatrix[2].xyz;
+	NormalMatrix[0] = mvMatrix[0].xyz;
+	NormalMatrix[1] = mvMatrix[1].xyz;
+	NormalMatrix[2] = mvMatrix[2].xyz;
 
-    vec3 vLightDir = vec3(1.0, 1.0, 1.0);
-	vec3 vNorm = normalize(mNormalMatrix * vNormal);
-        vec3 vLightDir2 = normalize(mNormalMatrix * vLightDir);
-	//Normal = vNormal;
+	vec3 vNorm = normalize(NormalMatrix * vNormal);
 
-	float fDot = max(0.3, dot(vNorm, vLightDir));
-//if(vNorm.y > 0)
-	//vFragColor.rgb = vNorm;
-//else
-	//vFragColor.rgb = vec3(0.0, 0.0, 0.0);
-	vFragColor.rgb = vColor.rgb * fDot;// * 0.2;
-	vFragColor.a = vColor.a;
+	NormalMatrix[0] = vMatrix[0].xyz;
+	NormalMatrix[1] = vMatrix[1].xyz;
+	NormalMatrix[2] = vMatrix[2].xyz;
+
+
+	vFragColor = vColor;
 	vFragTexCoord = vTexCoord0;
+	fNormal = vNorm;
 	
 	mat4 mvpMatrix;
 	mvpMatrix = pMatrix * mvMatrix;

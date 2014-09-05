@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include <cmath>
+#include <stack>
+#include "Scene.h"
 using namespace AGE;
 
 const float PI = 3.1415926;
@@ -26,4 +28,24 @@ void Camera::SetParameters(float fov, float aspectRatio, float nearClip, float f
 	mProjectMatrix[2][3]/*[11]*/ = -1.0f;
 	mProjectMatrix[3][2]/*[14]*/ = -((2.0f * farClip * nearClip)/(farClip - nearClip));
 	mProjectMatrix[3][3]/*[15]*/ = 0.0f;
+}
+
+Matrix4x4f Camera::CalcViewMatrix() {
+	Matrix4x4f matrix;
+	std::stack<Matrix4x4f> s;
+	s.push(this->mTransform.GetTransformMatrix());
+	SceneNode* parent = mParent;
+	while (parent != NULL) {
+		s.push(parent->GetTramsform()->GetTransformMatrix());
+		parent = parent->GetParent();
+	}
+
+	while (!s.empty()) {
+		matrix = matrix * s.top();
+		s.pop();
+	}
+
+	matrix.Inverse();
+
+	return matrix;
 }

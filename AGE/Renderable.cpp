@@ -2,7 +2,7 @@
 #include "Primitive.h"
 using namespace AGE;
 
-Renderable::Renderable() : mMesh(0), mShader(0), mTexture(0){
+Renderable::Renderable() : mMesh(0), mShader(0), mMaterial(0){
 
 }
 
@@ -15,7 +15,7 @@ Renderable::~Renderable(){
 		//delete mTexture;
 
 	if(mOpenGLRenderData.VertexArrayBufferObject){
-		glDeleteBuffers(4, mOpenGLRenderData.BufferObjects);
+		glDeleteBuffers(3, mOpenGLRenderData.BufferObjects);
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &mOpenGLRenderData.VertexArrayBufferObject);
 	}
@@ -26,7 +26,7 @@ void Renderable::BuildObjects(){
 	glGenVertexArrays(1, &mOpenGLRenderData.VertexArrayBufferObject);
 	glBindVertexArray(mOpenGLRenderData.VertexArrayBufferObject);
 
-	glGenBuffers(4, mOpenGLRenderData.BufferObjects);
+	glGenBuffers(3, mOpenGLRenderData.BufferObjects);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[0]);
 	glEnableVertexAttribArray(0);
@@ -38,7 +38,6 @@ void Renderable::BuildObjects(){
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*mMesh->GetVertexNum()*3, mMesh->GetNormalData(), GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-	// Texture coordinates
 	glBindBuffer(GL_ARRAY_BUFFER, mOpenGLRenderData.BufferObjects[2]);
 	glEnableVertexAttribArray(2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*mMesh->GetVertexNum()*2, mMesh->GetTextureData(), GL_STATIC_DRAW);

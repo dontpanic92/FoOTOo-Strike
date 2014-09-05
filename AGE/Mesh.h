@@ -13,77 +13,59 @@ namespace AGE{
 	class Material
 	{
 	public:
-		Material(uint intexNum);
+		Material();
 
 		~Material();
-
-		void AddIndex(uint nface, ushort* index3);
-
-		const GLushort* GetIndexData() const{ return mIndexData; }
-
-		uint GetIndexNum() const { return mIndexNum; }
-
-		void BuildObject();
 
 		void SetTexture(Texture2D* texture) { mTexture = texture; }
 
 		void Use();
-		
 
 	private:
-		GLushort* mIndexData;
-		uint mIndexNum;
 		Texture2D* mTexture;
-
-		GLuint mIndexBufferObject;
 	};
 
 	class Mesh
 	{
 	public:
-		typedef std::vector<Material*> MaterialCollection;
 
-		Mesh(int vertexNum, int indexNum);
+		Mesh(int vertexNum);
 
-		Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum, GLushort* indexArray, int indexNum);
+		Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum);
 
 		~Mesh();
 
-		void SetData(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, GLushort* indexArray);
+		void SetData(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray);
 
-		void AddVertex(uint nface, GLfloat* vertex9);
-		void AddNormal(uint nface, GLfloat* normal9);
-		void AddTexCoord(uint nface, GLfloat* texCoord6);
+		void SetVertex(uint nface, GLfloat* vertex9);
+
+		void SetNormal(uint nface, GLfloat* normal9);
+
+		void SetTexCoord(uint nface, GLfloat* texCoord6);
 
 		const GLfloat* GetVertexData() const{ return mVertexData;}
-
-		const GLushort* GetIndexData() const{ return mIndexData; }
+		GLfloat* GetVertexData() { return mVertexData; }
 
 		const GLfloat* GetNormalData() const{ return mNormalData; }
+		GLfloat* GetNormalData() { return mNormalData; }
 
 		const GLfloat* GetTextureData() const{ return mTextureData; }
+		GLfloat* GetTextureData() { return mTextureData; }
 
 		int GetVertexNum() const{ return mVertexNum; }
 
-		int GetIndexNum() const{ return mIndexNum; }
+		//void SetMaterial(Material* material){ mMaterial = material; }
 
-		void AddMaterial(Material* material){ mMaterials.push_back(material); }
-
-		const MaterialCollection& GetMaterials() const { return mMaterials; }
-
-		void BuildMatierials(){ for (uint i = 0; i < mMaterials.size(); i++) mMaterials[i]->BuildObject(); }
+		//Material* GetMaterial() const { return mMaterial; }
 
 	private:
 		int mVertexNum;
 		int mIndexNum;
 
-		MaterialCollection mMaterials;
-
 		GLfloat* mVertexData;
 		GLfloat* mNormalData;
 		GLfloat* mTextureData;
-		GLushort* mIndexData;
+		//GLushort* mIndexData;
 	};
-
 }
 #endif

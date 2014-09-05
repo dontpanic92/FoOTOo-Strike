@@ -4,7 +4,7 @@
 using namespace AGE;
 
 Renderable* Primitive::CreateTorusUnmanage(){
-	GLTriangleBatch torusBatch;
+	/*GLTriangleBatch torusBatch;
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 
 	Mesh* mesh = new Mesh((GLfloat*)torusBatch.pVerts, (GLfloat*)torusBatch.pNorms, (GLfloat*)torusBatch.pTexCoords, torusBatch.nNumVerts, torusBatch.pIndexes, torusBatch.nNumIndexes);
@@ -19,11 +19,12 @@ Renderable* Primitive::CreateTorusUnmanage(){
 	newRenderable->SetMesh(mesh);
 	newRenderable->SetShader(shader);
 	newRenderable->SetTexture(texture2);
-	return newRenderable;
+	return newRenderable;*/
+	return NULL;
 }
 
 Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4]){
-	GLfloat vertex[12];
+	/*GLfloat vertex[12];
 	GLfloat normal[12];
 	
 	for(uint i = 0; i < 4; i++){
@@ -51,5 +52,6 @@ Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4]){
 	newRenderable->SetMesh(mesh);
 	newRenderable->SetShader(shader);
 	newRenderable->SetTexture(texture2);
-	return newRenderable;
+	return newRenderable;*/
+	return NULL;
 }

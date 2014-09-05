@@ -1,11 +1,25 @@
 #include "GameLogic.h"
 #include "Engine.h"
+#include "AGEMeshImporter.h"
 using namespace AGE;
 using namespace OIS;
+
+SceneNode* CameraNode;
 
 void GameLogicImp::StartUp(){
 	InputEngine::GetInstance()->RegisterMouseListener(this);
 	InputEngine::GetInstance()->RegisterKeyListener(this);
+
+	AGEMeshImporter importer;
+	SceneNode* node = importer.LoadFromFile("../Resources/Models/b.AMESH");
+	SceneNode* node2 = importer.LoadFromFile("../Resources/Models/c.AMESH");
+	node2->GetTramsform()->Translate(Vector3f(0.0f, 0.0f, -5.0f));
+	CameraNode = new SceneNode();
+	CameraNode->Attach(node2);
+	node2->GetTramsform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
+	Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
+	Engine::GetInstance()->GetScene()->GetRoot()->Attach(node);
+	Engine::GetInstance()->GetScene()->GetRoot()->Attach(CameraNode);
 }
 
 bool GameLogicImp::Update(float time){
@@ -19,7 +33,7 @@ bool GameLogicImp::Update(float time){
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
 
-	Transform* cameraTransform = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
+	Transform* cameraTransform = CameraNode->GetTramsform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	float speed = time / 4;// / 100;
 
 	if(keys[KC_W]){
@@ -51,7 +65,7 @@ bool GameLogicImp::Update(float time){
 
 bool GameLogicImp::mouseMoved( const MouseEvent &arg ){
 	//printf("abs: %d, rel: %d\n", arg.state.X.abs, arg.state.X.rel);
-	Transform* cameraTransform = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
+	Transform* cameraTransform = CameraNode->GetTramsform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	static float pitchDegree = 0.0f;
 	static float yawDegree = 0.0f;
 

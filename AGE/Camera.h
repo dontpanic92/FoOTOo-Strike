@@ -6,7 +6,7 @@
 
 namespace AGE
 {
-	class Camera// : public Attachable
+	class Camera : public Attachable
 	{
 	public:
 		Camera(){}
@@ -19,10 +19,12 @@ namespace AGE
 		Matrix4x4f GetProjectMatrix(){ return mProjectMatrix; }
 		Transform* GetTransform(){ return &mTransform; }
 
+		Matrix4x4f CalcViewMatrix();
+
 	private:
 
 		Matrix4x4f mProjectMatrix;
-		Transform mTransform;
+		//Transform mTransform;
 	};
 }
 

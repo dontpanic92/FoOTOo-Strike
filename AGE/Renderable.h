@@ -15,7 +15,7 @@ namespace AGE
 		struct OpenGLRenderData
 		{
 			GLuint VertexArrayBufferObject;
-			GLuint BufferObjects[4];
+			GLuint BufferObjects[3];
 		};
 
 		Renderable();
@@ -25,13 +25,13 @@ namespace AGE
 
 		void SetShader(ShaderProgram* shader){ mShader = shader; }
 
-		void SetTexture(Texture2D* texture){ mTexture = texture; }
+		void SetMaterial(Material* material){ mMaterial = material; }
 
 		Mesh* GetMesh(){ return mMesh; }
 
 		ShaderProgram* GetShader(){ return mShader; }
 
-		Texture2D* GetTexture(){ return mTexture; }
+		Material* GetMaterial(){ return mMaterial; }
 
 		const OpenGLRenderData* GetRenderData() const{ return &mOpenGLRenderData; }
 			
@@ -41,7 +41,7 @@ namespace AGE
 
 		Mesh* mMesh;
 		ShaderProgram* mShader;
-		Texture2D* mTexture;
+		Material* mMaterial;
 
 		OpenGLRenderData mOpenGLRenderData;
 	};

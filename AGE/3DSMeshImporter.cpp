@@ -1,14 +1,14 @@
 #include "3DSMeshImporter.h"
 #include "Log.h"
 #include "ResourceManager.h"
-
+/*
 using namespace AGE;
 uint total = 0;
 Scene* AGE3DSMeshImporter::LoadSceneFromFile(){
 	total = 0;
 
 	Lib3dsFile * file;
-	file = lib3ds_file_open("../Resources/Models/cs_assult.3ds");
+	file = lib3ds_file_open("../Resources/Models/cs_assault.3ds");
 	// If loading the model failed, we throw an exception
 	if (!file)
 	{
@@ -85,36 +85,40 @@ void AGE3DSMeshImporter::ProcessMesh(Lib3dsFile* file, Lib3dsMesh* mesh, Scene* 
 	for (uint fi = 0; fi < mesh->nfaces; ++fi) {
 		total++;
 		face = &(mesh->faces[fi]);
-
-		if (!ms[face->material]){
-			ms[face->material] = new Material(materials[face->material] * 3);
-			Texture2D* texture2 = ResourceManager::GetInstance()->LoadTexture2D(file->materials[face->material]->texture1_map.name);
-
-			//Texture2D* texture2 = new Texture2D();
-			//char path[256];
-			//strcpy(path, "../Resources/Textures/");
-			//strcat(path, file->materials[face->material]->texture1_map.name);
-			//texture2->Load(path, Texture2D::AUTO);
-
-			ms[face->material]->SetTexture(texture2);
-			ageMesh->AddMaterial(ms[face->material]);
-		}
-
 		float vertex[9], normal[9], texCoord[6];
-		ushort index[3] = {fi * 3, fi * 3 + 1, fi * 3 + 2};
+		ushort index[3] = { fi * 3, fi * 3 + 1, fi * 3 + 2 };
 		//ma->AddIndex(fi, face->index);
-		ms[face->material]->AddIndex(curIndex[face->material], index);
-		curIndex[face->material]++;
 		memcpy(vertex, mesh->vertices[face->index[0]], sizeof(float) * 3);
 		memcpy(vertex + 3, mesh->vertices[face->index[1]], sizeof(float) * 3);
 		memcpy(vertex + 6, mesh->vertices[face->index[2]], sizeof(float) * 3);
 		memcpy(normal, &norm_verts[fi * 9], sizeof(float) * 9);
-		memcpy(texCoord, mesh->texcos[face->index[0]], sizeof(float) * 2);
-		memcpy(texCoord + 2, mesh->texcos[face->index[1]], sizeof(float) * 2);
-		memcpy(texCoord + 4, mesh->texcos[face->index[2]], sizeof(float) * 2);
+		if (mesh->texcos){
+			memcpy(texCoord, mesh->texcos[face->index[0]], sizeof(float) * 2);
+			memcpy(texCoord + 2, mesh->texcos[face->index[1]], sizeof(float) * 2);
+			memcpy(texCoord + 4, mesh->texcos[face->index[2]], sizeof(float) * 2);
+		}
 		ageMesh->AddVertex(fi, vertex);
 		ageMesh->AddNormal(fi, normal);
 		ageMesh->AddTexCoord(fi, texCoord);
+
+		if (face->material != -1){
+			if (!ms[face->material]){
+				ms[face->material] = new Material(materials[face->material] * 3);
+				Texture2D* texture2 = ResourceManager::GetInstance()->LoadTexture2D(file->materials[face->material]->texture1_map.name);
+
+				//Texture2D* texture2 = new Texture2D();
+				//char path[256];
+				//strcpy(path, "../Resources/Textures/");
+				//strcat(path, file->materials[face->material]->texture1_map.name);
+				//texture2->Load(path, Texture2D::AUTO);
+
+				ms[face->material]->SetTexture(texture2);
+				ageMesh->AddMaterial(ms[face->material]);
+			}
+
+			ms[face->material]->AddIndex(curIndex[face->material], index);
+			curIndex[face->material]++;
+		}
 		//memcpy(normal, mesh->vertices[face->index[1]], sizeof(float) * 3);
 		//memcpy(normal, mesh->vertices[face->index[2]], sizeof(float) * 3);
 
@@ -123,9 +127,9 @@ void AGE3DSMeshImporter::ProcessMesh(Lib3dsFile* file, Lib3dsMesh* mesh, Scene* 
 
 		/*mat = 0;
 		if (face->material >= 0 && face->material < file->nmaterials)
-			mat = file->materials[face->material];
+		mat = file->materials[face->material];
 		if (mat){
-			printf("1: %s 2: \n", mat->texture1_map.name, mat->texture2_map.name);
+		printf("1: %s 2: \n", mat->texture1_map.name, mat->texture2_map.name);
 		}
 		mat = 0;
 
@@ -155,7 +159,7 @@ void AGE3DSMeshImporter::ProcessMesh(Lib3dsFile* file, Lib3dsMesh* mesh, Scene* 
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, d);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, s);
 		}
-		*/
+		
 
 		//glNormal3fv(norm_faces[fi].v);  // face normal   
 
@@ -175,6 +179,7 @@ void AGE3DSMeshImporter::ProcessMesh(Lib3dsFile* file, Lib3dsMesh* mesh, Scene* 
 	renderable->SetShader(shader);
 	//renderable->SetTexture(texture2);
 	//Transform* t = renderable->GetTramsform();
+	//renderable->GetTramsform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
 	//renderable->GetTramsform()->RotateByRadian(Deg2Rad(-90), 1.0f, 0.0f, 0.0f);
 	//delete[] norm_faces;
 	delete[] norm_verts;
@@ -207,3 +212,4 @@ void AGE3DSMeshImporter::ProcessNode(Lib3dsFile* file, Lib3dsNode* node, Scene* 
 
 	}
 }
+*/

@@ -72,14 +72,16 @@ namespace AGE
 		//operator const float*() const{ return (const float*)mMatrix; }
 
 		Matrix4x4f& Transpose();
+		Matrix4x4f& Inverse();
 
-		Matrix4x4f operator *(const Matrix4x4f& mul);
+		Matrix4x4f operator *(const Matrix4x4f& mul) const;
 
 		bool operator != (const Matrix4x4f& mat);
 
-		void MakeIdentity() { memcpy(mMatrix, Identity, sizeof(Identity)); }
+		void MakeIdentity() { memcpy(mMatrix, IdentityFloat, sizeof(IdentityFloat)); }
 
-		static const float Identity[4][4];
+		static const Matrix4x4f Identity;
+		static const float IdentityFloat[4][4];
 
 	private:
 		float mMatrix[4][4];

@@ -11,12 +11,13 @@ inline void swap(float* a, float* b){
 }
 
 
-const float Matrix4x4f::Identity[4][4] = {
+const float Matrix4x4f::IdentityFloat[4][4] = {
 	1.0f, 0.0f, 0.0f, 0.0f,
 	0.0f, 1.0f, 0.0f, 0.0f,
 	0.0f, 0.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 0.0f, 1.0f
 };
+const Matrix4x4f Matrix4x4f::Identity;
 
 const float Matrix3x3f::Identity[3][3] = {
 	1.0f, 0.0f, 0.0f,
@@ -85,7 +86,27 @@ Matrix4x4f& Matrix4x4f::Transpose(){
 	return *this;
 }
 
-Matrix4x4f Matrix4x4f::operator *(const Matrix4x4f& mul){
+Matrix4x4f& Matrix4x4f::Inverse() {
+	/*
+	* http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html
+	*
+	*/
+	Matrix3x3f inverseMatrix(*this);
+	swap(&inverseMatrix[0][1], &inverseMatrix[1][0]);
+	swap(&inverseMatrix[0][2], &inverseMatrix[2][0]);
+	swap(&inverseMatrix[1][2], &inverseMatrix[2][1]);
+
+	Vector3f vec((*this)[3][0], (*this)[3][1], (*this)[3][2]);
+
+	vec = vec * inverseMatrix;
+	vec.Set(-vec[0], -vec[1], -vec[2]);
+
+	*this = Matrix4x4f(inverseMatrix, vec);
+
+	return *this;
+}
+
+Matrix4x4f Matrix4x4f::operator *(const Matrix4x4f& mul) const{
 	Matrix4x4f tmp;
 
 	for(int i = 0; i < 4; i++){

@@ -20,15 +20,20 @@ namespace AGE
 
 		SceneNode* CreateNode();
 		void Attach(Attachable* attach);
+		void Attach(SceneNode* node);
+		void SetParent(SceneNode* parent) { mParent = parent; }
+		SceneNode* GetParent() { return mParent; }
 		const vector<SceneNode*>& GetChildren() { return mNodes; }
 		const vector<Attachable*>& GetAttachable() { return mAttachable; }
 
-		void Render();
+		void Render(const Matrix4x4f& parentMatrix);
 
 		Transform* GetTramsform(){ return &mTransform; }
 	private:
 		vector<SceneNode*> mNodes;
 		vector<Attachable*> mAttachable;
+
+		SceneNode* mParent;
 
 		Transform mTransform;
 	};
@@ -43,6 +48,8 @@ namespace AGE
 		Renderable* LoadMesh();
 
 		void Render();
+
+		void AttachCameraOnNode(SceneNode* node);
 
 		Camera* GetCurrentCamera(){ return &mCamera; }
 		Attachable* GetAttachable() { return mAttachable[0]; }

@@ -1,11 +1,12 @@
 #include "Engine.h"
 #include "Primitive.h"
-#include "3DSMeshImporter.h"
+#include "AGEMeshImporter.h"
 #include "Timer.h"
 using namespace AGE;
 
 Engine::Engine():mLastTimeUpdate(0), mScene(0){
 	mGameLogic = new GameLogicImp();
+	mScene = new Scene();
 }
 
 int Engine::StartUp(){
@@ -14,12 +15,6 @@ int Engine::StartUp(){
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	Timer::GetInstance()->StartUp();
 
-	//mScene->GetRoot()->Attach(mScene->LoadMesh());
-	//if (mScene)
-	delete mScene;
-
-	AGE3DSMeshImporter importer;
-	mScene = importer.LoadSceneFromFile();
 	mGameLogic->StartUp();
 
 	return 0;

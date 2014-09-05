@@ -7,6 +7,7 @@
 
 namespace AGE
 {
+	/*
 	class AGE3DSMeshImporter
 	{
 	public:
@@ -20,6 +21,7 @@ namespace AGE
 
 		//unsigned int m_TotalFaces;
 	};
+	*/
 }
 
 #endif

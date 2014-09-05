@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "Engine.h"
 #include "ResourceManager.h"
 #include "Primitive.h"
 #include "Math.h"
@@ -6,7 +6,7 @@
 
 using namespace AGE;
 
-SceneNode::SceneNode(){
+SceneNode::SceneNode() : mParent(0){
 }
 
 SceneNode::~SceneNode(){
@@ -16,20 +16,55 @@ void SceneNode::Attach(Attachable* attach){
 	mAttachable.push_back(attach);
 }
 
-void SceneNode::Render(){
+void SceneNode::Attach(SceneNode* attach){
+	mNodes.push_back(attach);
+}
+
+void SceneNode::Render(const Matrix4x4f& parentMatrix) {
+
+	//const vector<Attachable*>& attachable = mRoot.GetAttachable();
+	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
+	for (int i = 0; i < mAttachable.size(); i++){
+		ShaderProgram* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetShader();
+		//dynamic_cast<Renderable*>(attachable[i])->GetTexture()->Use();
+
+		Transform* translate = mAttachable[i]->GetTramsform();
+		GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
+		Shader shaderData;
+		shaderData.ColorVector = vBlack;
+
+		shaderData.MMatrix = currentMatrix * translate->GetTransformMatrix();
+		shaderData.VMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->CalcViewMatrix();//GetTransform()->GetInverseTransformMatrix();
+		shaderData.PMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetProjectMatrix();
+
+		shader->Begin(&shaderData);
+
+		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
+		//shader->End();
+	}
+
+	
+
+	for (uint i = 0; i < mNodes.size(); i++){
+		mNodes[i]->Render(currentMatrix);
+	}
 }
 
 Scene::Scene(){
 	mCamera.SetParameters(60.f, float(800)/float(600), 1.0f, 10000.0f);
-	Vector3f v;
-	v[2] = 20;
-	mCamera.GetTransform()->Translate(v, Transform::World);
+	//Vector3f v;
+	//v[2] = 5;
+	//mCamera.GetTransform()->Translate(v);
 }
 
 Scene::~Scene(){
 	for(unsigned int i = 0; i < mAttachable.size(); i++){
 		delete mAttachable[i];
 	}
+}
+
+void Scene::AttachCameraOnNode(SceneNode* node) { 
+	mCamera.SetParent(node);
 }
 
 Renderable* Scene::LoadMesh(){
@@ -73,27 +108,7 @@ void Scene::Render(){
 		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
 	}
 
-	const vector<Attachable*>& attachable = mRoot.GetAttachable();
-
-	for (int i = 0; i < attachable.size(); i++){
-		ShaderProgram* shader = dynamic_cast<Renderable*>(attachable[i])->GetShader();
-		//dynamic_cast<Renderable*>(attachable[i])->GetTexture()->Use();
-
-		Transform* translate = attachable[i]->GetTramsform();
-		GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
-		Shader shaderData;
-		shaderData.ColorVector = vBlack;
-
-		shaderData.MMatrix = translate->GetTransformMatrix();
-		shaderData.VMatrix = mCamera.GetTransform()->GetInverseTransformMatrix();
-		shaderData.PMatrix = mCamera.GetProjectMatrix();
-
-		shader->Begin(&shaderData);
-
-		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(attachable[i]));
-
-		//shader->End();
-	}
+	mRoot.Render(Matrix4x4f::Identity);
 
 	RenderEngine::GetInstance()->End();
 }

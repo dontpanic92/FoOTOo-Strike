@@ -5,13 +5,22 @@
 
 namespace AGE
 {
+	class SceneNode;
 	class Attachable
 	{
 	public:
+		Attachable() :mParent(0) {}
+
 		virtual ~Attachable(){};
 		Transform* GetTramsform(){ return &mTransform; }
-	private:
+
+		void SetParent(SceneNode* parent) { mParent = parent; }
+		SceneNode* GetParent() { return mParent; }
+
+	protected:
 		Transform mTransform;
+		SceneNode* mParent;
+
 	};
 
 }

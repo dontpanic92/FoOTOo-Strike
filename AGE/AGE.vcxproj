@@ -74,6 +74,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="3DSMeshImporter.h" />
+    <ClInclude Include="AGEMeshImporter.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Attachable.h" />
     <ClInclude Include="Camera.h" />
@@ -102,6 +103,7 @@
     <ClCompile Include="..\3rd\GLTools\src\GLTriangleBatch.cpp" />
     <ClCompile Include="..\3rd\GLTools\src\math3d.cpp" />
     <ClCompile Include="3DSMeshImporter.cpp" />
+    <ClCompile Include="AGEMeshImporter.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Engine.cpp" />

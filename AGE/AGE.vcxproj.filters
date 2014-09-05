@@ -78,6 +78,9 @@
     <ClInclude Include="3DSMeshImporter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="AGEMeshImporter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -147,6 +150,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="3DSMeshImporter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AGEMeshImporter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
