@@ -18,6 +18,7 @@ namespace AGE{
 		int Update();
 
 		Scene* GetScene(){ return mScene; }
+		Window GetMainWindow() { return mApp.GetMainWindow(); }
 
 	private:
 		Engine();

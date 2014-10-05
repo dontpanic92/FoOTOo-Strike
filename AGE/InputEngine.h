@@ -34,6 +34,8 @@ namespace AGE
 		OIS::Mouse			*mMouse;
 		//OIS::JoyStick* g_joys[4] = {0,0,0,0};
 	};
+
+	//inline InputEngine* GetInputEngine() { return InputEngine::GetInstance(); }
 }
 
 #endif

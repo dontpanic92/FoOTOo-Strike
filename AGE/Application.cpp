@@ -79,6 +79,8 @@ bool WindowsApplication::CreateApplicationWindow(){
 
 	mWindow.hWnd = hWnd;
 	mWindow.hDC = ::GetWindowDC(hWnd);
+	mWindow.Width = 800;
+	mWindow.Height = 600;
 
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);

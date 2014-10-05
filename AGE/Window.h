@@ -1,6 +1,7 @@
 #ifndef __AGE_WINDOW_HEADER__
 #define __AGE_WINDOW_HEADER__
 #include <Windows.h>
+#include "Math.h"
 
 namespace AGE
 {
@@ -8,6 +9,8 @@ namespace AGE
 	{
 		HWND hWnd;
 		HDC hDC;
+		uint Height;
+		uint Width;
 	};
 
 	typedef WindowsWindow Window;

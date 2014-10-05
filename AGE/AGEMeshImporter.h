@@ -13,6 +13,8 @@ namespace AGE
 		{
 			char	Magic[4];
 			int		MaterialNum;
+			int		BoneNum;
+			int		VertexNum;
 		};
 
 		struct AM1MaterialHeader
@@ -21,7 +23,14 @@ namespace AGE
 			int		VertexNum;
 		};
 
-		SceneNode* LoadFromFile(const char* filename);
+		struct AM1Bone
+		{
+			int BoneID;
+			int ParentID;
+			float BindPoseMatrixInv[16];
+		};
+
+		Renderable* LoadFromFile(const char* filename);
 	};
 }
 

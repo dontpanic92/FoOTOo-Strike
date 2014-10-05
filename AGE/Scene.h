@@ -26,9 +26,9 @@ namespace AGE
 		const vector<SceneNode*>& GetChildren() { return mNodes; }
 		const vector<Attachable*>& GetAttachable() { return mAttachable; }
 
-		void Render(const Matrix4x4f& parentMatrix);
+		void Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix);
 
-		Transform* GetTramsform(){ return &mTransform; }
+		Transform* GetTransform(){ return &mTransform; }
 	private:
 		vector<SceneNode*> mNodes;
 		vector<Attachable*> mAttachable;
@@ -44,6 +44,7 @@ namespace AGE
 		Scene();
 		~Scene();
 
+		void StartUp();
 		SceneNode* GetRoot() { return &mRoot; }
 		Renderable* LoadMesh();
 

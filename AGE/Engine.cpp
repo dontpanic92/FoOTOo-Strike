@@ -15,6 +15,8 @@ int Engine::StartUp(){
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	Timer::GetInstance()->StartUp();
 
+	mScene->StartUp();
+
 	mGameLogic->StartUp();
 
 	return 0;
@@ -33,8 +35,8 @@ int Engine::Update(){
 
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	float delta = now - mLastTimeUpdate;
-	if (delta < 10)
-		return 1;
+	//if (delta < 10)
+		//return 1;
 	InputEngine::GetInstance()->Update();
 	mGameLogic->Update(delta);
 	mScene->Render();

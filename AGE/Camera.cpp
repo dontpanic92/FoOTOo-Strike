@@ -36,7 +36,7 @@ Matrix4x4f Camera::CalcViewMatrix() {
 	s.push(this->mTransform.GetTransformMatrix());
 	SceneNode* parent = mParent;
 	while (parent != NULL) {
-		s.push(parent->GetTramsform()->GetTransformMatrix());
+		s.push(parent->GetTransform()->GetTransformMatrix());
 		parent = parent->GetParent();
 	}
 
@@ -45,7 +45,7 @@ Matrix4x4f Camera::CalcViewMatrix() {
 		s.pop();
 	}
 
-	matrix.Inverse();
+	matrix = matrix.Inverse();
 
 	return matrix;
 }

@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Texture2D.h"
+#include "Skeleton.h"
 
 namespace AGE
 {
@@ -12,8 +13,10 @@ namespace AGE
 	class Renderable : public Attachable
 	{
 	public:
-		struct OpenGLRenderData
+		struct RenderObject
 		{
+			Mesh* Mesh;
+			Material* Material;
 			GLuint VertexArrayBufferObject;
 			GLuint BufferObjects[3];
 		};
@@ -21,29 +24,48 @@ namespace AGE
 		Renderable();
 		virtual ~Renderable();
 
-		void SetMesh(Mesh* mesh){ mMesh = mesh; BuildObjects();}
+		//void SetMesh(Mesh* mesh){ mMesh = mesh; BuildObjects();}
 
-		void SetShader(ShaderProgram* shader){ mShader = shader; }
+		void AddRenderObject(Mesh* mesh, Material* material);
 
-		void SetMaterial(Material* material){ mMaterial = material; }
+		void SetVertexData(GLfloat* vertex, uint vertexNum);
 
-		Mesh* GetMesh(){ return mMesh; }
+		void SetSkeleton(Skeleton* skeleton) { mSkeleton = skeleton; skeleton->SetRenderable(this); }
 
-		ShaderProgram* GetShader(){ return mShader; }
+		Skeleton* GetSkeleton() { return mSkeleton; }
 
-		Material* GetMaterial(){ return mMaterial; }
+		void SetShader(ShaderProgram* shader) { mShader = shader; }
 
-		const OpenGLRenderData* GetRenderData() const{ return &mOpenGLRenderData; }
+		ShaderProgram* GetShader() { return mShader; }
+
+		//void SetMaterial(Material* material){ mMaterial = material; }
+
+		//Mesh* GetMesh(){ return mMesh; }
+
+		//Material* GetMaterial(){ return mMaterial; }
+		GLuint GetVertexBufferObject() { return mVertexBufferObject; }
+		GLfloat* GetVertex() { return mVertex; }
+		uint GetNumberOfVertex() { return mVertexNum; }
+
+		uint GetNumberOfRenderObjects() { return mRenderObjects.size(); }
+		const RenderObject* GetRenderObject(uint i) const { return &mRenderObjects[i]; }
+
+		void UpdateSkinnedVertex();
 			
 	private:
 
-		void BuildObjects();
+		void BuildObjects(RenderObject& object);
 
-		Mesh* mMesh;
+		void BuildVertexBuffer();
+
+		GLuint mVertexBufferObject;
+		GLfloat* mVertex;
+		GLfloat* mVertexBindPose;
+		uint mVertexNum;
+
+		std::vector<RenderObject> mRenderObjects;
 		ShaderProgram* mShader;
-		Material* mMaterial;
-
-		OpenGLRenderData mOpenGLRenderData;
+		Skeleton* mSkeleton;
 	};
 }
 

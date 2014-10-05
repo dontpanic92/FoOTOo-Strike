@@ -40,15 +40,18 @@ namespace AGE
 		float mMatrix[3][3];
 	};
 
+	class Matrix4x4f;
 	class Vector3f
 	{
 	public:
 		Vector3f(){Set(Zero[0], Zero[1], Zero[2]);}
 		Vector3f(float _0, float _1, float _2){ Set(_0, _1, _2); }
+		Vector3f(float v[3]) { memcpy(mVector, v, sizeof(mVector)); }
 
 		float& operator[](int index){ return mVector[index]; }
 		float operator[](int index) const{ return mVector[index]; }
 		Vector3f operator*(const Matrix3x3f& mul);
+		Vector3f operator*(const Matrix4x4f& mul);
 		operator float*() { return mVector; }
 		operator const float*() const {return mVector;}
 
@@ -63,12 +66,13 @@ namespace AGE
 	{
 	public:
 		Matrix4x4f() { MakeIdentity(); }
+		Matrix4x4f(float m[16]) { memcpy(mMatrix, m, sizeof(mMatrix)); }
 		Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector);
 
 		float* operator[](int index) { return mMatrix[index]; }
 		const float* operator[](int index) const { return mMatrix[index]; }
 
-		operator float*();
+		operator float*() const;
 		//operator const float*() const{ return (const float*)mMatrix; }
 
 		Matrix4x4f& Transpose();
@@ -96,6 +100,8 @@ namespace AGE
 		void RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem = Local);
 		void ClearRotation();
 
+		void Multiply(const Matrix4x4f& matrix, CoordSystem coordSystem = Local);
+
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 
 		Matrix4x4f GetTransformMatrix(){ return mTransformMatrix; }
@@ -105,6 +111,28 @@ namespace AGE
 		Matrix4x4f mTransformMatrix;
 	};
 
+
+	class Quaternion
+	{
+	public:
+		Quaternion() {}
+
+		Quaternion(float x, float y, float z, float w) {
+			mQuaternion[0] = x;
+			mQuaternion[1] = y;
+			mQuaternion[2] = z;
+			mQuaternion[3] = w;
+		}
+
+		Quaternion(float q[4]) { memcpy(mQuaternion, q, sizeof(mQuaternion)); }
+
+		float& operator[] (int index) { return mQuaternion[index]; }
+
+		Matrix4x4f ToRotationMatrix();
+
+	private:
+		float mQuaternion[4];
+	};
 }
 
 #endif

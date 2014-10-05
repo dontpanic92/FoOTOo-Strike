@@ -36,6 +36,17 @@ Vector3f Vector3f::operator* (const Matrix3x3f& mul){
 
 	return tmp;
 }
+Vector3f Vector3f::operator*(const Matrix4x4f& mul) {
+	Vector3f tmp;
+	float scale = mul[0][3] + mul[1][3] + mul[2][3] + mul[3][3];
+	for (int i = 0; i < 3; i++) {
+		tmp.mVector[i] = (mul[0][i] * mVector[0] + mul[1][i] * mVector[1] + mul[2][i] * mVector[2] + mul[3][i]);// / scale;
+	}
+
+	//if (scale > 1.1)
+		//printf("%f\n", scale);
+	return tmp;
+}
 
 Matrix3x3f::operator float*(){
 	return (float*)mMatrix;
@@ -68,7 +79,7 @@ Matrix4x4f::Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector){
 	mMatrix[3][3] = 1.0f;
 }
 
-Matrix4x4f::operator float*(){
+Matrix4x4f::operator float*()const {
 	return (float*)mMatrix;
 }
 
@@ -101,9 +112,9 @@ Matrix4x4f& Matrix4x4f::Inverse() {
 	vec = vec * inverseMatrix;
 	vec.Set(-vec[0], -vec[1], -vec[2]);
 
-	*this = Matrix4x4f(inverseMatrix, vec);
+	Matrix4x4f newMatrix(inverseMatrix, vec);
 
-	return *this;
+	return newMatrix;
 }
 
 Matrix4x4f Matrix4x4f::operator *(const Matrix4x4f& mul) const{
@@ -126,11 +137,13 @@ void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem){
 	translateMatrix[3][1] = translation[1];
 	translateMatrix[3][2] = translation[2];
 
-	if(coordSystem == Local){
+	/*if(coordSystem == Local){
 		mTransformMatrix = translateMatrix * mTransformMatrix;
 	}else{
 		mTransformMatrix = mTransformMatrix * translateMatrix;
-	}
+	}*/
+
+	Multiply(translateMatrix, coordSystem);
 }
 
 void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem){
@@ -167,16 +180,25 @@ void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSys
 	rotationMatrix[1][2] = mc*y*z+s*x;
 	rotationMatrix[2][2] = c + mc*z*z;
 
-	if(coordSystem == Local)
+	/*if(coordSystem == Local)
 		mTransformMatrix = rotationMatrix * mTransformMatrix;
 	else
 		mTransformMatrix = mTransformMatrix * rotationMatrix;
+		*/
+	Multiply(rotationMatrix, coordSystem);
 }
 
 void Transform::ClearRotation(){
 	mTransformMatrix[0][0] = mTransformMatrix[1][1] = mTransformMatrix[2][2] = 1.0f;
 	mTransformMatrix[0][1] = mTransformMatrix[0][2] = mTransformMatrix[1][0]
 		= mTransformMatrix[1][2] = mTransformMatrix[2][0] = mTransformMatrix[2][1] = 0.0f;
+}
+
+void Transform::Multiply(const Matrix4x4f& matrix, CoordSystem coordSystem) {
+	if (coordSystem == Local)
+		mTransformMatrix = matrix * mTransformMatrix;
+	else
+		mTransformMatrix = mTransformMatrix * matrix;
 }
 
 Matrix4x4f Transform::GetInverseTransformMatrix(){
@@ -195,4 +217,30 @@ Matrix4x4f Transform::GetInverseTransformMatrix(){
 	vec.Set(-vec[0], -vec[1], -vec[2]);
 
 	return Matrix4x4f(inverseMatrix, vec);
+}
+
+Matrix4x4f Quaternion::ToRotationMatrix() {
+	float x2 = mQuaternion[0] * mQuaternion[0];
+	float y2 = mQuaternion[1] * mQuaternion[1];
+	float z2 = mQuaternion[2] * mQuaternion[2];
+	float xy = mQuaternion[0] * mQuaternion[1];
+	float xz = mQuaternion[0] * mQuaternion[2];
+	float yz = mQuaternion[1] * mQuaternion[2];
+	float wx = mQuaternion[3] * mQuaternion[0];
+	float wy = mQuaternion[3] * mQuaternion[1];
+	float wz = mQuaternion[3] * mQuaternion[2];
+
+	Matrix4x4f matrix;
+
+	matrix[0][0] = 1 - 2 * (y2 - z2);
+	matrix[0][1] = 2 * (xy + wz);
+	matrix[0][2] = 2 * (xz - wy);
+	matrix[1][0] = 2 * (xy - wz);
+	matrix[1][1] = 1 - 2 * (x2 - z2);
+	matrix[1][2] = 2 * (yz + wz);
+	matrix[2][0] = 2 * (xz - wy);
+	matrix[2][1] = 2 * (yz + wz);
+	matrix[2][2] = 1 - 2 * (x2 - y2);
+
+	return matrix;
 }

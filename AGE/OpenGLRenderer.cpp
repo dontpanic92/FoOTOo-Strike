@@ -54,7 +54,7 @@ int OpenGLRenderer::StartUp(Window window){
 		return 0;
 	}
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, window.Width, window.Height);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
@@ -67,14 +67,16 @@ void OpenGLRenderer::Begin(){
 }
 
 void OpenGLRenderer::Render(Renderable* renderable){
-	glBindVertexArray(renderable->GetRenderData()->VertexArrayBufferObject);
 
-	//const Mesh::MaterialCollection& ms = renderable->GetMesh()->GetMaterials();
-	//for (uint i = 0; i < ms.size(); i++){
-	renderable->GetMaterial()->Use();
-	glDrawArrays(GL_TRIANGLES, 0, renderable->GetMesh()->GetVertexNum());
-	//glDrawElements(GL_TRIANGLES, ms[i]->GetIndexNum(), GL_UNSIGNED_SHORT, 0);
-	//}
+	for (uint i = 0; i < renderable->GetNumberOfRenderObjects(); i++) {
+		const Renderable::RenderObject* object = renderable->GetRenderObject(i);
+
+		glBindVertexArray(object->VertexArrayBufferObject);
+		
+		object->Material->Use();
+		glDrawArrays(GL_TRIANGLES, 0, object->Mesh->GetVertexNum());
+		//glDrawElements(GL_TRIANGLES, object->Mesh->GetVertexNum(), GL_UNSIGNED_SHORT, 0);
+	}
 
 }
 

@@ -81,6 +81,12 @@
     <ClInclude Include="AGEMeshImporter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AGESkeletonAnimationImporter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -153,6 +159,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AGEMeshImporter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AGESkeletonAnimationImporter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

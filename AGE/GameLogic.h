@@ -5,6 +5,8 @@
 
 namespace AGE
 {
+
+	class Skeleton;
 	class GameLogic
 	{
 	public:
@@ -12,6 +14,8 @@ namespace AGE
 
 		virtual void StartUp() = 0;
 		virtual bool Update(float time) = 0;
+
+		Skeleton* mSkeleton;
 	};
 
 
