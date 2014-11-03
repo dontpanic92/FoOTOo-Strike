@@ -39,12 +39,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Projects\AGE\3rd\GLTools\include;D:\Projects\AGE\3rd\ois\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\AGE\3rd\ois\lib;D:\Projects\AGE\3rd\lib3ds\lib;D:\Projects\AGE\3rd\ijg\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\AGE\3rd\GLTools\include;D:\Projects\AGE\3rd\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\AGE\3rd\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\Projects\AGE\3rd\GLTools\include;D:\Projects\AGE\3rd\ois\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\AGE\3rd\ois\lib;D:\Projects\AGE\3rd\lib3ds\lib;D:\Projects\AGE\3rd\ijg\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\AGE\3rd\GLTools\include;D:\Projects\AGE\3rd\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\AGE\3rd\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

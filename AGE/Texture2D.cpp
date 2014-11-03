@@ -2,7 +2,7 @@
 #include "Math.h"
 #include <cstdio>
 #include <cstdlib>
-#include "../3rd/ijg/include/jpeglib.h"
+#include <ijg/jpeglib.h>
 #include "Log.h"
 
 using namespace AGE;

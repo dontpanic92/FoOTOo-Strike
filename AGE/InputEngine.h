@@ -3,7 +3,7 @@
 
 #include "Singleton.h"
 #include "Window.h"
-#include <OIS.h>
+#include <ois/OIS.h>
 
 namespace AGE
 {

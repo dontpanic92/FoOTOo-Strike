@@ -1,7 +1,7 @@
 #ifndef __AGE_3DSMESHIMPORTER_HEADER__
 #define __AGE_3DSMESHIMPORTER_HEADER__
 
-#include "../3rd/lib3ds/include/lib3ds.h"
+#include <lib3ds/lib3ds.h>
 
 #include "Scene.h"
 

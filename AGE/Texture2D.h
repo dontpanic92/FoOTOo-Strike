@@ -1,7 +1,7 @@
 #ifndef __AGE_TEXTURE2D_HEADER__
 #define __AGE_TEXTURE2D_HEADER__
 
-#include <GL\glew.h>
+#include <GL/glew.h>
 #include <cstdint>
 
 namespace AGE

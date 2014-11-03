@@ -8,7 +8,7 @@
 #include "Singleton.h"
 
 #define FREEGLUT_STATIC
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 namespace AGE{
 
