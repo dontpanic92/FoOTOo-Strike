@@ -50,12 +50,15 @@ namespace AGE
 
 		float& operator[](int index){ return mVector[index]; }
 		float operator[](int index) const{ return mVector[index]; }
-		Vector3f operator*(const Matrix3x3f& mul);
-		Vector3f operator*(const Matrix4x4f& mul);
+		Vector3f operator *(const Matrix3x3f& mul);
+		Vector3f operator *(const Matrix4x4f& mul);
+		Vector3f operator *(float mul);
 		operator float*() { return mVector; }
 		operator const float*() const {return mVector;}
 
 		void Set(float _0, float _1, float _2){ mVector[0] = _0; mVector[1] = _1; mVector[2] = _2; }
+		void Normalize();
+		float GetLength();
 
 		static const Vector3f Zero;
 	private:
@@ -96,7 +99,12 @@ namespace AGE
 	public:
 		enum CoordSystem { World, Local};
 
+		Transform() {}
+		Transform(const Matrix4x4f& matrix) :mTransformMatrix(matrix){}
+
 		void Translate(const Vector3f& translation, CoordSystem coordSystem = Local);
+		void SetPosition(const Vector3f& position);
+		Vector3f GetPosition();
 		void RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem = Local);
 		void ClearRotation();
 
@@ -105,6 +113,7 @@ namespace AGE
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 
 		Matrix4x4f GetTransformMatrix(){ return mTransformMatrix; }
+		void SetTransformMatrix(const Matrix4x4f& matrix) { mTransformMatrix = matrix; }
 
 		Matrix4x4f GetInverseTransformMatrix();
 	private:

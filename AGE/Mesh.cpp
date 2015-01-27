@@ -10,8 +10,9 @@ Material::~Material(){
 }
 
 
-void Material::Use(){
+void Material::Use() const{
 	mTexture->Use();
+	mShader->Begin();
 }
 
 Mesh::Mesh(int vertexNum, Renderable* parent) {

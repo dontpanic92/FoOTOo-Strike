@@ -27,8 +27,10 @@ namespace AGE
 		const vector<Attachable*>& GetAttachable() { return mAttachable; }
 
 		void Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix);
+		void UpdateAndCulling(const Matrix4x4f& parentMatrix);
 
 		Transform* GetTransform(){ return &mTransform; }
+		Matrix4x4f CalcWorldTransformMatrix();
 	private:
 		vector<SceneNode*> mNodes;
 		vector<Attachable*> mAttachable;
@@ -49,14 +51,15 @@ namespace AGE
 		Renderable* LoadMesh();
 
 		void Render();
+		void UpdateAndCulling();
 
 		void AttachCameraOnNode(SceneNode* node);
 
 		Camera* GetCurrentCamera(){ return &mCamera; }
-		Attachable* GetAttachable() { return mAttachable[0]; }
+		//Attachable* GetAttachable() { return mAttachable[0]; }
 	private:
 		SceneNode mRoot;
-		vector<Attachable*> mAttachable;
+		//vector<Attachable*> mAttachable;
 
 		Camera mCamera;
 

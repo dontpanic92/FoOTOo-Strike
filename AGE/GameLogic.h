@@ -20,10 +20,12 @@ namespace AGE
 
 
 	using namespace OIS;
+	class Renderable;
 	class GameLogicImp : public GameLogic, public OIS::MouseListener, public OIS::KeyListener
 	{
 	public:
 		void StartUp();
+		void InitPhysics(Renderable *r1);
 
 		bool Update(float time);
 

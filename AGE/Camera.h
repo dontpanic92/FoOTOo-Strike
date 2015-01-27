@@ -24,6 +24,7 @@ namespace AGE
 	private:
 
 		Matrix4x4f mProjectMatrix;
+		Matrix4x4f mViewMatrix;
 		//Transform mTransform;
 	};
 }

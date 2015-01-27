@@ -20,8 +20,6 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename) {
 	//SceneNode* node = new SceneNode();
 	Renderable* renderable = new Renderable();
 	renderable->SetVertexData(vertex, fileHeader.VertexNum);
-	ShaderProgram* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
-	renderable->SetShader(shader);
 
 	delete[] vertex;
 
@@ -46,9 +44,12 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename) {
 
 		mesh->UpdateVertex();
 
-		Material* material = new Material();
-		Texture2D* texture2 = ResourceManager::GetInstance()->LoadTexture2D(matHeader.TextureName);
-		material->SetTexture(texture2);
+		Material* material = ResourceManager::GetInstance()->LoadMaterial(matHeader.TextureName);
+		ShaderProgram* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
+		material->SetShaderProgram(shader);
+		//new Material();
+		//Texture2D* texture2 = ResourceManager::GetInstance()->LoadTexture2D(matHeader.TextureName);
+		//material->SetTexture(texture2);
 
 		renderable->AddRenderObject(mesh, material);
 

@@ -96,7 +96,24 @@ void Skeleton::BindVertex(int vertex, int boneID[4], float weight[4]) {
 	}
 }
 
-void Skeleton::Update() {
+void Skeleton::StartPlay(const char* name)
+{ 
+	mPlaying = false;
+	mCurrentAnimation = mAnimations.find(name);
+	if (mCurrentAnimation == mAnimations.end())
+		return;
+	mTime = 0;
+	mCurrentFrame = 0; 
+	mPlaying = true; 
+}
+
+void Skeleton::Update(float time) {
+	if (!mPlaying)
+		return;
+	//printf("%f %f %f\n", time, mStartTime, mCurrentAnimation->second->GetFrame(mCurrentFrame)->Time);
+	mTime += time;
+	if (mTime < mCurrentAnimation->second->GetFrame(mCurrentFrame)->Time)
+		return;
 	for (uint i = 0; i < mVertexNum; i++) {
 		if (mVertexBoneBind[i].Bones[0] == 0)
 			continue;
@@ -112,6 +129,10 @@ void Skeleton::Update() {
 	mRenderable->UpdateSkinnedVertex();
 
 	mCurrentFrame = (mCurrentFrame + 1) % mAnimations["default"]->GetFrameNum();
+	
+	float t2 = mAnimations["default"]->GetFrame(mAnimations["default"]->GetFrameNum() - 1)->Time;
+	while (mTime > t2)
+		mTime -= t2;
 }
 
 
@@ -125,7 +146,8 @@ SkeletonAnimation::~SkeletonAnimation() {
 	delete[] mFrames;
 }
 
-void SkeletonAnimation::SetFrame(uint frame, Skeleton::BoneTransform* transform) {
+void SkeletonAnimation::SetFrame(uint frame, float time, Skeleton::BoneTransform* transform) {
 	mFrames[frame].Transforms = transform;
+	mFrames[frame].Time = time;
 }
 

@@ -38,7 +38,7 @@ namespace AGE
 
 		GLuint GetTexture(){ return mTexture; }
 
-		void Use() { glBindTexture(GL_TEXTURE_2D, mTexture); }
+		void Use() const { glBindTexture(GL_TEXTURE_2D, mTexture); }
 	private:
 
 		bool LoadTGA(const char* path);

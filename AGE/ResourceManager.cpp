@@ -7,7 +7,7 @@ using namespace std;
 
 
 ResourceManager::~ResourceManager(){
-	for (Texture2DMap::iterator it = mTextures.begin(); it != mTextures.end(); it++){
+	for (MaterialMap::iterator it = mMaterials.begin(); it != mMaterials.end(); it++) {
 		delete it->second;
 	}
 
@@ -20,12 +20,13 @@ Mesh* ResourceManager::LoadMesh(){
 	return NULL;//new Mesh();
 }
 
-Texture2D* ResourceManager::LoadTexture2D(const char* name){
-	Texture2DMap::iterator it;
-	if ((it = mTextures.find(name)) != mTextures.end()){
+Material* ResourceManager::LoadMaterial(const char* name){
+	MaterialMap::iterator it;
+	if ((it = mMaterials.find(name)) != mMaterials.end()) {
 		return it->second;
 	} else {
 
+		Material* material = new Material();
 		Texture2D* texture2 = new Texture2D();
 		char path[256];
 		strcpy(path, "../Resources/Textures/");
@@ -37,9 +38,9 @@ Texture2D* ResourceManager::LoadTexture2D(const char* name){
 
 		printf("%s\n", path);
 		texture2->Load(path, Texture2D::AUTO);
-
-		mTextures.insert(make_pair(name, texture2));
-		return texture2;
+		material->SetTexture(texture2);
+		mMaterials.insert(make_pair(name, material));
+		return material;
 	}
 }
 

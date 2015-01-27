@@ -97,7 +97,7 @@ inline int	btGetVersion()
 #ifdef BT_DEBUG
 	#ifdef _MSC_VER
 		#include <stdio.h>
-		#define btAssert(x) { if(!(x)){printf("Assert " __FILE__  ":%u ("#x")\n", __LINE__);__debugbreak();	}}
+		#define btAssert(x) /*{ if(!(x)){printf("Assert " __FILE__  ":%u ("#x")\n", __LINE__);__debugbreak();	}}*/
 	#else//_MSC_VER
 		#include <assert.h>
 		#define btAssert assert

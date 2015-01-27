@@ -87,6 +87,12 @@
     <ClInclude Include="AGESkeletonAnimationImporter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RtInfomation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -165,6 +171,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AGESkeletonAnimationImporter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

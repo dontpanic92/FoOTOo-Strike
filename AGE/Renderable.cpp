@@ -2,7 +2,7 @@
 #include "Primitive.h"
 using namespace AGE;
 
-Renderable::Renderable() :mShader(0), mVertexBufferObject(0), mVertex(0), mVertexBindPose(0), mSkeleton(0) {
+Renderable::Renderable() :mVertexBufferObject(0), mVertex(0), mVertexBindPose(0), mSkeleton(0) {
 
 }
 
@@ -30,6 +30,7 @@ void Renderable::AddRenderObject(Mesh* mesh, Material* material) {
 	RenderObject object;
 	object.Mesh = mesh;
 	object.Material = material;
+	object.Parent = this;
 
 	BuildObjects(object);
 

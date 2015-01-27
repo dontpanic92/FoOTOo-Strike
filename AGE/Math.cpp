@@ -48,6 +48,28 @@ Vector3f Vector3f::operator*(const Matrix4x4f& mul) {
 	return tmp;
 }
 
+void Vector3f::Normalize() {
+	float n = sqrt(mVector[0] * mVector[0] + mVector[1] * mVector[1] + mVector[2] * mVector[2]);
+	if (n == 0)
+		return;
+
+	mVector[0] /= n;
+	mVector[1] /= n;
+	mVector[2] /= n;
+}
+
+Vector3f Vector3f::operator *(float mul) {
+	Vector3f tmp(*this);
+	tmp.mVector[0] *= mul;
+	tmp.mVector[1] *= mul;
+	tmp.mVector[2] *= mul;
+	return tmp;
+}
+
+float Vector3f::GetLength() {
+	return sqrt(mVector[0] * mVector[0] + mVector[1] * mVector[1] + mVector[2] * mVector[2]);
+}
+
 Matrix3x3f::operator float*(){
 	return (float*)mMatrix;
 }
@@ -60,7 +82,7 @@ Matrix3x3f& Matrix3x3f::Transpose(){
 }
 
 bool Matrix3x3f::operator != (const Matrix3x3f& mat){
-	return !memcmp(mMatrix, mat.mMatrix, sizeof(mMatrix));;
+	return !memcmp(mMatrix, mat.mMatrix, sizeof(mMatrix));
 }
 
 Matrix3x3f::Matrix3x3f(const Matrix4x4f& copy){
@@ -144,6 +166,20 @@ void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem){
 	}*/
 
 	Multiply(translateMatrix, coordSystem);
+}
+
+void Transform::SetPosition(const Vector3f& position) {
+	mTransformMatrix[3][0] = position[0];
+	mTransformMatrix[3][1] = position[1];
+	mTransformMatrix[3][2] = position[2];
+}
+
+Vector3f Transform::GetPosition() {
+	Vector3f position;
+	position[0] = mTransformMatrix[3][0];
+	position[1] = mTransformMatrix[3][1];
+	position[2] = mTransformMatrix[3][2];
+	return position;
 }
 
 void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem){

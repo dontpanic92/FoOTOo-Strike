@@ -10,16 +10,18 @@
 namespace AGE
 {
 
+	struct RenderObject
+	{
+		Renderable* Parent;
+		Mesh* Mesh;
+		Material* Material;
+		GLuint VertexArrayBufferObject;
+		GLuint BufferObjects[3];
+	};
+
 	class Renderable : public Attachable
 	{
 	public:
-		struct RenderObject
-		{
-			Mesh* Mesh;
-			Material* Material;
-			GLuint VertexArrayBufferObject;
-			GLuint BufferObjects[3];
-		};
 
 		Renderable();
 		virtual ~Renderable();
@@ -34,23 +36,26 @@ namespace AGE
 
 		Skeleton* GetSkeleton() { return mSkeleton; }
 
-		void SetShader(ShaderProgram* shader) { mShader = shader; }
+		//void SetShader(ShaderProgram* shader) { mShader = shader; }
 
-		ShaderProgram* GetShader() { return mShader; }
+		//ShaderProgram* GetShader() { return mShader; }
 
 		//void SetMaterial(Material* material){ mMaterial = material; }
 
 		//Mesh* GetMesh(){ return mMesh; }
 
 		//Material* GetMaterial(){ return mMaterial; }
-		GLuint GetVertexBufferObject() { return mVertexBufferObject; }
+		GLuint GetVertexBufferObject() const { return mVertexBufferObject; }
 		GLfloat* GetVertex() { return mVertex; }
-		uint GetNumberOfVertex() { return mVertexNum; }
+		uint GetNumberOfVertex() const { return mVertexNum; }
 
-		uint GetNumberOfRenderObjects() { return mRenderObjects.size(); }
+		uint GetNumberOfRenderObjects() const { return mRenderObjects.size(); }
 		const RenderObject* GetRenderObject(uint i) const { return &mRenderObjects[i]; }
 
 		void UpdateSkinnedVertex();
+
+		std::vector<RenderObject>::const_iterator begin() const { return mRenderObjects.begin(); }
+		std::vector<RenderObject>::const_iterator end() const { return mRenderObjects.end(); }
 			
 	private:
 
@@ -64,7 +69,6 @@ namespace AGE
 		uint mVertexNum;
 
 		std::vector<RenderObject> mRenderObjects;
-		ShaderProgram* mShader;
 		Skeleton* mSkeleton;
 	};
 }

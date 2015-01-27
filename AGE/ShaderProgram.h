@@ -23,7 +23,7 @@ namespace AGE
 		}
 	};*/
 
-	struct Shader
+	struct DefaultShaderData
 	{
 		float* MMatrix;
 		float* VMatrix;
@@ -58,8 +58,10 @@ namespace AGE
 		bool LoadAndCompile(const char* vShaderPath, const char* fShaderPath);
 		GLuint GetProgram(){ return mProgram; }
 
-		template<class Shader>
-		void Begin(const Shader* shader){ glUseProgram(mProgram); shader->InitUniforms(mProgram); }
+		void Begin() { glUseProgram(mProgram); }
+
+		template<class ShaderData>
+		void UpdateShaderData(const ShaderData* shaderData){ shaderData->InitUniforms(mProgram); }
 
 		void End(){ glUseProgram(0); }
 	private:

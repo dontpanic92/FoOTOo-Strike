@@ -104,15 +104,20 @@ namespace AGE
 		
 		const Matrix4x4f* GetVertexTransform() { return mVertexTransform; }
 
-		void Play() { mCurrentFrame = 0; mPlaying = true; }
+		void StartPlay(const char* name);
 
-		void Update();
+		void Update(float time);
+
+		bool IsPlaying() { return mPlaying; }
 
 	private:
 		Bone* FindBone(int ID);
 
 		std::vector<Bone*> mAllBones;
-		std::map<std::string, SkeletonAnimation*> mAnimations;
+		typedef std::map<std::string, SkeletonAnimation*> AnimationMapType;
+		AnimationMapType mAnimations;
+		AnimationMapType::iterator mCurrentAnimation;
+		float mTime;
 
 		struct VertexBoneBind
 		{
@@ -127,7 +132,7 @@ namespace AGE
 		uint mBoneNum;
 
 		uint mCurrentFrame;
-		uint mPlaying;
+		bool mPlaying;
 	};
 
 	class SkeletonAnimation
@@ -150,7 +155,7 @@ namespace AGE
 
 		Frame* GetFrame(uint frame) { return &mFrames[frame]; }
 
-		void SetFrame(uint frame, Skeleton::BoneTransform* transforms);
+		void SetFrame(uint frame, float time, Skeleton::BoneTransform* transforms);
 	private:
 		Frame* mFrames;
 		uint mFrameNum;

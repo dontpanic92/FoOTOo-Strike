@@ -18,12 +18,13 @@ SkeletonAnimation* AGESkeletonAnimationImporter::LoadFromeFile(int vertexNum, Sk
 	for (int i = 0; i < fileHeader.FrameNum; i++) {
 		Skeleton::BoneTransform* boneTransform = new Skeleton::BoneTransform[fileHeader.BoneNum];
 
-		float m[16];
+		float m[16], t;
 		for (int j = 0; j < fileHeader.BoneNum; j++) {
+			fread(&t, sizeof(t), 1, filp);
 			fread(m, sizeof(m), 1, filp);
 			memcpy(boneTransform[j].Matrix, m, sizeof(m));
 		}
-		animation->SetFrame(i, boneTransform);
+		animation->SetFrame(i, t, boneTransform);
 	}
 
 

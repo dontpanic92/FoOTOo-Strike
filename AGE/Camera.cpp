@@ -31,7 +31,8 @@ void Camera::SetParameters(float fov, float aspectRatio, float nearClip, float f
 }
 
 Matrix4x4f Camera::CalcViewMatrix() {
-	Matrix4x4f matrix;
+	mViewMatrix.MakeIdentity();
+
 	std::stack<Matrix4x4f> s;
 	s.push(this->mTransform.GetTransformMatrix());
 	SceneNode* parent = mParent;
@@ -41,11 +42,11 @@ Matrix4x4f Camera::CalcViewMatrix() {
 	}
 
 	while (!s.empty()) {
-		matrix = matrix * s.top();
+		mViewMatrix = mViewMatrix * s.top();
 		s.pop();
 	}
 
-	matrix = matrix.Inverse();
+	mViewMatrix = mViewMatrix.Inverse();
 
-	return matrix;
+	return mViewMatrix;
 }

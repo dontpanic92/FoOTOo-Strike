@@ -5,10 +5,12 @@
 //#include "../3rd/glew-1.10.0/include/GL/wglew.h"
 #include "Math.h"
 #include "Texture2D.h"
+#include "ShaderProgram.h"
 #include <GL\glew.h>
 #include <vector>
 
-namespace AGE{
+namespace AGE
+{
 
 	class Material
 	{
@@ -19,10 +21,16 @@ namespace AGE{
 
 		void SetTexture(Texture2D* texture) { mTexture = texture; }
 
-		void Use();
+		void SetShaderProgram(ShaderProgram* shader) { mShader = shader; }
+
+		ShaderProgram* GetShaderProgram() const { return mShader; }
+
+		void Use() const;
+
 
 	private:
 		Texture2D* mTexture;
+		ShaderProgram* mShader;
 	};
 
 	class Renderable;

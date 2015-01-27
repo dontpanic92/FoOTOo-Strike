@@ -22,6 +22,7 @@ namespace AGE{
 		int StartUp(Window window);
 
 		void Render(Renderable* renderable);
+		void Render();
 
 		void Begin();
 
