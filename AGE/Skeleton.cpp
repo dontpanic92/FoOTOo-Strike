@@ -9,16 +9,16 @@ using namespace AGE;
 	mFrames[frame].Rotation = rotation;
 	mFrames[frame].Translation = translation;
 	mFrames[frame].BuildMatrix();
-}
+	}
 
 
-void Bone::SetBindPoseTranslation(float x, float y, float z) {
+	void Bone::SetBindPoseTranslation(float x, float y, float z) {
 	mMatrix[3][0] = x;
 	mMatrix[3][1] = y;
 	mMatrix[3][2] = z;
-}
+	}
 
-void Bone::SetBindPoseRotation(float x, float y, float z, float w) {
+	void Bone::SetBindPoseRotation(float x, float y, float z, float w) {
 	Quaternion q(x, y, z, w);
 	Matrix4x4f m = q.ToRotationMatrix();
 
@@ -27,9 +27,10 @@ void Bone::SetBindPoseRotation(float x, float y, float z, float w) {
 	m[3][2] = mMatrix[3][2];
 
 	mMatrix = m;
-}*/
+	}*/
 
-Skeleton::Skeleton(uint vertexNum, uint boneNum){
+Skeleton::Skeleton(uint vertexNum, uint boneNum)
+{
 	mVertexBoneBind = new VertexBoneBind[vertexNum];
 	mVertexTransform = new Matrix4x4f[vertexNum];
 
@@ -40,7 +41,8 @@ Skeleton::Skeleton(uint vertexNum, uint boneNum){
 	mCurrentFrame = 0;
 }
 
-Skeleton::~Skeleton() {
+Skeleton::~Skeleton()
+{
 	for (uint i = 0; i < mAllBones.size(); i++) {
 		delete mAllBones[i];
 	}
@@ -52,7 +54,8 @@ Skeleton::~Skeleton() {
 	delete[] mVertexTransform;
 }
 
-Bone* Skeleton::FindBone(int ID) {
+Bone* Skeleton::FindBone(int ID)
+{
 	for (uint i = 0; i < mAllBones.size(); i++) {
 		if (mAllBones[i]->GetID() == ID)
 			return mAllBones[i];
@@ -60,7 +63,8 @@ Bone* Skeleton::FindBone(int ID) {
 	return NULL;
 }
 
-Bone* Skeleton::AddBone(int ID, int parentID) {
+Bone* Skeleton::AddBone(int ID, int parentID)
+{
 
 	//Bone* bone = FindBone(ID);
 	//if (bone == NULL) {
@@ -73,7 +77,8 @@ Bone* Skeleton::AddBone(int ID, int parentID) {
 	return bone;
 }
 
-void Skeleton::BuildTree() {
+void Skeleton::BuildTree()
+{
 	for (uint i = 0; i < mAllBones.size(); i++) {
 		int id = mAllBones[i]->GetID();
 		if (id == -1)
@@ -84,12 +89,14 @@ void Skeleton::BuildTree() {
 	}
 }
 
-void Skeleton::SetBoneBindPoseMatrixInv(int ID, float matrix[16]) {
+void Skeleton::SetBoneBindPoseMatrixInv(int ID, float matrix[16])
+{
 	Bone* bone = FindBone(ID);
 	bone->SetBindPoseMatrixInv(matrix);
 }
 
-void Skeleton::BindVertex(int vertex, int boneID[4], float weight[4]) {
+void Skeleton::BindVertex(int vertex, int boneID[4], float weight[4])
+{
 	for (int i = 0; i < 4; i++) {
 		mVertexBoneBind[vertex].Bones[i] = FindBone(boneID[i]);
 		mVertexBoneBind[vertex].weight[i] = weight[i];
@@ -97,17 +104,18 @@ void Skeleton::BindVertex(int vertex, int boneID[4], float weight[4]) {
 }
 
 void Skeleton::StartPlay(const char* name)
-{ 
+{
 	mPlaying = false;
 	mCurrentAnimation = mAnimations.find(name);
 	if (mCurrentAnimation == mAnimations.end())
 		return;
 	mTime = 0;
-	mCurrentFrame = 0; 
-	mPlaying = true; 
+	mCurrentFrame = 0;
+	mPlaying = true;
 }
 
-void Skeleton::Update(float time) {
+void Skeleton::Update(float time)
+{
 	if (!mPlaying)
 		return;
 	//printf("%f %f %f\n", time, mStartTime, mCurrentAnimation->second->GetFrame(mCurrentFrame)->Time);
@@ -118,35 +126,38 @@ void Skeleton::Update(float time) {
 		if (mVertexBoneBind[i].Bones[0] == 0)
 			continue;
 		//if (mVertexBoneBind[i].Bones[0]->GetID() != 2)
-			//continue;
+		//continue;
 		uint id = mVertexBoneBind[i].Bones[0]->GetInternalID();
 		float weight = mVertexBoneBind[i].weight[0];
 
-		
+
 		mVertexTransform[i] = mVertexBoneBind[i].Bones[0]->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
 	}
 
 	mRenderable->UpdateSkinnedVertex();
 
 	mCurrentFrame = (mCurrentFrame + 1) % mAnimations["default"]->GetFrameNum();
-	
+
 	float t2 = mAnimations["default"]->GetFrame(mAnimations["default"]->GetFrameNum() - 1)->Time;
 	while (mTime > t2)
 		mTime -= t2;
 }
 
 
-SkeletonAnimation::SkeletonAnimation(Skeleton* skeleton, uint frameNum) {
+SkeletonAnimation::SkeletonAnimation(Skeleton* skeleton, uint frameNum)
+{
 	mFrameNum = frameNum;
 	mFrames = new Frame[frameNum];
 	mSkeleton = skeleton;
 }
 
-SkeletonAnimation::~SkeletonAnimation() {
+SkeletonAnimation::~SkeletonAnimation()
+{
 	delete[] mFrames;
 }
 
-void SkeletonAnimation::SetFrame(uint frame, float time, Skeleton::BoneTransform* transform) {
+void SkeletonAnimation::SetFrame(uint frame, float time, Skeleton::BoneTransform* transform)
+{
 	mFrames[frame].Transforms = transform;
 	mFrames[frame].Time = time;
 }

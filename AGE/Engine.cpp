@@ -6,13 +6,16 @@
 #include "RtInfomation.h"
 using namespace AGE;
 
-Engine::Engine():mLastTimeUpdate(0), mScene(0){
+Engine::Engine() :mLastTimeUpdate(0), mScene(0)
+{
 	mGameLogic = new GameLogicImp();
 	mScene = new Scene();
 }
 
-int Engine::StartUp(){
+int Engine::StartUp()
+{
 	mApp.StartUp();
+	RenderEngine::SetEngineType(RenderEngine::Type::Direct3D11);
 	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	PhysicsEngine::GetInstance()->StartUp();
@@ -25,21 +28,24 @@ int Engine::StartUp(){
 	return 0;
 }
 
-int Engine::Run(){
+int Engine::Run()
+{
 	return mApp.MainLoop();
 }
 
-Engine::~Engine(){
+Engine::~Engine()
+{
 	delete mScene;
 	delete mGameLogic;
 }
 
-int Engine::Update(){
+int Engine::Update()
+{
 
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	float delta = now - mLastTimeUpdate;
 	//if (delta < 10)
-		//return 1;
+	//return 1;
 
 	RtInfomation::GetInstance()->FrameStart();
 
@@ -49,11 +55,9 @@ int Engine::Update(){
 	RtInfomation::GetInstance()->FrameLogicEnd();
 	//mScene->Render();
 	mScene->UpdateAndCulling();
+	RtInfomation::GetInstance()->FrameCullingEnd();
 	RenderEngine::GetInstance()->Render();
 	RtInfomation::GetInstance()->FrameEnd();
-	//printf("LTime: %fms %f%%,RTime: %fms %f%%,fps:%f\r", logicTime - now, (logicTime - now)/(renderTime - now) * 100, 
-	//													renderTime - logicTime, (renderTime-logicTime)/(renderTime - now) * 100,
-	//													1000 / delta);
 
 
 	mLastTimeUpdate = now;

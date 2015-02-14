@@ -1,8 +1,10 @@
 #include "AGEMeshImporter.h"
 #include "ResourceManager.h"
+#include "RenderEngine.h"
 using namespace AGE;
 
-Renderable* AGEMeshImporter::LoadFromFile(const char* filename) {
+Renderable* AGEMeshImporter::LoadFromFile(const char* filename)
+{
 	FILE* filp;
 
 	fopen_s(&filp, filename, "rb");
@@ -45,13 +47,13 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename) {
 		mesh->UpdateVertex();
 
 		Material* material = ResourceManager::GetInstance()->LoadMaterial(matHeader.TextureName);
-		ShaderProgram* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
-		material->SetShaderProgram(shader);
+		Shader* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
+		material->SetShader(shader);
 		//new Material();
 		//Texture2D* texture2 = ResourceManager::GetInstance()->LoadTexture2D(matHeader.TextureName);
 		//material->SetTexture(texture2);
 
-		renderable->AddRenderObject(mesh, material);
+		renderable->AddRenderObject(RenderEngine::GetInstance()->CreateRenderObject(renderable, mesh, material));
 
 		delete[] matVertex;
 	}

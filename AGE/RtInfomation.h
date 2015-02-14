@@ -27,13 +27,18 @@ namespace AGE{
 			mCpuLogicTime = Timer::GetInstance()->GetTotalMilliSeconds() - mRenderStartTime;
 		}
 
+		void FrameCullingEnd()
+		{
+			mCpuCullingTime = Timer::GetInstance()->GetTotalMilliSeconds() - mRenderStartTime - -mCpuLogicTime;
+		}
+
 		void FrameEnd()
 		{
 			mCpuRenderingTime = Timer::GetInstance()->GetTotalMilliSeconds() - mRenderStartTime - mCpuLogicTime;
 			mNumberOfTriangles = mTmpNumberOfTriangles;
 			mNumberOfObjects = mTmpNumberOfObject;
 
-			printf("%f %f %f %lu %lu   \r", mCpuLogicTime, mCpuRenderingTime, mFps, mNumberOfTriangles, mNumberOfObjects);
+			//printf("%f %f %f %f %lu %lu   \n", mCpuLogicTime, mCpuCullingTime, mCpuRenderingTime, mFps, mNumberOfTriangles, mNumberOfObjects);
 		}
 
 		void MoreTriangles(unsigned long n)
@@ -59,6 +64,7 @@ namespace AGE{
 		//Values
 
 		float mCpuLogicTime;
+		float mCpuCullingTime;
 		float mCpuRenderingTime;
 		float mFps;
 		unsigned long mNumberOfTriangles;

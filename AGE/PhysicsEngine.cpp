@@ -4,7 +4,8 @@ using namespace AGE;
 
 PhysicsEngine::PhysicsEngine() : mDispatcher(0), mDynamicsWorld(0), mSolver(0), mCollisionConfiguration(0), mBroadphase(0) {}
 
-PhysicsEngine::~PhysicsEngine() {
+PhysicsEngine::~PhysicsEngine()
+{
 	delete mDynamicsWorld;
 	delete mSolver;
 	delete mDispatcher;
@@ -12,7 +13,8 @@ PhysicsEngine::~PhysicsEngine() {
 	delete mBroadphase;
 }
 
-void PhysicsEngine::StartUp() {
+void PhysicsEngine::StartUp()
+{
 	mBroadphase = new btDbvtBroadphase();
 
 	// Set up the collision configuration and dispatcher
@@ -29,7 +31,8 @@ void PhysicsEngine::StartUp() {
 }
 
 //From Bullet Demo
-btRigidBody* PhysicsEngine::CreateRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape) {
+btRigidBody* PhysicsEngine::CreateRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape)
+{
 	btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
@@ -41,25 +44,26 @@ btRigidBody* PhysicsEngine::CreateRigidBody(float mass, const btTransform& start
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
-//#define USE_MOTIONSTATE
-/*#ifdef USE_MOTIONSTATE
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	//#define USE_MOTIONSTATE
+	/*#ifdef USE_MOTIONSTATE
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 
-	btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
+		btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
 
-	btRigidBody* body = new btRigidBody(cInfo);
-	body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
+		btRigidBody* body = new btRigidBody(cInfo);
+		body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
 
-#else*/
+		#else*/
 	btRigidBody* body = new btRigidBody(mass, 0, shape, localInertia);
 	body->setWorldTransform(startTransform);
-//#endif
+	//#endif
 
 	mDynamicsWorld->addRigidBody(body);
 
 	return body;
 }
 
-void PhysicsEngine::Update(float time) {
+void PhysicsEngine::Update(float time)
+{
 	mDynamicsWorld->stepSimulation(time * 0.01, 10);
 }

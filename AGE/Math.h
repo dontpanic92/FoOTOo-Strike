@@ -14,14 +14,14 @@ namespace AGE
 	const float _PI_DIV_180 = 0.0174532925f; //0.017453292519943296;
 	const float _180_DIV_PI = 57.2957795f; //57.295779513082320876798154814105;
 
-	inline float Deg2Rad(float Deg){ return Deg * _PI_DIV_180; }
-	inline float Rad2Deg(float Rad){ return Rad * _180_DIV_PI; }
+	inline float Deg2Rad(float Deg) { return Deg * _PI_DIV_180; }
+	inline float Rad2Deg(float Rad) { return Rad * _180_DIV_PI; }
 
 	class Matrix4x4f;
 	class Matrix3x3f
 	{
 	public:
-		Matrix3x3f(){ MakeIdentity(); }
+		Matrix3x3f() { MakeIdentity(); }
 		Matrix3x3f(const Matrix4x4f& copy);
 
 		Matrix3x3f& Transpose();
@@ -30,7 +30,7 @@ namespace AGE
 		const float* operator[](int index) const { return mMatrix[index]; }
 
 		bool operator != (const Matrix3x3f& mat);
-		
+
 		operator float*();
 
 		void MakeIdentity() { memcpy(mMatrix, Identity, sizeof(Identity)); }
@@ -44,19 +44,19 @@ namespace AGE
 	class Vector3f
 	{
 	public:
-		Vector3f(){Set(Zero[0], Zero[1], Zero[2]);}
-		Vector3f(float _0, float _1, float _2){ Set(_0, _1, _2); }
+		Vector3f() { Set(Zero[0], Zero[1], Zero[2]); }
+		Vector3f(float _0, float _1, float _2) { Set(_0, _1, _2); }
 		Vector3f(float v[3]) { memcpy(mVector, v, sizeof(mVector)); }
 
-		float& operator[](int index){ return mVector[index]; }
-		float operator[](int index) const{ return mVector[index]; }
+		float& operator[](int index) { return mVector[index]; }
+		float operator[](int index) const { return mVector[index]; }
 		Vector3f operator *(const Matrix3x3f& mul);
 		Vector3f operator *(const Matrix4x4f& mul);
 		Vector3f operator *(float mul);
 		operator float*() { return mVector; }
-		operator const float*() const {return mVector;}
+		operator const float*() const { return mVector; }
 
-		void Set(float _0, float _1, float _2){ mVector[0] = _0; mVector[1] = _1; mVector[2] = _2; }
+		void Set(float _0, float _1, float _2) { mVector[0] = _0; mVector[1] = _1; mVector[2] = _2; }
 		void Normalize();
 		float GetLength();
 
@@ -97,10 +97,10 @@ namespace AGE
 	class Transform
 	{
 	public:
-		enum CoordSystem { World, Local};
+		enum CoordSystem { World, Local };
 
 		Transform() {}
-		Transform(const Matrix4x4f& matrix) :mTransformMatrix(matrix){}
+		Transform(const Matrix4x4f& matrix) :mTransformMatrix(matrix) {}
 
 		void Translate(const Vector3f& translation, CoordSystem coordSystem = Local);
 		void SetPosition(const Vector3f& position);
@@ -112,7 +112,7 @@ namespace AGE
 
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 
-		Matrix4x4f GetTransformMatrix(){ return mTransformMatrix; }
+		Matrix4x4f GetTransformMatrix() { return mTransformMatrix; }
 		void SetTransformMatrix(const Matrix4x4f& matrix) { mTransformMatrix = matrix; }
 
 		Matrix4x4f GetInverseTransformMatrix();
@@ -126,7 +126,8 @@ namespace AGE
 	public:
 		Quaternion() {}
 
-		Quaternion(float x, float y, float z, float w) {
+		Quaternion(float x, float y, float z, float w)
+		{
 			mQuaternion[0] = x;
 			mQuaternion[1] = y;
 			mQuaternion[2] = z;

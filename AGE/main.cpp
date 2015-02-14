@@ -3,7 +3,8 @@
 
 using namespace std;
 
-int main(){
+int main()
+{
 	AGE::Engine::GetInstance()->StartUp();
 	AGE::Engine::GetInstance()->Run();
 }

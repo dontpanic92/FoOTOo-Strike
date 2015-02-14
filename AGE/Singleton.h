@@ -6,24 +6,25 @@ namespace AGE
 	class NonCopyable
 	{
 	protected:
-		NonCopyable(){}
+		NonCopyable() {}
 	private:
-		NonCopyable & operator=(const NonCopyable&){};
-		NonCopyable(const NonCopyable&){};
+		NonCopyable & operator=(const NonCopyable&) {};
+		NonCopyable(const NonCopyable&) {};
 	};
 
 	template<class T>
 	class Singleton : private NonCopyable
 	{
 	public:
-		virtual ~Singleton(){}
-		static T* GetInstance() {
+		virtual ~Singleton() {}
+		static T* GetInstance()
+		{
 			static T sInstance;
 			return &sInstance;
 		}
 
 	protected:
-		Singleton(){};
+		Singleton() {};
 	};
 }
 

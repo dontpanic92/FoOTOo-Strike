@@ -2,6 +2,7 @@
 #include <cstdio>
 using namespace AGE;
 
-void Log::Error(const char* fmt){
+void Log::Error(const char* fmt)
+{
 	printf("Error %s\n", fmt);
 }

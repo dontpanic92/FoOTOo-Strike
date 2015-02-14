@@ -4,24 +4,23 @@
 
 using namespace AGE;
 
-int WindowsApplication::MainLoop(){
+int WindowsApplication::MainLoop()
+{
 	bool bRunning = true;
-	while(bRunning)
-	{
+	while (bRunning) {
 		MSG msg;
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
-		{
-			if(msg.message == WM_QUIT){
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0) {
+			if (msg.message == WM_QUIT) {
 				bRunning = false;
 				break;
 			}
-			if(msg.message != WM_SYSKEYDOWN){
+			if (msg.message != WM_SYSKEYDOWN) {
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
 		}
 
-		if(!Engine::GetInstance()->Update()){
+		if (!Engine::GetInstance()->Update()) {
 			bRunning = false;
 			break;
 		}
@@ -30,17 +29,20 @@ int WindowsApplication::MainLoop(){
 	return 0;
 }
 
-int WindowsApplication::StartUp(){
+int WindowsApplication::StartUp()
+{
 	CreateApplicationWindow();
 	return true;
 }
 
-Window WindowsApplication::GetMainWindow(){
+Window WindowsApplication::GetMainWindow()
+{
 	return mWindow;
 }
 
-LRESULT CALLBACK WindowEventHandler (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam){
-	switch(message){
+LRESULT CALLBACK WindowEventHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message) {
 	case WM_ERASEBKGND:
 		return 1;
 	case WM_DESTROY:
@@ -51,29 +53,29 @@ LRESULT CALLBACK WindowEventHandler (HWND hwnd, UINT message, WPARAM wParam, LPA
 	}
 }
 
-bool WindowsApplication::CreateApplicationWindow(){
+bool WindowsApplication::CreateApplicationWindow()
+{
 	HWND hWnd;
 	WNDCLASSEX ageWindow;
-	ageWindow.cbSize             =      sizeof(ageWindow);
-	ageWindow.style              =      CS_HREDRAW|CS_VREDRAW;
-	ageWindow.lpfnWndProc        =      WindowEventHandler;
-	ageWindow.cbClsExtra         =      0;
-	ageWindow.cbWndExtra         =      0;
-	ageWindow.hInstance          =      0;
-	ageWindow.hIcon              =      ::LoadIcon(NULL,IDI_APPLICATION);
-	ageWindow.hCursor            =      ::LoadCursor(NULL,IDC_ARROW);
-	ageWindow.hbrBackground      =      (HBRUSH)::GetStockObject(BLACK_BRUSH);
-	ageWindow.lpszMenuName       =      NULL;
-	ageWindow.lpszClassName      =      "AGE Application";
-	ageWindow.hIconSm            =      NULL;
+	ageWindow.cbSize = sizeof(ageWindow);
+	ageWindow.style = CS_HREDRAW | CS_VREDRAW;
+	ageWindow.lpfnWndProc = WindowEventHandler;
+	ageWindow.cbClsExtra = 0;
+	ageWindow.cbWndExtra = 0;
+	ageWindow.hInstance = 0;
+	ageWindow.hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+	ageWindow.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+	ageWindow.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
+	ageWindow.lpszMenuName = NULL;
+	ageWindow.lpszClassName = L"AGE Application";
+	ageWindow.hIconSm = NULL;
 
 	RegisterClassEx(&ageWindow);
 
-	hWnd = ::CreateWindow("AGE Application", "AGE Application", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, NULL, NULL);
+	hWnd = ::CreateWindow(L"AGE Application", L"AGE Application", WS_OVERLAPPEDWINDOW,
+						  CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, NULL, NULL);
 
-	if (!hWnd)
-	{
+	if (!hWnd) {
 		return false;
 	}
 

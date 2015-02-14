@@ -1,14 +1,15 @@
 #include "Primitive.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
 #include <GLTools.h>
 using namespace AGE;
 
-Renderable* Primitive::CreateTorusUnmanage(){
+Renderable* Primitive::CreateTorusUnmanage()
+{
 	/*GLTriangleBatch torusBatch;
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 
 	Mesh* mesh = new Mesh((GLfloat*)torusBatch.pVerts, (GLfloat*)torusBatch.pNorms, (GLfloat*)torusBatch.pTexCoords, torusBatch.nNumVerts, torusBatch.pIndexes, torusBatch.nNumIndexes);
-	
+
 	ShaderProgram* shader = new ShaderProgram();
 	shader->LoadAndCompile("../Resources/Shaders/GLSL/DefaultLight.vshader", "../Resources/Shaders/GLSL/DefaultLight.fshader");
 
@@ -23,17 +24,18 @@ Renderable* Primitive::CreateTorusUnmanage(){
 	return NULL;
 }
 
-Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4]){
+Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4])
+{
 	/*GLfloat vertex[12];
 	GLfloat normal[12];
-	
+
 	for(uint i = 0; i < 4; i++){
-		for(uint j = 0; j < 3; j++){
-			vertex[i * 3 + j] = points[i][j];
-		}
-		normal[i * 3] = 0.0f;
-		normal[i * 3 + 1] = 1.0f;
-		normal[i * 3 + 2] = 0.0f;
+	for(uint j = 0; j < 3; j++){
+	vertex[i * 3 + j] = points[i][j];
+	}
+	normal[i * 3] = 0.0f;
+	normal[i * 3 + 1] = 1.0f;
+	normal[i * 3 + 2] = 0.0f;
 	}
 
 	GLfloat texture[] = {0, 0, 1, 0, 1, 1, 0, 1};
@@ -41,7 +43,7 @@ Renderable* Primitive::CreatePlaneUnmanage(Vector3f points[4]){
 	GLushort index[6] = {0, 1, 2, 0, 2, 3};
 
 	Mesh* mesh = new Mesh(vertex, normal, texture, 4, index, 6);
-	
+
 	ShaderProgram* shader = new ShaderProgram();
 	shader->LoadAndCompile("../Resources/Shaders/GLSL/DefaultLight.vshader", "../Resources/Shaders/GLSL/DefaultLight.fshader");
 

@@ -4,7 +4,8 @@
 using namespace AGE;
 
 
-inline void swap(float* a, float* b){
+inline void swap(float* a, float* b)
+{
 	float t = *a;
 	*a = *b;
 	*b = t;
@@ -27,16 +28,18 @@ const float Matrix3x3f::Identity[3][3] = {
 
 const Vector3f Vector3f::Zero(0.0f, 0.0f, 0.0f);
 
-Vector3f Vector3f::operator* (const Matrix3x3f& mul){
+Vector3f Vector3f::operator* (const Matrix3x3f& mul)
+{
 	Vector3f tmp;
 
-	for(int i = 0; i < 3; i++){
+	for (int i = 0; i < 3; i++) {
 		tmp.mVector[i] = mul[0][i] * mVector[0] + mul[1][i] * mVector[1] + mul[2][i] * mVector[2];
 	}
 
 	return tmp;
 }
-Vector3f Vector3f::operator*(const Matrix4x4f& mul) {
+Vector3f Vector3f::operator*(const Matrix4x4f& mul)
+{
 	Vector3f tmp;
 	float scale = mul[0][3] + mul[1][3] + mul[2][3] + mul[3][3];
 	for (int i = 0; i < 3; i++) {
@@ -44,11 +47,12 @@ Vector3f Vector3f::operator*(const Matrix4x4f& mul) {
 	}
 
 	//if (scale > 1.1)
-		//printf("%f\n", scale);
+	//printf("%f\n", scale);
 	return tmp;
 }
 
-void Vector3f::Normalize() {
+void Vector3f::Normalize()
+{
 	float n = sqrt(mVector[0] * mVector[0] + mVector[1] * mVector[1] + mVector[2] * mVector[2]);
 	if (n == 0)
 		return;
@@ -58,7 +62,8 @@ void Vector3f::Normalize() {
 	mVector[2] /= n;
 }
 
-Vector3f Vector3f::operator *(float mul) {
+Vector3f Vector3f::operator *(float mul)
+{
 	Vector3f tmp(*this);
 	tmp.mVector[0] *= mul;
 	tmp.mVector[1] *= mul;
@@ -66,33 +71,39 @@ Vector3f Vector3f::operator *(float mul) {
 	return tmp;
 }
 
-float Vector3f::GetLength() {
+float Vector3f::GetLength()
+{
 	return sqrt(mVector[0] * mVector[0] + mVector[1] * mVector[1] + mVector[2] * mVector[2]);
 }
 
-Matrix3x3f::operator float*(){
+Matrix3x3f::operator float*()
+{
 	return (float*)mMatrix;
 }
 
-Matrix3x3f& Matrix3x3f::Transpose(){
+Matrix3x3f& Matrix3x3f::Transpose()
+{
 	swap(&mMatrix[0][1], &mMatrix[1][0]);
 	swap(&mMatrix[0][2], &mMatrix[2][0]);
 	swap(&mMatrix[1][2], &mMatrix[2][1]);
 	return *this;
 }
 
-bool Matrix3x3f::operator != (const Matrix3x3f& mat){
+bool Matrix3x3f::operator != (const Matrix3x3f& mat)
+{
 	return !memcmp(mMatrix, mat.mMatrix, sizeof(mMatrix));
 }
 
-Matrix3x3f::Matrix3x3f(const Matrix4x4f& copy){
+Matrix3x3f::Matrix3x3f(const Matrix4x4f& copy)
+{
 	memcpy(mMatrix[0], copy[0], sizeof(float) * 3);
 	memcpy(mMatrix[1], copy[1], sizeof(float) * 3);
 	memcpy(mMatrix[2], copy[2], sizeof(float) * 3);
 }
 
 
-Matrix4x4f::Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector){
+Matrix4x4f::Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector)
+{
 	memcpy(mMatrix[0], matrix[0], sizeof(float) * 3);
 	memcpy(mMatrix[1], matrix[1], sizeof(float) * 3);
 	memcpy(mMatrix[2], matrix[2], sizeof(float) * 3);
@@ -101,15 +112,18 @@ Matrix4x4f::Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector){
 	mMatrix[3][3] = 1.0f;
 }
 
-Matrix4x4f::operator float*()const {
+Matrix4x4f::operator float*()const
+{
 	return (float*)mMatrix;
 }
 
-bool Matrix4x4f::operator != (const Matrix4x4f& mat){
+bool Matrix4x4f::operator != (const Matrix4x4f& mat)
+{
 	return !memcmp(mMatrix, mat.mMatrix, sizeof(mMatrix));;
 }
 
-Matrix4x4f& Matrix4x4f::Transpose(){
+Matrix4x4f& Matrix4x4f::Transpose()
+{
 	swap(&mMatrix[0][1], &mMatrix[1][0]);
 	swap(&mMatrix[0][2], &mMatrix[2][0]);
 	swap(&mMatrix[0][3], &mMatrix[3][0]);
@@ -119,7 +133,8 @@ Matrix4x4f& Matrix4x4f::Transpose(){
 	return *this;
 }
 
-Matrix4x4f& Matrix4x4f::Inverse() {
+Matrix4x4f& Matrix4x4f::Inverse()
+{
 	/*
 	* http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html
 	*
@@ -139,20 +154,22 @@ Matrix4x4f& Matrix4x4f::Inverse() {
 	return newMatrix;
 }
 
-Matrix4x4f Matrix4x4f::operator *(const Matrix4x4f& mul) const{
+Matrix4x4f Matrix4x4f::operator *(const Matrix4x4f& mul) const
+{
 	Matrix4x4f tmp;
 
-	for(int i = 0; i < 4; i++){
-		tmp.mMatrix[i][0] = mMatrix[i][0]*mul.mMatrix[0][0]+mMatrix[i][1]*mul.mMatrix[1][0]+mMatrix[i][2]*mul.mMatrix[2][0]+mMatrix[i][3]*mul.mMatrix[3][0];
-		tmp.mMatrix[i][1] = mMatrix[i][0]*mul.mMatrix[0][1]+mMatrix[i][1]*mul.mMatrix[1][1]+mMatrix[i][2]*mul.mMatrix[2][1]+mMatrix[i][3]*mul.mMatrix[3][1];
-		tmp.mMatrix[i][2] = mMatrix[i][0]*mul.mMatrix[0][2]+mMatrix[i][1]*mul.mMatrix[1][2]+mMatrix[i][2]*mul.mMatrix[2][2]+mMatrix[i][3]*mul.mMatrix[3][2];
-		tmp.mMatrix[i][3] = mMatrix[i][0]*mul.mMatrix[0][3]+mMatrix[i][1]*mul.mMatrix[1][3]+mMatrix[i][2]*mul.mMatrix[2][3]+mMatrix[i][3]*mul.mMatrix[3][3];
+	for (int i = 0; i < 4; i++) {
+		tmp.mMatrix[i][0] = mMatrix[i][0] * mul.mMatrix[0][0] + mMatrix[i][1] * mul.mMatrix[1][0] + mMatrix[i][2] * mul.mMatrix[2][0] + mMatrix[i][3] * mul.mMatrix[3][0];
+		tmp.mMatrix[i][1] = mMatrix[i][0] * mul.mMatrix[0][1] + mMatrix[i][1] * mul.mMatrix[1][1] + mMatrix[i][2] * mul.mMatrix[2][1] + mMatrix[i][3] * mul.mMatrix[3][1];
+		tmp.mMatrix[i][2] = mMatrix[i][0] * mul.mMatrix[0][2] + mMatrix[i][1] * mul.mMatrix[1][2] + mMatrix[i][2] * mul.mMatrix[2][2] + mMatrix[i][3] * mul.mMatrix[3][2];
+		tmp.mMatrix[i][3] = mMatrix[i][0] * mul.mMatrix[0][3] + mMatrix[i][1] * mul.mMatrix[1][3] + mMatrix[i][2] * mul.mMatrix[2][3] + mMatrix[i][3] * mul.mMatrix[3][3];
 	}
 
 	return tmp;
 }
 
-void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem){
+void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem)
+{
 
 	Matrix4x4f translateMatrix;
 	translateMatrix[3][0] = translation[0];
@@ -161,20 +178,22 @@ void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem){
 
 	/*if(coordSystem == Local){
 		mTransformMatrix = translateMatrix * mTransformMatrix;
-	}else{
+		}else{
 		mTransformMatrix = mTransformMatrix * translateMatrix;
-	}*/
+		}*/
 
 	Multiply(translateMatrix, coordSystem);
 }
 
-void Transform::SetPosition(const Vector3f& position) {
+void Transform::SetPosition(const Vector3f& position)
+{
 	mTransformMatrix[3][0] = position[0];
 	mTransformMatrix[3][1] = position[1];
 	mTransformMatrix[3][2] = position[2];
 }
 
-Vector3f Transform::GetPosition() {
+Vector3f Transform::GetPosition()
+{
 	Vector3f position;
 	position[0] = mTransformMatrix[3][0];
 	position[1] = mTransformMatrix[3][1];
@@ -182,8 +201,9 @@ Vector3f Transform::GetPosition() {
 	return position;
 }
 
-void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem){
-	/*	
+void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem)
+{
+	/*
 	*	http://en.wikipedia.org/wiki/Rotation_matrix
 	*
 	*	c = cos(theta), s = sin(theta), v = (x, y, z), where x^2+y^2+z^2=0
@@ -194,8 +214,8 @@ void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSys
 	*
 	*/
 
-	float norm = sqrt(x*x+y*y+z*z);
-	if(norm == 0){
+	float norm = sqrt(x*x + y*y + z*z);
+	if (norm == 0) {
 		return;
 	}
 
@@ -207,37 +227,40 @@ void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSys
 
 	Matrix4x4f rotationMatrix;
 	rotationMatrix[0][0] = c + mc*x*x;
-	rotationMatrix[1][0] = mc*x*y-s*z;
-	rotationMatrix[2][0] = mc*x*z+s*y;
-	rotationMatrix[0][1] = mc*x*y+s*z;
+	rotationMatrix[1][0] = mc*x*y - s*z;
+	rotationMatrix[2][0] = mc*x*z + s*y;
+	rotationMatrix[0][1] = mc*x*y + s*z;
 	rotationMatrix[1][1] = c + mc*y*y;
-	rotationMatrix[2][1] = mc*y*z-s*x;
-	rotationMatrix[0][2] = mc*x*z-s*y;
-	rotationMatrix[1][2] = mc*y*z+s*x;
+	rotationMatrix[2][1] = mc*y*z - s*x;
+	rotationMatrix[0][2] = mc*x*z - s*y;
+	rotationMatrix[1][2] = mc*y*z + s*x;
 	rotationMatrix[2][2] = c + mc*z*z;
 
 	/*if(coordSystem == Local)
 		mTransformMatrix = rotationMatrix * mTransformMatrix;
-	else
+		else
 		mTransformMatrix = mTransformMatrix * rotationMatrix;
 		*/
 	Multiply(rotationMatrix, coordSystem);
 }
 
-void Transform::ClearRotation(){
+void Transform::ClearRotation()
+{
 	mTransformMatrix[0][0] = mTransformMatrix[1][1] = mTransformMatrix[2][2] = 1.0f;
 	mTransformMatrix[0][1] = mTransformMatrix[0][2] = mTransformMatrix[1][0]
 		= mTransformMatrix[1][2] = mTransformMatrix[2][0] = mTransformMatrix[2][1] = 0.0f;
 }
 
-void Transform::Multiply(const Matrix4x4f& matrix, CoordSystem coordSystem) {
+void Transform::Multiply(const Matrix4x4f& matrix, CoordSystem coordSystem)
+{
 	if (coordSystem == Local)
 		mTransformMatrix = matrix * mTransformMatrix;
 	else
 		mTransformMatrix = mTransformMatrix * matrix;
 }
 
-Matrix4x4f Transform::GetInverseTransformMatrix(){
+Matrix4x4f Transform::GetInverseTransformMatrix()
+{
 	/*
 	 * http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html
 	 *
@@ -255,7 +278,8 @@ Matrix4x4f Transform::GetInverseTransformMatrix(){
 	return Matrix4x4f(inverseMatrix, vec);
 }
 
-Matrix4x4f Quaternion::ToRotationMatrix() {
+Matrix4x4f Quaternion::ToRotationMatrix()
+{
 	float x2 = mQuaternion[0] * mQuaternion[0];
 	float y2 = mQuaternion[1] * mQuaternion[1];
 	float z2 = mQuaternion[2] * mQuaternion[2];

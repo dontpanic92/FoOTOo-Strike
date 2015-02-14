@@ -5,17 +5,19 @@
 #include "Singleton.h"
 namespace AGE
 {
-	class Timer : public Singleton<Timer>
+	class Timer : public Singleton < Timer >
 	{
 	public:
-		Timer(){ SetThreadAffinityMask(GetCurrentThread(), 1); }
+		Timer() { SetThreadAffinityMask(GetCurrentThread(), 1); }
 
-		void StartUp(){ 
+		void StartUp()
+		{
 			QueryPerformanceFrequency(&mFrequency);
 			QueryPerformanceCounter(&mStartCount);
 		}
 
-		float GetTotalMilliSeconds(){
+		float GetTotalMilliSeconds()
+		{
 			LARGE_INTEGER count;
 			QueryPerformanceCounter(&count);
 			return float((count.QuadPart - mStartCount.QuadPart) * 1000 / float(mFrequency.QuadPart));

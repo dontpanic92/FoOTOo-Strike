@@ -29,14 +29,14 @@ namespace AGE
 	{
 	public:
 
-		enum Type {AUTO, TGA, JPEG};
+		enum Type { AUTO, TGA, JPEG };
 
 		Texture2D();
 		~Texture2D();
 
 		bool Load(const char* path, Type fileType = AUTO);
 
-		GLuint GetTexture(){ return mTexture; }
+		GLuint GetTexture() { return mTexture; }
 
 		void Use() const { glBindTexture(GL_TEXTURE_2D, mTexture); }
 	private:

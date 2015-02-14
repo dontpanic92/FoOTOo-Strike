@@ -1,26 +1,31 @@
-#include "ResourceManager.h"
-
 #include <Windows.h>
+#include "ResourceManager.h"
+#include "RenderEngine.h"
+
 
 using namespace AGE;
 using namespace std;
 
+const wchar_t* ResourceManager::RootDirectory = L"../Resources/";
 
-ResourceManager::~ResourceManager(){
+ResourceManager::~ResourceManager()
+{
 	for (MaterialMap::iterator it = mMaterials.begin(); it != mMaterials.end(); it++) {
 		delete it->second;
 	}
 
-	for (ShaderProgramMap::iterator it = mShaderPrograms.begin(); it != mShaderPrograms.end(); it++){
+	for (ShaderProgramMap::iterator it = mShaderPrograms.begin(); it != mShaderPrograms.end(); it++) {
 		delete it->second;
 	}
 }
 
-Mesh* ResourceManager::LoadMesh(){
+Mesh* ResourceManager::LoadMesh()
+{
 	return NULL;//new Mesh();
 }
 
-Material* ResourceManager::LoadMaterial(const char* name){
+Material* ResourceManager::LoadMaterial(const char* name)
+{
 	MaterialMap::iterator it;
 	if ((it = mMaterials.find(name)) != mMaterials.end()) {
 		return it->second;
@@ -44,13 +49,13 @@ Material* ResourceManager::LoadMaterial(const char* name){
 	}
 }
 
-ShaderProgram* ResourceManager::LoadShader(const char* name){
+Shader* ResourceManager::LoadShader(const char* name)
+{
 	ShaderProgramMap::iterator it;
-	if ((it = mShaderPrograms.find(name)) != mShaderPrograms.end()){
+	if ((it = mShaderPrograms.find(name)) != mShaderPrograms.end()) {
 		return it->second;
-	}
-	else {
-		ShaderProgram* shader = new ShaderProgram();
+	} else {
+		/*Shader* shader = new Shader();
 		char path1[256], path2[256];
 		strcpy(path1, "../Resources/Shaders/GLSL/");
 		strcat(path1, name);
@@ -62,8 +67,9 @@ ShaderProgram* ResourceManager::LoadShader(const char* name){
 
 		shader->LoadAndCompile(path1, path2);
 
+		*/
+		Shader* shader = RenderEngine::GetInstance()->CreateShader(name);
 		mShaderPrograms.insert(make_pair(name, shader));
-
 		return shader;
 	}
 }

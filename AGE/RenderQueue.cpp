@@ -10,7 +10,7 @@ void RenderQueue::PushRenderObject(const RenderObject* object)
 		it->second.push_back(object);
 	} else {
 		vector<const RenderObject*> objects = { object };
-		mRenderQueue.insert(make_pair(object->Material, move(objects)));
+		mRenderQueue.insert(move(make_pair(object->Material, move(objects))));
 	}
 }
 
@@ -18,6 +18,6 @@ void RenderQueue::PushRenderable(const Renderable* renderable)
 {
 	for each(auto& object in *renderable)
 	{
-		PushRenderObject(&object);
+		PushRenderObject(object);
 	}
 }

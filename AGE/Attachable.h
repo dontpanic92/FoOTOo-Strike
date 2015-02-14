@@ -11,14 +11,14 @@ namespace AGE
 	public:
 		Attachable() :mParent(0) {}
 
-		virtual ~Attachable(){};
-		Transform* GetTramsform(){ return &mTransform; }
+		virtual ~Attachable() {};
+		Transform* GetTramsform() { return &mTransform; }
 
 		void SetParent(SceneNode* parent) { mParent = parent; }
 		SceneNode* GetParent() { return mParent; }
 
 		void UpdateWorldMatrix(const Matrix4x4f& parentMatrix)
-		{ 
+		{
 			mWorldMatrix = mTransform.GetTransformMatrix() * parentMatrix;
 		}
 

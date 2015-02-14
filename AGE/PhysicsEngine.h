@@ -7,7 +7,7 @@
 
 namespace AGE
 {
-	class PhysicsEngine : public Singleton<PhysicsEngine>
+	class PhysicsEngine : public Singleton < PhysicsEngine >
 	{
 	public:
 		PhysicsEngine();

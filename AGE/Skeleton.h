@@ -11,7 +11,7 @@ namespace AGE
 	{
 	public:
 
-		Bone(int boneID)/* : mAnimation(0)*/{ mBoneID = boneID; mParentID = -1; }
+		Bone(int boneID)/* : mAnimation(0)*/ { mBoneID = boneID; mParentID = -1; }
 
 		~Bone() { /*delete mAnimation;*/ }
 
@@ -78,7 +78,8 @@ namespace AGE
 			BoneTransform() {}
 			BoneTransform(float trans[3], float quat[4]) { BuildMatrix(trans, quat); }
 
-			void BuildMatrix(float trans[3], float quat[4]) {
+			void BuildMatrix(float trans[3], float quat[4])
+			{
 				Quaternion q(quat);
 				Matrix = q.ToRotationMatrix();
 				Matrix[3][0] = trans[0];
@@ -101,7 +102,7 @@ namespace AGE
 		void SetRenderable(Renderable* renderable) { mRenderable = renderable; }
 
 		void AddAnimation(const char* name, SkeletonAnimation* animation) { mAnimations.insert(std::make_pair(name, animation)); }
-		
+
 		const Matrix4x4f* GetVertexTransform() { return mVertexTransform; }
 
 		void StartPlay(const char* name);

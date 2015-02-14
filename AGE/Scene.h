@@ -29,7 +29,7 @@ namespace AGE
 		void Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix);
 		void UpdateAndCulling(const Matrix4x4f& parentMatrix);
 
-		Transform* GetTransform(){ return &mTransform; }
+		Transform* GetTransform() { return &mTransform; }
 		Matrix4x4f CalcWorldTransformMatrix();
 	private:
 		vector<SceneNode*> mNodes;
@@ -55,7 +55,7 @@ namespace AGE
 
 		void AttachCameraOnNode(SceneNode* node);
 
-		Camera* GetCurrentCamera(){ return &mCamera; }
+		Camera* GetCurrentCamera() { return &mCamera; }
 		//Attachable* GetAttachable() { return mAttachable[0]; }
 	private:
 		SceneNode mRoot;

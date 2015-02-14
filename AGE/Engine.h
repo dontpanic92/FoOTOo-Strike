@@ -1,12 +1,12 @@
 #ifndef __AGE_ENGINE_HEADER__
 #define __AGE_ENGINE_HEADER__
 #include "Application.h"
-#include "OpenGLRenderer.h"
+#include "RenderEngine.h"
 #include "Scene.h"
 #include "GameLogic.h"
 
 namespace AGE{
-	class Engine : public Singleton<Engine>
+	class Engine : public Singleton < Engine >
 	{
 	public:
 		~Engine();
@@ -17,7 +17,7 @@ namespace AGE{
 
 		int Update();
 
-		Scene* GetScene(){ return mScene; }
+		Scene* GetScene() { return mScene; }
 		Window GetMainWindow() { return mApp.GetMainWindow(); }
 
 	private:
@@ -25,13 +25,12 @@ namespace AGE{
 
 	private:
 		Application mApp;
-		OpenGLRenderer* mRenderer;
 		Scene * mScene;
 		GameLogicImp* mGameLogic;
 
 		float mLastTimeUpdate;
 
-		friend class Singleton<Engine>;
+		friend class Singleton < Engine > ;
 	};
 }
 #endif

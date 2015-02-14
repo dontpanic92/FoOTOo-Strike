@@ -10,7 +10,7 @@ namespace AGE
 	class GameLogic
 	{
 	public:
-		virtual ~GameLogic(){}
+		virtual ~GameLogic() {}
 
 		virtual void StartUp() = 0;
 		virtual bool Update(float time) = 0;
@@ -29,12 +29,12 @@ namespace AGE
 
 		bool Update(float time);
 
-		bool keyPressed(const KeyEvent &arg){return false;}
-		bool keyReleased(const KeyEvent &arg){return false;}
+		bool keyPressed(const KeyEvent &arg) { return false; }
+		bool keyReleased(const KeyEvent &arg) { return false; }
 
-		bool mouseMoved( const MouseEvent &arg );
-		bool mousePressed( const MouseEvent &arg, MouseButtonID id ){return true;}
-		bool mouseReleased( const MouseEvent &arg, MouseButtonID id ){return true;}
+		bool mouseMoved(const MouseEvent &arg);
+		bool mousePressed(const MouseEvent &arg, MouseButtonID id) { return true; }
+		bool mouseReleased(const MouseEvent &arg, MouseButtonID id) { return true; }
 	};
 }
 

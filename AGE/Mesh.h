@@ -1,12 +1,9 @@
 #ifndef __AGE_MESH_HEADER__
 #define __AGE_MESH_HEADER__
 
-//#include "../3rd/glew-1.10.0/include/GL/glew.h"
-//#include "../3rd/glew-1.10.0/include/GL/wglew.h"
 #include "Math.h"
 #include "Texture2D.h"
-#include "ShaderProgram.h"
-#include <GL\glew.h>
+#include "Shader.h"
 #include <vector>
 
 namespace AGE
@@ -21,16 +18,16 @@ namespace AGE
 
 		void SetTexture(Texture2D* texture) { mTexture = texture; }
 
-		void SetShaderProgram(ShaderProgram* shader) { mShader = shader; }
+		void SetShader(Shader* shader) { mShader = shader; }
 
-		ShaderProgram* GetShaderProgram() const { return mShader; }
+		Shader* GetShader() const { return mShader; }
 
 		void Use() const;
 
 
 	private:
 		Texture2D* mTexture;
-		ShaderProgram* mShader;
+		Shader* mShader;
 	};
 
 	class Renderable;
@@ -41,34 +38,34 @@ namespace AGE
 		Mesh(int vertexNum, Renderable* parent);
 
 		//Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum);
-		Mesh(GLushort* indexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum, Renderable* parent);
+		Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent);
 
 		~Mesh();
 
-		void SetData(GLushort* indexArray, GLfloat* normalArray, GLfloat* textureArray);
+		void SetData(ushort* indexArray, float* normalArray, float* textureArray);
 
 		//void SetVertexByFace(uint nface, GLfloat* vertex9);
 		//void SetVertex(uint nvertex, GLfloat* vertex3);
 
-		void SetIndexByFace(uint nface, GLushort* index3);
+		void SetIndexByFace(uint nface, ushort* index3);
 
-		void SetNormalByFace(uint nface, GLfloat* normal9);
+		void SetNormalByFace(uint nface, float* normal9);
 
-		void SetTexCoordByFace(uint nface, GLfloat* texCoord6);
+		void SetTexCoordByFace(uint nface, float* texCoord6);
 
-		const GLfloat* GetVertexData() const{ return mVertexData;}
-		GLfloat* GetVertexData() { return mVertexData; }
+		const float* GetVertexData() const { return mVertexData; }
+		float* GetVertexData() { return mVertexData; }
 
-		const GLushort* GetIndexData() const { return mIndexData; }
-		GLushort* GetIndexData() { return mIndexData; }
+		const ushort* GetIndexData() const { return mIndexData; }
+		ushort* GetIndexData() { return mIndexData; }
 
-		const GLfloat* GetNormalData() const{ return mNormalData; }
-		GLfloat* GetNormalData() { return mNormalData; }
+		const float* GetNormalData() const { return mNormalData; }
+		float* GetNormalData() { return mNormalData; }
 
-		const GLfloat* GetTextureData() const{ return mTextureData; }
-		GLfloat* GetTextureData() { return mTextureData; }
+		const float* GetTextureData() const { return mTextureData; }
+		float* GetTextureData() { return mTextureData; }
 
-		int GetVertexNum() const { return mVertexNum; }
+		int GetNumberOfVertex() const { return mVertexNum; }
 
 		void UpdateVertex();
 
@@ -83,10 +80,10 @@ namespace AGE
 
 		Renderable* mParent;
 
-		GLfloat* mVertexData;
-		GLushort* mIndexData;
-		GLfloat* mNormalData;
-		GLfloat* mTextureData;
+		float* mVertexData;
+		ushort* mIndexData;
+		float* mNormalData;
+		float* mTextureData;
 		//GLushort* mIndexData;
 	};
 }

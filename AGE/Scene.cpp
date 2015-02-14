@@ -2,32 +2,37 @@
 #include "ResourceManager.h"
 #include "Primitive.h"
 #include "Math.h"
-#include "OpenGLRenderer.h"
+#include "RenderEngine.h"
 #include "RenderQueue.h"
 #include <stack>
 
 using namespace AGE;
 
-SceneNode::SceneNode() : mParent(0){
+SceneNode::SceneNode() : mParent(0)
+{
 }
 
-SceneNode::~SceneNode(){
+SceneNode::~SceneNode()
+{
 }
 
-void SceneNode::Attach(Attachable* attach){
+void SceneNode::Attach(Attachable* attach)
+{
 	mAttachable.push_back(attach);
 }
 
-void SceneNode::Attach(SceneNode* attach){
+void SceneNode::Attach(SceneNode* attach)
+{
 	mNodes.push_back(attach);
 }
 
-void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix) {
+void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix)
+{
 
 	//const vector<Attachable*>& attachable = mRoot.GetAttachable();
 	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
-	for (int i = 0; i < mAttachable.size(); i++){
-		ShaderProgram* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetRenderObject(0)->Material->GetShaderProgram();
+	for (int i = 0; i < mAttachable.size(); i++) {
+		Shader* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetRenderObject(0)->Material->GetShader();
 
 		Transform* translate = mAttachable[i]->GetTramsform();
 		GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
@@ -38,14 +43,14 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 		shaderData.VMatrix = viewMatrix; //GetTransform()->GetInverseTransformMatrix();
 		shaderData.PMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetProjectMatrix();
 
-		shader->Begin();
-		shader->UpdateShaderData(&shaderData);
+		shader->Use();
+		shader->UpdateShaderData(shaderData);
 
-		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
+		//RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
 		//shader->End();
 	}
 
-	for (uint i = 0; i < mNodes.size(); i++){
+	for (uint i = 0; i < mNodes.size(); i++) {
 		mNodes[i]->Render(currentMatrix, viewMatrix);
 	}
 }
@@ -53,18 +58,20 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
 {
 	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
-	for each(auto attachable in mAttachable) {
+	for each(auto attachable in mAttachable)
+	{
 		attachable->UpdateWorldMatrix(currentMatrix);
 		RenderQueue::GetInstance()->PushRenderable(dynamic_cast<const Renderable*>(attachable));
 	}
 
-	for each(auto node in mNodes) 
+	for each(auto node in mNodes)
 	{
 		node->UpdateAndCulling(currentMatrix);
 	}
 }
 
-Matrix4x4f SceneNode::CalcWorldTransformMatrix() {
+Matrix4x4f SceneNode::CalcWorldTransformMatrix()
+{
 	Matrix4x4f matrix;
 	std::stack<Matrix4x4f> s;
 	s.push(this->mTransform.GetTransformMatrix());
@@ -82,20 +89,23 @@ Matrix4x4f SceneNode::CalcWorldTransformMatrix() {
 	return matrix;
 }
 
-Scene::Scene(){}
+Scene::Scene() {}
 
-void Scene::StartUp() {
+void Scene::StartUp()
+{
 	Window window = Engine::GetInstance()->GetMainWindow();
 	mCamera.SetParameters(60.f, float(window.Width) / float(window.Height), 1.0f, 10000.0f);
 }
 
-Scene::~Scene(){
+Scene::~Scene()
+{
 	//for(unsigned int i = 0; i < mAttachable.size(); i++){
 	//	delete mAttachable[i];
 	//}
 }
 
-void Scene::AttachCameraOnNode(SceneNode* node) { 
+void Scene::AttachCameraOnNode(SceneNode* node)
+{
 	mCamera.SetParent(node);
 }
 
@@ -115,15 +125,16 @@ void Scene::AttachCameraOnNode(SceneNode* node) {
 	Renderable* attObj2 = Primitive::GetInstance()->CreatePlaneUnmanage(points);
 
 	mAttachable.push_back(attObj2);
-	
+
 	return attObj;
-}
-*/
-void Scene::Render(){
+	}
+	*/
+void Scene::Render()
+{
 
 	Matrix4x4f viewMatrix = mCamera.CalcViewMatrix();
 
-	RenderEngine::GetInstance()->Begin();
+	//RenderEngine::GetInstance()->Begin();
 	/*for (int i = 0; i < mAttachable.size(); i++){
 		ShaderProgram* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetShader();
 		//dynamic_cast<Renderable*>(mAttachable[i])->GetTexture()->Use();
@@ -139,11 +150,11 @@ void Scene::Render(){
 		shader->Begin(&shaderData);
 
 		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
-	}
-	*/
+		}
+		*/
 	mRoot.Render(Matrix4x4f::Identity, viewMatrix);
 
-	RenderEngine::GetInstance()->End();
+	//RenderEngine::GetInstance()->End();
 }
 
 void Scene::UpdateAndCulling()

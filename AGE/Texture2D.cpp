@@ -9,7 +9,8 @@ using namespace AGE;
 
 Texture2D::Texture2D():mTexture(0){}
 
-Texture2D::~Texture2D(){
+Texture2D::~Texture2D() 
+{
 	if(mTexture)
 		glDeleteTextures(1, &mTexture);
 }

@@ -3,7 +3,7 @@
 
 #include "Singleton.h"
 #include "Mesh.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
 
 #include <map>
 
@@ -12,20 +12,24 @@ namespace AGE
 	class ResourceManager : public Singleton<ResourceManager>
 	{
 	public:
+		const static wchar_t* RootDirectory;
+		
 		ResourceManager() {}
 		~ResourceManager();
+
+
 
 		Mesh* LoadMesh();
 
 		//Texture2D* LoadTexture2D(const char* name);
 
-		ShaderProgram* LoadShader(const char* name);
+		Shader* LoadShader(const char* name);
 
 		Material* LoadMaterial(const char* name);
 	private:
 
 		typedef std::map<std::string, Material*>	MaterialMap;
-		typedef std::map<std::string, ShaderProgram*>		ShaderProgramMap;
+		typedef std::map<std::string, Shader*>		ShaderProgramMap;
 
 
 		MaterialMap				mMaterials;
