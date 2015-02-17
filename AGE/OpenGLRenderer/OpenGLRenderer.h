@@ -28,8 +28,11 @@ namespace AGE{
 
 		void Begin();
 
-		RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material) override;
+		RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader) override;
+
 		Shader* CreateShader(const char* shaderName) override;
+
+		Texture2D* CreateTextrue2D(const char* path) override;
 
 		void End();
 

@@ -12,7 +12,7 @@ namespace AGE{
 		GLuint BufferObjects[3];
 
 		void Update() { 
-			Mesh->UpdateVertex();
+			//Mesh->UpdateVertex();
 			glBindBuffer(GL_ARRAY_BUFFER, BufferObjects[0]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0,
 				sizeof(GLfloat) * Mesh->GetNumberOfVertex() * 3, Mesh->GetVertexData());

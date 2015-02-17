@@ -2,7 +2,7 @@
 
 using namespace AGE;
 
-SkeletonAnimation* AGESkeletonAnimationImporter::LoadFromeFile(int vertexNum, Skeleton* skeleton, const char* filename)
+SkeletonAnimation* AGESkeletonAnimationImporter::LoadFromeFile(Skeleton* skeleton, const char* filename)
 {
 	FILE* filp;
 	fopen_s(&filp, filename, "rb");

@@ -17,12 +17,12 @@ namespace AGE{
 
 		void Use() const;
 
-		void UpdateShaderData(const ShaderData& shaderData);
+		void UpdateShaderData(const ShaderUniforms& shaderData);
 
 	public:
 		bool Load(const char* shaderName);
 
-		bool ProcessParameter(const ShaderParameter& parameter);
+		bool ProcessParameter(const ShaderUniformParameter& parameter);
 
 		//DXGI_FORMAT GetDXGIFormat(ShaderParameter::Type type);
 

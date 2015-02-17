@@ -95,7 +95,7 @@ namespace AGE
 
 		void SetBoneBindPoseMatrixInv(int ID, float matrix[16]);
 
-		void BindVertex(int vertex, int boneID[4], float weight[4]);
+		//void BindVertex(int vertex, int boneID[4], float weight[4]);
 
 		void BuildTree();
 

@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "GLSLShader.h"
+#include "OpenGLTexture.h"
 #include "../ResourceManager.h"
 #include "../Math.h"
 #include "../Log.h"
@@ -139,29 +140,28 @@ bool GLSLShader::Load(const char* shaderName)
 	return true;
 }
 
-bool GLSLShader::ProcessParameter(const ShaderParameter& parameter)
+bool GLSLShader::UpdateShaderData(const ShaderUniformParameter& parameter)
 {
 
 	//printf("parameter %s \n", parameter.Name.c_str());
 	GLint location = glGetUniformLocation(mProgram, parameter.Name.c_str());
 	switch (parameter.ParameterType) {
-	case ShaderParameter::Type::INT1:
+	case ShaderUniformParameter::Type::INT1:
 		glUniform1i(location, *(int*)parameter.Parameter);
 		break;
-	case ShaderParameter::Type::FLOAT1:
+	case ShaderUniformParameter::Type::FLOAT1:
 		glUniform1f(location, *(float*)parameter.Parameter);
 		break;
-	case ShaderParameter::Type::FLOAT4:
+	case ShaderUniformParameter::Type::FLOAT4:
 		glUniform4fv(location, 1, *(float**)parameter.Parameter);
 		break;
-	case ShaderParameter::Type::MATRIX4F:
+	case ShaderUniformParameter::Type::MATRIX4F:
 		glUniformMatrix4fv(location, 1, GL_FALSE, *(float**)parameter.Parameter);
-
-		//for (int i = 0; i < 16; i++) {
-		//	printf("%f ", (*(float**)parameter.Parameter)[i]);
-		//}
-		//printf("\n");
-		//getchar();
+		break;
+	case ShaderUniformParameter::Type::TEXTURE:
+		glUniform1i(location, 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, (*(OpenGLTexture**)parameter.Parameter)->mTexture);
 		break;
 	default:
 		return false;
@@ -171,10 +171,10 @@ bool GLSLShader::ProcessParameter(const ShaderParameter& parameter)
 	return true;
 }
 
-void GLSLShader::UpdateShaderData(const ShaderData& shaderData)
+void GLSLShader::UpdateShaderData(const ShaderUniforms& shaderData)
 {
 	for each (auto parameter in shaderData)
 	{
-		ProcessParameter(parameter);
+		UpdateShaderData(parameter);
 	}
 }

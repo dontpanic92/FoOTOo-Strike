@@ -6,6 +6,7 @@
 #include "Renderable.h"
 
 #include "Shader.h"
+#include "Texture.h"
 
 namespace AGE{
 
@@ -34,9 +35,11 @@ namespace AGE{
 
 		virtual int StartUp(Window window) = 0;
 
-		virtual RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material) = 0;
+		virtual RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader) = 0;
 
 		virtual Shader* CreateShader(const char* shaderName) { return NULL; }
+
+		virtual Texture2D* CreateTextrue2D(const char* path) { return NULL; }
 
 		virtual void Render() = 0;
 

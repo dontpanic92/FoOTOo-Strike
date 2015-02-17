@@ -32,24 +32,20 @@ namespace AGE
 		enum Type { AUTO, TGA, JPEG };
 
 		Texture2D();
-		~Texture2D();
 
-		bool Load(const char* path, Type fileType = AUTO);
+		virtual ~Texture2D();
 
-		GLuint GetTexture() { return mTexture; }
+		virtual bool Load(const char* path) = 0;
 
-		void Use() const { glBindTexture(GL_TEXTURE_2D, mTexture); }
-	private:
+	protected:
 
-		bool LoadTGA(const char* path);
+		char* LoadTexture(const char* path, Type fileType = AUTO);
 
-		bool LoadJPEG(const char* path);
+		char* LoadTGA(const char* path);
 
-		GLuint mTexture;
+		char* LoadJPEG(const char* path);
 
-		GLbyte* pBits;
-
-		GLint mWidth, mHeight, mComponents, mFormat;
+		int mWidth, mHeight, mDepth;
 	};
 }
 

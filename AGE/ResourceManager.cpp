@@ -32,7 +32,6 @@ Material* ResourceManager::LoadMaterial(const char* name)
 	} else {
 
 		Material* material = new Material();
-		Texture2D* texture2 = new Texture2D();
 		char path[256];
 		strcpy(path, "../Resources/Textures/");
 		strcat(path, name);
@@ -42,7 +41,8 @@ Material* ResourceManager::LoadMaterial(const char* name)
 		//GetLongPathNameA(path, longpath, sizeof(longpath));
 
 		printf("%s\n", path);
-		texture2->Load(path, Texture2D::AUTO);
+
+		Texture2D* texture2 = RenderEngine::GetInstance()->CreateTextrue2D(path);
 		material->SetTexture(texture2);
 		mMaterials.insert(make_pair(name, material));
 		return material;

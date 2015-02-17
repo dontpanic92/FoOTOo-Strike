@@ -1,29 +1,16 @@
 #ifndef __AGE_SHADERPROGRAM_HEADER__
 #define __AGE_SHADERPROGRAM_HEADER__
 
-#include "Singleton.h"
 #include <string>
 #include <vector>
+#include "Singleton.h"
+#include "Texture.h"
 
 
 namespace AGE
 {
-	/*struct FlatShader
-	{
-		float* MVPMatrix;
-		float* ColorVector;
 
-		void InitUniforms(GLint program) const{
-			GLint iTransform, iColor;
-			iTransform = glGetUniformLocation(program, "mvpMatrix");
-			glUniformMatrix4fv(iTransform, 1, GL_FALSE, MVPMatrix);
-
-			iColor = glGetUniformLocation(program, "vColor");
-			glUniform4fv(iColor, 1, ColorVector);
-		}
-	};*/
-
-	struct ShaderParameter
+	struct ShaderUniformParameter
 	{
 		enum class Type
 		{
@@ -35,7 +22,8 @@ namespace AGE
 			FLOAT2,
 			FLOAT3,
 			FLOAT4,
-			MATRIX4F
+			MATRIX4F,
+			TEXTURE
 		};
 
 		Type ParameterType;
@@ -43,7 +31,7 @@ namespace AGE
 		std::string Name;
 	};
 
-	typedef std::vector<ShaderParameter> ShaderData;
+	typedef std::vector<ShaderUniformParameter> ShaderUniforms;
 
 	class DefaultShaderData
 	{
@@ -52,26 +40,25 @@ namespace AGE
 		float* VMatrix;
 		float* PMatrix;
 		float* ColorVector;
-		int TextureUnit;
+		Texture2D* TextureUnit;
 
 		DefaultShaderData() { 
-			TextureUnit = 0;
 			mParameters = { 
-				{ ShaderParameter::Type::MATRIX4F, &MMatrix, "mMatrix" }, 
-				{ ShaderParameter::Type::MATRIX4F, &VMatrix, "vMatrix" }, 
-				{ ShaderParameter::Type::MATRIX4F, &PMatrix, "pMatrix" } ,
-				{ ShaderParameter::Type::FLOAT4, &ColorVector, "vColor" },
-				{ ShaderParameter::Type::INT1,  &TextureUnit, "textureUnit0"}
+				{ ShaderUniformParameter::Type::MATRIX4F, &MMatrix, "mMatrix" },
+				{ ShaderUniformParameter::Type::MATRIX4F, &VMatrix, "vMatrix" },
+				{ ShaderUniformParameter::Type::MATRIX4F, &PMatrix, "pMatrix" },
+				{ ShaderUniformParameter::Type::FLOAT4, &ColorVector, "vColor" },
+				{ ShaderUniformParameter::Type::TEXTURE, &TextureUnit, "textureUnit0" }
 			}; 
 		}
 
-		std::vector<ShaderParameter>::const_iterator begin() const { return mParameters.begin(); }
-		std::vector<ShaderParameter>::const_iterator end() const { return mParameters.end(); }
+		std::vector<ShaderUniformParameter>::const_iterator begin() const { return mParameters.begin(); }
+		std::vector<ShaderUniformParameter>::const_iterator end() const { return mParameters.end(); }
 
-		operator const ShaderData& () { return mParameters; }
+		operator const ShaderUniforms& () { return mParameters; }
 
 	private:
-		std::vector<ShaderParameter> mParameters;
+		std::vector<ShaderUniformParameter> mParameters;
 	};
 
 	class Shader
@@ -80,7 +67,7 @@ namespace AGE
 		virtual void Use() const = 0;
 
 		//template<class ShaderData>
-		virtual void UpdateShaderData(const ShaderData& shaderData) = 0;
+		virtual void UpdateShaderData(const ShaderUniforms& shaderData) = 0;
 
 		//virtual bool ProcessSingleParameter(const ShaderParameter& parameter) = 0;
 

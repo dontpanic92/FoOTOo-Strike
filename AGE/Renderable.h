@@ -4,7 +4,7 @@
 #include "Attachable.h"
 #include "Mesh.h"
 #include "Shader.h"
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Skeleton.h"
 
 namespace AGE
@@ -15,9 +15,10 @@ namespace AGE
 	public:
 		Renderable* Parent;
 		Mesh* Mesh;
+		Shader* Shader;
 		Material* Material;
 
-		virtual void Update() { Mesh->UpdateVertex(); }
+		virtual void Update() {}
 		virtual void Destroy() {}
 		virtual ~RenderObject() { Destroy(); }
 	};
@@ -33,18 +34,18 @@ namespace AGE
 
 		void AddRenderObject(RenderObject* object);
 
-		void SetVertexData(float* vertex, uint vertexNum);
+		//void SetVertexData(float* vertex, uint vertexNum);
 
 		void SetSkeleton(Skeleton* skeleton) { mSkeleton = skeleton; skeleton->SetRenderable(this); }
 
 		Skeleton* GetSkeleton() { return mSkeleton; }
 
 		//GLuint GetVertexBufferObject() const { return mVertexBufferObject; }
-		float* GetVertex() { return mVertex; }
-		uint GetNumberOfVertex() const { return mVertexNum; }
+		//Mesh::Vertex* GetVertex() { return mVertex; }
+		//uint GetNumberOfVertex() const { return mVertexNum; }
 
 		uint GetNumberOfRenderObjects() const { return mRenderObjects.size(); }
-		const RenderObject* GetRenderObject(uint i) const { return mRenderObjects[i]; }
+		RenderObject* GetRenderObject(uint i) { return mRenderObjects[i]; }
 
 		void UpdateSkinnedVertex();
 
@@ -54,9 +55,9 @@ namespace AGE
 	private:
 
 
-		float* mVertex;
-		float* mVertexBindPose;
-		uint mVertexNum;
+		//Mesh::Vertex* mVertex;
+		//Mesh::Vertex* mVertexBindPose;
+		//uint mVertexNum;
 
 		std::vector<RenderObject*> mRenderObjects;
 		Skeleton* mSkeleton;

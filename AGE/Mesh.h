@@ -2,7 +2,7 @@
 #define __AGE_MESH_HEADER__
 
 #include "Math.h"
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Shader.h"
 #include <vector>
 
@@ -18,16 +18,11 @@ namespace AGE
 
 		void SetTexture(Texture2D* texture) { mTexture = texture; }
 
-		void SetShader(Shader* shader) { mShader = shader; }
-
-		Shader* GetShader() const { return mShader; }
-
-		void Use() const;
+		Texture2D* GetTexture() const { return mTexture; }
 
 
 	private:
 		Texture2D* mTexture;
-		Shader* mShader;
 	};
 
 	class Renderable;
@@ -35,39 +30,58 @@ namespace AGE
 	{
 	public:
 
-		Mesh(int vertexNum, Renderable* parent);
+		struct Vertex
+		{
+			float Position[3];
+			float Normal[3];
+			float TextureCoord[2];
+		};
+
+		struct SkeletonData
+		{
+			int BoneID[4];
+			float weight[4];
+		};
+
+		Mesh(Renderable* parent);
 
 		//Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum);
-		Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent);
+		//Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent);
 
 		~Mesh();
 
-		void SetData(ushort* indexArray, float* normalArray, float* textureArray);
+		//void SetData(ushort* indexArray, float* normalArray, float* textureArray);
 
 		//void SetVertexByFace(uint nface, GLfloat* vertex9);
 		//void SetVertex(uint nvertex, GLfloat* vertex3);
 
-		void SetIndexByFace(uint nface, ushort* index3);
+		//void SetIndexByFace(uint nface, ushort* index3);
 
-		void SetNormalByFace(uint nface, float* normal9);
+		//void SetNormalByFace(uint nface, float* normal9);
 
-		void SetTexCoordByFace(uint nface, float* texCoord6);
+		//void SetTexCoordByFace(uint nface, float* texCoord6);
 
-		const float* GetVertexData() const { return mVertexData; }
-		float* GetVertexData() { return mVertexData; }
+		Vertex* GetVertexData() { return mVertexData; }
+		//Vertex* GetVertexData() { return mVertexData; }
+		void SetVertexData(Vertex* vertex, uint vertexNum);
 
-		const ushort* GetIndexData() const { return mIndexData; }
-		ushort* GetIndexData() { return mIndexData; }
+		void SetSkeletonData(uint i, const SkeletonData& data)
+		{
+			mSkeletonData[i] = data;
+		}
+		const SkeletonData* GetSkeletonData() { return mSkeletonData; }
+		//const ushort* GetIndexData() const { return mIndexData; }
+		//ushort* GetIndexData() { return mIndexData; }
 
-		const float* GetNormalData() const { return mNormalData; }
-		float* GetNormalData() { return mNormalData; }
+		//const float* GetNormalData() const { return mNormalData; }
+		//float* GetNormalData() { return mNormalData; }
 
-		const float* GetTextureData() const { return mTextureData; }
-		float* GetTextureData() { return mTextureData; }
+		//const float* GetTextureData() const { return mTextureData; }
+		//float* GetTextureData() { return mTextureData; }
 
 		int GetNumberOfVertex() const { return mVertexNum; }
 
-		void UpdateVertex();
+		//void UpdateVertex();
 
 		//void SetMaterial(Material* material){ mMaterial = material; }
 
@@ -79,11 +93,11 @@ namespace AGE
 		int mIndexNum;
 
 		Renderable* mParent;
-
-		float* mVertexData;
-		ushort* mIndexData;
-		float* mNormalData;
-		float* mTextureData;
+		Vertex* mBindposeVertexData;
+		Vertex* mVertexData;
+		SkeletonData* mSkeletonData;
+		//float* mNormalData;
+		//float* mTextureData;
 		//GLushort* mIndexData;
 	};
 }

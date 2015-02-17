@@ -20,7 +20,7 @@ namespace AGE
 			float Translation[3];
 		};
 
-		SkeletonAnimation* LoadFromeFile(int vertexNum, Skeleton* skeleton, const char* filename);
+		SkeletonAnimation* LoadFromeFile(Skeleton* skeleton, const char* filename);
 	};
 }
 

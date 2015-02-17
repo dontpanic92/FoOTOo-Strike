@@ -1,5 +1,4 @@
 #include "Mesh.h"
-#include "Texture2D.h"
 #include "Renderable.h"
 using namespace AGE;
 
@@ -11,54 +10,63 @@ Material::~Material()
 {
 }
 
-
-void Material::Use() const
+Mesh::Mesh(Renderable* parent) : mVertexData(0), mBindposeVertexData(0)
 {
-	mTexture->Use();
-	mShader->Use();
-}
+	//mVertexNum = vertexNum;
 
-Mesh::Mesh(int vertexNum, Renderable* parent)
-{
-	mVertexNum = vertexNum;
-
-	mVertexData = new float[vertexNum * 3];
-	mIndexData = new ushort[vertexNum];
-	mNormalData = new float[vertexNum * 3];
-	mTextureData = new float[vertexNum * 2];
+	//mNormalData = new float[vertexNum * 3];
+	//mTextureData = new float[vertexNum * 2];
 
 	mParent = parent;
 }
 
-Mesh::Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent)
+void Mesh::SetVertexData(Vertex* vertex, uint vertexNum)
+{
+
+	delete[] mVertexData;
+	delete[] mBindposeVertexData;
+
+	mVertexNum = vertexNum;
+	mVertexData = new Vertex[vertexNum];
+	mBindposeVertexData = new Vertex[vertexNum];
+	mSkeletonData = new SkeletonData[vertexNum];
+	//mIndexData = new ushort[vertexNum];
+
+	memcpy(mVertexData, vertex, sizeof(Vertex) * vertexNum);
+	memcpy(mBindposeVertexData, vertex, sizeof(Vertex) * vertexNum);
+}
+
+/*Mesh::Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent)
 {
 	mVertexNum = vertexNum;
 	mIndexData = new ushort[vertexNum];
-	mVertexData = new float[vertexNum * 3];
-	mNormalData = new float[vertexNum * 3];
-	mTextureData = new float[vertexNum * 2];
+	mVertexData = new Vertex[vertexNum * 3];
+	//mNormalData = new float[vertexNum * 3];
+	//mTextureData = new float[vertexNum * 2];
 
 	memcpy(mIndexData, indexArray, sizeof(ushort) * vertexNum);
-	memcpy(mTextureData, textureArray, sizeof(float) * 2 * vertexNum);
-	memcpy(mNormalData, normalArray, sizeof(float) * 3 * vertexNum);
+	//memcpy(mTextureData, textureArray, sizeof(float) * 2 * vertexNum);
+	//memcpy(mNormalData, normalArray, sizeof(float) * 3 * vertexNum);
 
 	mParent = parent;
 
 	UpdateVertex();
-}
+}*/
 
 Mesh::~Mesh()
 {
-	delete[] mIndexData;
+	//delete[] mIndexData;
 	delete[] mVertexData;
-	delete[] mNormalData;
-	delete[] mTextureData;
+	delete[] mBindposeVertexData;
+	delete[] mSkeletonData;
+	//delete[] mNormalData;
+	//delete[] mTextureData;
 
 	//delete mMaterial; // This should be done by ResMan
 }
 
 
-void Mesh::SetData(ushort* indexArray, float* normalArray, float* textureArray)
+/*void Mesh::SetData(ushort* indexArray, float* normalArray, float* textureArray)
 {
 	if (indexArray) {
 		memcpy(mIndexData, indexArray, sizeof(ushort) * mVertexNum);
@@ -74,8 +82,9 @@ void Mesh::SetData(ushort* indexArray, float* normalArray, float* textureArray)
 
 	UpdateVertex();
 }
+*/
 
-void Mesh::UpdateVertex()
+/*void Mesh::UpdateVertex()
 {
 	for (int i = 0; i < mVertexNum; i++) {
 		mVertexData[i * 3] = mParent->GetVertex()[mIndexData[i] * 3];
@@ -83,12 +92,12 @@ void Mesh::UpdateVertex()
 		mVertexData[i * 3 + 2] = mParent->GetVertex()[mIndexData[i] * 3 + 2];
 	}
 }
-
+*/
 /*void Mesh::SetVertex(uint nvertex, GLfloat* vertex3) {
 	memcpy(&mVertexData[nvertex * 3], vertex3, sizeof(GLfloat) * 3);
 	}*/
 
-void Mesh::SetIndexByFace(uint nface, ushort* index3)
+/*void Mesh::SetIndexByFace(uint nface, ushort* index3)
 {
 	memcpy(&mIndexData[nface * 3], index3, sizeof(ushort) * 3);
 }
@@ -102,4 +111,4 @@ void Mesh::SetNormalByFace(uint nface, float* normal9)
 {
 	memcpy(&mNormalData[nface * 9], normal9, sizeof(float) * 9);
 }
-
+*/

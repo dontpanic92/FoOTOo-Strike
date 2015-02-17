@@ -32,7 +32,7 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 	//const vector<Attachable*>& attachable = mRoot.GetAttachable();
 	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
 	for (int i = 0; i < mAttachable.size(); i++) {
-		Shader* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetRenderObject(0)->Material->GetShader();
+		Shader* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetRenderObject(0)->Shader;
 
 		Transform* translate = mAttachable[i]->GetTramsform();
 		GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
@@ -61,6 +61,7 @@ void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
 	for each(auto attachable in mAttachable)
 	{
 		attachable->UpdateWorldMatrix(currentMatrix);
+		//printf("scenenode: %p, attachable: %p\n", this, attachable);
 		RenderQueue::GetInstance()->PushRenderable(dynamic_cast<const Renderable*>(attachable));
 	}
 

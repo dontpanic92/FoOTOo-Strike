@@ -13,14 +13,15 @@ namespace AGE{
 
 		~GLSLShader();
 		
-		void UpdateShaderData(const ShaderData& shaderData);
+		void UpdateShaderData(const ShaderUniforms& shaderData);
+
+		bool UpdateShaderData(const ShaderUniformParameter& parameter);
 
 		void Use() const;
 
 	protected:
 		bool Load(const char* shaderName);
 
-		bool ProcessParameter(const ShaderParameter& parameter);
 
 		//bool ProcessSingleParameter(const ShaderParameter& parameter);
 

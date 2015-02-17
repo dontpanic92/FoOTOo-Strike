@@ -1,11 +1,13 @@
 #include "OpenGLRenderer.h"
 #include "OpenGLRenderObject.h"
 #include "GLSLShader.h"
+#include "OpenGLTexture.h"
 #include "../Engine.h"
 #include "../Mesh.h"
 #include "../Log.h"
 #include "../RtInfomation.h"
 #include "../RenderQueue.h"
+
 using namespace AGE;
 
 OpenGLRenderer::OpenGLRenderer()
@@ -111,39 +113,36 @@ int OpenGLRenderer::StartUp(Window window)
 	return 1;
 }
 
-RenderObject* OpenGLRenderer::CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material)
+RenderObject* OpenGLRenderer::CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader)
 {
 	OpenGLRenderObject* object = new OpenGLRenderObject();
 	object->Parent = renderable;
 	object->Material = material;
 	object->Mesh = mesh;
+	object->Shader = shader;
 
 	glGenVertexArrays(1, &object->VertexArrayBufferObject);
 	glBindVertexArray(object->VertexArrayBufferObject);
 
-	glGenBuffers(3, object->BufferObjects);
-
+	//glGenBuffers(3, object->BufferObjects);
+	glGenBuffers(1, &object->BufferObjects[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, object->BufferObjects[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Mesh::Vertex)*mesh->GetNumberOfVertex(), mesh->GetVertexData(), GL_STATIC_DRAW);
+
 	glEnableVertexAttribArray(0);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*mesh->GetNumberOfVertex() * 3, mesh->GetVertexData(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), 0);
 
-
-	glBindBuffer(GL_ARRAY_BUFFER, object->BufferObjects[1]);
 	glEnableVertexAttribArray(1);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*mesh->GetNumberOfVertex() * 3, mesh->GetNormalData(), GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (GLvoid*)12);
 
-	glBindBuffer(GL_ARRAY_BUFFER, object->BufferObjects[2]);
 	glEnableVertexAttribArray(2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*mesh->GetNumberOfVertex() * 2, mesh->GetTextureData(), GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (GLvoid*)24);
 
 	// Indices
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.BufferObjects[2]);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*object.Mesh->GetNumberOfVertex(), object.Mesh->GetIndexData(), GL_STATIC_DRAW);
 
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 
 	return object;
 }
@@ -157,6 +156,12 @@ Shader* OpenGLRenderer::CreateShader(const char* shaderName)
 {
 	return new GLSLShader(shaderName);
 }
+
+Texture2D* OpenGLRenderer::CreateTextrue2D(const char* path)
+{ 
+	return new OpenGLTexture(path);
+}
+
 /*void OpenGLRenderer::Render(Renderable* renderable)
 {
 	RtInfomation::GetInstance()->MoreObjects(renderable->GetNumberOfRenderObjects());
@@ -202,13 +207,18 @@ void OpenGLRenderer::Render()
 	Begin();
 	for each (auto& pair in map)
 	{
-		pair.first->Use();
+		//pair.first->Use();
+		shaderData.TextureUnit = pair.first->GetTexture();
+
 		for each (auto object in pair.second)
 		{
 			OpenGLRenderObject* openGLObject = (OpenGLRenderObject*)object;
-			shaderData.MMatrix = openGLObject->Parent->GetWorldMatrix();
+			Matrix4x4f t = openGLObject->Parent->GetWorldMatrix();
+			shaderData.MMatrix = t;
 
-			pair.first->GetShader()->UpdateShaderData(shaderData);
+			openGLObject->Shader->UpdateShaderData(shaderData);
+			openGLObject->Shader->Use();
+
 			glBindVertexArray(openGLObject->VertexArrayBufferObject);
 			glDrawArrays(GL_TRIANGLES, 0, openGLObject->Mesh->GetNumberOfVertex());
 			RtInfomation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);

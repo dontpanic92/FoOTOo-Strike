@@ -1,6 +1,7 @@
 #include "d3dx11effect.h"
 #include "HLSLShader.h"
 #include "../ResourceManager.h"
+#include "D3D11Texture.h"
 
 
 using namespace AGE;
@@ -49,6 +50,8 @@ bool HLSLShader::Load(const char* shaderName)
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	// Done with compiled shader.
@@ -59,31 +62,35 @@ bool HLSLShader::Load(const char* shaderName)
 	ID3D11Device* device = ((D3D11Renderer*)(RenderEngine::GetInstance()))->GetDevice();
 	D3DX11_PASS_DESC passDesc;
 	Technique->GetPassByIndex(0)->GetDesc(&passDesc);
-	(device->CreateInputLayout(vertexDesc, 1, passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &InputLayout));
+	(device->CreateInputLayout(vertexDesc, 3, passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &InputLayout));
 	
 	//(device->CreateInputLayout(vertexDesc, 1, compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), &InputLayout));
 
 	return true;
 }
 
-bool HLSLShader::ProcessParameter(const ShaderParameter& parameter)
+bool HLSLShader::ProcessParameter(const ShaderUniformParameter& parameter)
 {
 	ID3DX11EffectVariable* var = Effect->GetVariableByName(parameter.Name.c_str());
 	switch (parameter.ParameterType) {
-	case ShaderParameter::Type::INT1:
+	case ShaderUniformParameter::Type::INT1:
 		var->AsScalar()->SetInt(*(int*)parameter.Parameter);
 		return true;
 		break;
-	case ShaderParameter::Type::FLOAT1:
+	case ShaderUniformParameter::Type::FLOAT1:
 		var->AsScalar()->SetFloat(*(float*)parameter.Parameter);
 		return true;
 		break;
-	case ShaderParameter::Type::FLOAT4:
+	case ShaderUniformParameter::Type::FLOAT4:
 		var->AsVector()->SetFloatVector(*(float**)parameter.Parameter);
 		return true;
 		break;
-	case ShaderParameter::Type::MATRIX4F:
+	case ShaderUniformParameter::Type::MATRIX4F:
 		var->AsMatrix()->SetMatrix(*(float**)parameter.Parameter);
+		return true;
+		break;
+	case ShaderUniformParameter::Type::TEXTURE:
+		var->AsShaderResource()->SetResource((*(D3D11Texture**)parameter.Parameter)->TextureSRV);
 		return true;
 		break;
 	}
@@ -97,7 +104,7 @@ void HLSLShader::Use() const
 	Technique->GetPassByIndex(0)->Apply(0, context);
 }
 
-void HLSLShader::UpdateShaderData(const ShaderData& shaderData)
+void HLSLShader::UpdateShaderData(const ShaderUniforms& shaderData)
 {
 	for each (auto parameter in shaderData)
 	{

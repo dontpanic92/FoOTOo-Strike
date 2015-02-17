@@ -1,6 +1,7 @@
 #include "D3D11Renderer.h"
 #include "D3D11RenderObject.h"
 #include "HLSLShader.h"
+#include "D3D11Texture.h"
 #include "../RenderQueue.h"
 #include "../Engine.h"
 #include "../RtInfomation.h"
@@ -179,16 +180,17 @@ void D3D11Renderer::ShutDown()
 }
 
 
-RenderObject* D3D11Renderer::CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material)
+RenderObject* D3D11Renderer::CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader)
 {
 	D3D11RenderObject *object = new D3D11RenderObject();
 	object->Parent = renderable;
 	object->Material = material;
 	object->Mesh = mesh;
+	object->Shader = shader;
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * mesh->GetNumberOfVertex();
+	vertexBufferDesc.ByteWidth = sizeof(Mesh::Vertex) * mesh->GetNumberOfVertex();
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0;
@@ -205,12 +207,17 @@ Shader* D3D11Renderer::CreateShader(const char* shaderName)
 	return new HLSLShader(shaderName);
 }
 
+Texture2D* D3D11Renderer::CreateTextrue2D(const char* path)
+{
+	return new D3D11Texture(mD3DDevice, path);
+}
+
 void D3D11Renderer::Render()
 {
 	const RenderQueue::RenderQueueMap& map = RenderQueue::GetInstance()->GetQueue();
 
 
-	GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
+	GLfloat vBlack[] = { 1.0, 1.0, 1.0, 1.0f };
 	DefaultShaderData shaderData;
 	shaderData.ColorVector = vBlack;
 	shaderData.VMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->CalcViewMatrix();
@@ -219,16 +226,20 @@ void D3D11Renderer::Render()
 	Begin();
 	for each (auto& pair in map)
 	{
-		pair.first->Use();
+		shaderData.TextureUnit = pair.first->GetTexture();
 		for each (auto object in pair.second)
 		{
 			D3D11RenderObject* d3d11Object = (D3D11RenderObject*)object;
-			HLSLShader* shader = (HLSLShader*)pair.first->GetShader();
+			HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
 			shaderData.MMatrix = d3d11Object->Parent->GetWorldMatrix();
+
 			shader->UpdateShaderData(shaderData);
+			//shader->Use();
+			mD3DImmediateContext->IASetInputLayout(shader->InputLayout);
+			shader->Technique->GetPassByIndex(0)->Apply(0, mD3DImmediateContext);
 
 			UINT offset = 0;
-			UINT stride = sizeof(Vertex);
+			UINT stride = sizeof(Mesh::Vertex);
 
 			mD3DImmediateContext->IASetVertexBuffers(0, 1, &d3d11Object->VertexBuffer, &stride, &offset);
 			mD3DImmediateContext->Draw(d3d11Object->Mesh->GetNumberOfVertex(), 0);
@@ -236,6 +247,7 @@ void D3D11Renderer::Render()
 			RtInfomation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);
 		}
 	}
+	//getchar();
 	End();
 	RenderQueue::GetInstance()->ClearQueue();
 }

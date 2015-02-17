@@ -20,53 +20,47 @@ void GameLogicImp::StartUp()
 	AGEMeshImporter importer;
 	Renderable* r1 = importer.LoadFromFile("../Resources/Models/b.AMESH");
 	Renderable* r2 = importer.LoadFromFile("../Resources/Models/c.AMESH");
-	AGESkeletonAnimationImporter importer2;
-	mSkeleton = r2->GetSkeleton();
-	SkeletonAnimation* animation = importer2.LoadFromeFile(r2->GetNumberOfVertex(), mSkeleton, "../Resources/Models/c.AMESH.ABONE");
-	mSkeleton->AddAnimation("default", animation);
+	//AGESkeletonAnimationImporter importer2;
+	//mSkeleton = r2->GetSkeleton();
+	//SkeletonAnimation* animation = importer2.LoadFromeFile(r2->GetNumberOfVertex(), mSkeleton, "../Resources/Models/c.AMESH.ABONE");
+	//mSkeleton->AddAnimation("default", animation);
 
-	SceneNode* node = new SceneNode();
 	SceneNode* node2 = new SceneNode();
+	SceneNode* node = new SceneNode();
 
-	node->Attach(r1);
 	node2->Attach(r2);
+	node->Attach(r1);
+	
 
 	CameraNode = new SceneNode();
-	CameraNode->GetTransform()->SetPosition(Vector3f(0, -0, -500));
+	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, -50));
 	CameraNode->Attach(node2);
 	//node2->GetTransform()->Translate(Vector3f(0, 0, -5));
 	node2->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
-	Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
+	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
 
 	Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
 	Engine::GetInstance()->GetScene()->GetRoot()->Attach(node);
 	Engine::GetInstance()->GetScene()->GetRoot()->Attach(CameraNode);
 
-	InitPhysics(r1);
+	//InitPhysics(r1);
 }
 btKinematicCharacterController* m_character;
 btPairCachingGhostObject* m_ghostObject;
 void GameLogicImp::InitPhysics(Renderable *r1)
 {
 
-	int vertStride = sizeof(btVector3);
+	/*int vertStride = sizeof(btVector3);
 	int indexStride = 3 * sizeof(int);
 
 
 	int totalTriangles = 0;
 
-	btVector3 *vertices = new btVector3[r1->GetNumberOfVertex()];
-	//int *indices = new int[totalTriangles * 3];
-
-	float *v = r1->GetVertex();
-	for (int i = 0; i < r1->GetNumberOfVertex(); i++) {
-		vertices[i].setValue(v[i * 3], v[i * 3 + 1], v[i * 3 + 2]);
-	}
-
 	for (int i = 0; i < r1->GetNumberOfRenderObjects(); i++) {
 		const RenderObject * ro = r1->GetRenderObject(i);
 		totalTriangles += ro->Mesh->GetNumberOfVertex() / 3;
 	}
+
 
 	int *indices = new int[totalTriangles * 3];
 	int k = 0;
@@ -112,6 +106,7 @@ void GameLogicImp::InitPhysics(Renderable *r1)
 	GetPhysicsEngine()->GetWorld()->addCollisionObject(m_ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
 	GetPhysicsEngine()->GetWorld()->addAction(m_character);
 	GetPhysicsEngine()->GetWorld()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	*/
 }
 #include <iostream>
 
@@ -127,13 +122,13 @@ bool GameLogicImp::Update(float time)
 	//static int itime = 0;
 
 	//if ((itime++) % 10 == 0)
-	if (!mSkeleton->IsPlaying())
-		mSkeleton->StartPlay("default");
-	mSkeleton->Update(time);
+//	if (!mSkeleton->IsPlaying())
+	//	mSkeleton->StartPlay("default");
+	//mSkeleton->Update(time);
 
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
-
+	return true;
 	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	float speed = 0.5;// time / 5;// / 100;
 	Vector3f v = Vector3f(0, 0, 0);
@@ -187,14 +182,14 @@ bool GameLogicImp::Update(float time)
 	//btQuaternion q(r, y, p);
 
 	//v.rotate(q.getAxis(), q.getAngle());
-	m_character->setWalkDirection(btVector3(v[0], v[1], v[2]));
+	///////m_character->setWalkDirection(btVector3(v[0], v[1], v[2]));
 
 	//if (v.x() != 0 || v.y() != 0 || v.z() != 0)
 	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
 
-	btTransform trans = m_character->getGhostObject()->getWorldTransform();
-	btVector3 v2 = trans.getOrigin();
-	cameraTransform->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
+	///////btTransform trans = m_character->getGhostObject()->getWorldTransform();
+	///////btVector3 v2 = trans.getOrigin();
+	///////cameraTransform->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
 	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
 	return true;
 }
@@ -230,7 +225,7 @@ bool GameLogicImp::mouseMoved(const MouseEvent &arg)
 	trans.setIdentity();
 	btQuaternion q;
 	q.setEuler(yawDegree, 0, 0);
-	m_character->getGhostObject()->getWorldTransform().setRotation(q);
+	///////m_character->getGhostObject()->getWorldTransform().setRotation(q);
 	//cameraTransform->ClearRotation();
 	//btQuaternion q = trans.getRotation();
 	//btVector3 v3 = q.getAxis();

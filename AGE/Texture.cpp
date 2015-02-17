@@ -1,4 +1,4 @@
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Math.h"
 #include <cstdio>
 #include <cstdlib>
@@ -7,34 +7,33 @@
 
 using namespace AGE;
 
-Texture2D::Texture2D():mTexture(0){}
+Texture2D::Texture2D(){}
 
 Texture2D::~Texture2D() 
 {
-	if(mTexture)
-		glDeleteTextures(1, &mTexture);
 }
 
 
-bool Texture2D::LoadTGA(const char* path)
+char* Texture2D::LoadTGA(const char* path)
 //OpenGL SuperBible
 {
 	FILE *pFile;			// File pointer
 	TGAHEADER tgaHeader;		// TGA file header
 	unsigned long lImageSize;		// Size in bytes of image
-	short sDepth;			// Pixel depth;
+	char* pBits;
+	//short sDepth;			// Pixel depth;
 
 	// Default/Failed values
 	mWidth = 0;
 	mHeight = 0;
-	mFormat = GL_RGB;
-	mComponents = GL_RGB;
+	//mFormat = GL_RGB;
+	//mComponents = GL_RGB;
 
 	// Attempt to open the file
 	pFile = fopen(path, "rb");
 	if (pFile == NULL){
 		Log::Error("Cannot Load TGA File");
-		return false;
+		return NULL;
 	}
 
 	// Read in header (binary)
@@ -54,7 +53,7 @@ bool Texture2D::LoadTGA(const char* path)
 	// Get width, height, and depth of texture
 	mWidth = tgaHeader.width;
 	mHeight = tgaHeader.height;
-	sDepth = tgaHeader.bits / 8;
+	mDepth = tgaHeader.bits / 8;
 
 	// Put some validity checks here. Very simply, I only understand
 	// or care about 8, 24, or 32 bit targa's.
@@ -62,12 +61,12 @@ bool Texture2D::LoadTGA(const char* path)
 		return false;
 
 	// Calculate size of image buffer
-	lImageSize = tgaHeader.width * tgaHeader.height * sDepth;
+	lImageSize = tgaHeader.width * tgaHeader.height * mDepth;
 
 	// Allocate memory and check for success
-	pBits = (GLbyte*)malloc(lImageSize * sizeof(GLbyte));
+	pBits = new char[lImageSize];
 	if (pBits == NULL)
-		return false;
+		return NULL;
 
 	// Read in the bits
 	// Check for read error. This should catch RLE or other 
@@ -75,48 +74,14 @@ bool Texture2D::LoadTGA(const char* path)
 	if (fread(pBits, lImageSize, 1, pFile) != 1)
 	{
 		free(pBits);
-		return false;
-	}
-
-	// Set OpenGL format expected
-	switch (sDepth)
-	{
-#ifndef OPENGL_ES
-	case 3:     // Most likely case
-		mFormat = GL_BGR;
-		mComponents = GL_RGB;
-		break;
-#endif
-	case 4:
-		mFormat = GL_BGRA;
-		mComponents = GL_RGBA;
-		break;
-	case 1:
-		mFormat = GL_LUMINANCE;
-		mComponents = GL_LUMINANCE;
-		break;
-	default:        // RGB
-		// If on the iPhone, TGA's are BGR, and the iPhone does not 
-		// support BGR without alpha, but it does support RGB,
-		// so a simple swizzle of the red and blue bytes will suffice.
-		// For faster iPhone loads however, save your TGA's with an Alpha!
-#ifdef OPENGL_ES
-		for (int i = 0; i < lImageSize; i += 3)
-		{
-			GLbyte temp = pBits[i];
-			pBits[i] = pBits[i + 2];
-			pBits[i + 2] = temp;
-		}
-#endif
-		break;
+		return NULL;
 	}
 
 	fclose(pFile);
-
-	return true;
+	return pBits;
 }
 
-bool Texture2D::LoadJPEG(const char* path)
+char* Texture2D::LoadJPEG(const char* path)
 //ijg example
 {
 	struct jpeg_decompress_struct cinfo;
@@ -124,6 +89,7 @@ bool Texture2D::LoadJPEG(const char* path)
 	FILE * infile;		/* source file */
 	JSAMPARRAY buffer;		/* Output row buffer */
 	int row_stride;		/* physical row width in output buffer */
+	char* pBits;
 
 	if ((infile = fopen(path, "rb")) == NULL) {
 		fprintf(stderr, "can't open %s\n", path);
@@ -134,42 +100,35 @@ bool Texture2D::LoadJPEG(const char* path)
 	cinfo.err = jpeg_std_error(&err);
 	jpeg_create_decompress(&cinfo);
 
+
+
 	jpeg_stdio_src(&cinfo, infile);
 
 	(void)jpeg_read_header(&cinfo, TRUE);
 
+
 	(void)jpeg_start_decompress(&cinfo);
 
-
+	mDepth = cinfo.num_components;
 	uint x = cinfo.output_width;
 	uint y = cinfo.output_height;
-	uint channels = cinfo.num_components;
+
 
 	mWidth = x;
 	mHeight = y;
 
-	//mFormat = GL_BGR;
-	mFormat = GL_RGB;
-	mComponents = GL_RGB;
 
-	if (channels == 4){
-		//mFormat = GL_BGRA;
-		mFormat = GL_RGBA;
-		mComponents = GL_RGBA;
-	}
+	ulong size = x * y * mDepth;
 
-	ulong size = x * y * channels;
-
-	pBits = new GLbyte[size];
-
-	row_stride = cinfo.output_width * cinfo.output_components;
+	pBits = new char[size];
+	//row_stride = cinfo.output_width * cinfo.output_components;
 
 	//buffer = (*cinfo.mem->alloc_sarray)
 		//((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
 
 	uint line = 0;
-	GLbyte *p = pBits;
-	GLbyte** p2 = &p;
+	char *p = pBits;
+	char** p2 = &p;
 
 	while (cinfo.output_scanline < cinfo.output_height) {
 		/* jpeg_read_scanlines expects an array of pointers to scanlines.
@@ -178,7 +137,7 @@ bool Texture2D::LoadJPEG(const char* path)
 		*/
 		line = jpeg_read_scanlines(&cinfo, (unsigned char**)p2, 1);
 		/* Assume put_scanline_someplace wants a pointer and sample count. */
-		p += line * x * channels;
+		p += line * x * mDepth;
 	}
 
 	(void)jpeg_finish_decompress(&cinfo);
@@ -187,12 +146,25 @@ bool Texture2D::LoadJPEG(const char* path)
 
 	fclose(infile);
 
-	return true;
+	if (mDepth == 3) {
+		mDepth = 4;
+		unsigned int size = x * y * mDepth;
+		char* pBits4 = new char[size];
+		for (int i = 0; i < size / 4; i++) {
+			pBits4[i * 4] = pBits[i * 3];
+			pBits4[i * 4 + 1] = pBits[i * 3 + 1];
+			pBits4[i * 4 + 2] = pBits[i * 3 + 2];
+			pBits4[i * 4 + 3] = 1;
+		}
+		delete[] pBits;
+		return pBits4;
+	}
+	return pBits;
 }
 
-bool Texture2D::Load(const char *path, Type fileType)
+char* Texture2D::LoadTexture(const char *path, Type fileType)
 {
-	bool ret;
+	char* pBits;
 	if (fileType == AUTO)
 	{
 		uint len = strlen(path);
@@ -206,29 +178,12 @@ bool Texture2D::Load(const char *path, Type fileType)
 
 	if (fileType == TGA)
 	{
-		ret = LoadTGA(path);
+		pBits = LoadTGA(path);
 	}
 	else if (fileType == JPEG)
 	{
-		ret = LoadJPEG(path);
+		pBits = LoadJPEG(path);
 	}
 
-	if (!ret)
-		return false;
-
-	glGenTextures(1, &mTexture);
-	glBindTexture(GL_TEXTURE_2D, mTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, mWidth, mHeight, 0,
-		mFormat, GL_UNSIGNED_BYTE, pBits);
-
-	free(pBits);
-
-	return true;
+	return pBits;
 }

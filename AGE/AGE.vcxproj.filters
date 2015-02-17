@@ -72,9 +72,6 @@
     <ClInclude Include="InputEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="3DSMeshImporter.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -118,6 +115,15 @@
       <Filter>D3D11Renderer</Filter>
     </ClInclude>
     <ClInclude Include="D3D11Renderer\HLSLShader.h">
+      <Filter>D3D11Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLRenderer\OpenGLTexture.h">
+      <Filter>OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Renderer\D3D11Texture.h">
       <Filter>D3D11Renderer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -179,9 +185,6 @@
     <ClCompile Include="..\3rd\GLTools\src\glew.c">
       <Filter>GLTools</Filter>
     </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="3DSMeshImporter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -216,6 +219,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Renderer\HLSLShader.cpp">
+      <Filter>D3D11Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLRenderer\OpenGLTexture.cpp">
+      <Filter>OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Renderer\D3D11Texture.cpp">
       <Filter>D3D11Renderer</Filter>
     </ClCompile>
   </ItemGroup>

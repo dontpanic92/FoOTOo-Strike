@@ -95,13 +95,14 @@ void Skeleton::SetBoneBindPoseMatrixInv(int ID, float matrix[16])
 	bone->SetBindPoseMatrixInv(matrix);
 }
 
-void Skeleton::BindVertex(int vertex, int boneID[4], float weight[4])
+/*void Skeleton::BindVertex(int vertex, int boneID[4], float weight[4])
 {
 	for (int i = 0; i < 4; i++) {
 		mVertexBoneBind[vertex].Bones[i] = FindBone(boneID[i]);
 		mVertexBoneBind[vertex].weight[i] = weight[i];
 	}
 }
+*/
 
 void Skeleton::StartPlay(const char* name)
 {
@@ -122,19 +123,30 @@ void Skeleton::Update(float time)
 	mTime += time;
 	if (mTime < mCurrentAnimation->second->GetFrame(mCurrentFrame)->Time)
 		return;
-	for (uint i = 0; i < mVertexNum; i++) {
-		if (mVertexBoneBind[i].Bones[0] == 0)
-			continue;
-		//if (mVertexBoneBind[i].Bones[0]->GetID() != 2)
-		//continue;
-		uint id = mVertexBoneBind[i].Bones[0]->GetInternalID();
-		float weight = mVertexBoneBind[i].weight[0];
+	for (uint i = 0; i < mRenderable->GetNumberOfRenderObjects(); i++) {
+		Mesh* mesh = mRenderable->GetRenderObject(i)->Mesh;
+		const Mesh::SkeletonData* skeletonData = mesh->GetSkeletonData();
+		Mesh::Vertex* vertex = mesh->GetVertexData();
+		for (uint j = 0; j < mesh->GetNumberOfVertex(); j++) {
+			if (mVertexBoneBind[i].Bones[0] == 0)
+				continue;
+			//if (mVertexBoneBind[i].Bones[0]->GetID() != 2)
+			//continue;
+			//uint id = mVertexBoneBind[i].Bones[0]->GetInternalID();
+			//float weight = mVertexBoneBind[i].weight[0];
+			uint id = skeletonData[j].BoneID[0];
+			float weigt = skeletonData[j].weight[0];
+			Matrix4x4f trans = FindBone(id)->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
+			Vector3f v = vertex[j].Position;
+			v = v * trans;
+			memcpy(vertex[j].Position, v, sizeof(float) * 3);
+		}
 
-
-		mVertexTransform[i] = mVertexBoneBind[i].Bones[0]->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
+		mRenderable->GetRenderObject(i)->Update();
+		//mVertexTransform[i] = mVertexBoneBind[i].Bones[0]->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
 	}
 
-	mRenderable->UpdateSkinnedVertex();
+	//mRenderable->UpdateSkinnedVertex();
 
 	mCurrentFrame = (mCurrentFrame + 1) % mAnimations["default"]->GetFrameNum();
 
