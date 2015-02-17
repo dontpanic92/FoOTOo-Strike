@@ -14,11 +14,11 @@ namespace AGE{
 
 		void Update()
 		{
-			//Mesh->UpdateVertex();
+			
 			//glBindBuffer(GL_ARRAY_BUFFER, BufferObjects[0]);
 			//glBufferSubData(GL_ARRAY_BUFFER, 0,
 			//				sizeof(GLfloat) * Mesh->GetVertexNum() * 3, Mesh->GetVertexData());
-			/*if (VertexBuffer) {
+			if (VertexBuffer) {
 				D3D11_MAPPED_SUBRESOURCE subData;
 				ID3D11DeviceContext* context = ((D3D11Renderer*)(RenderEngine::GetInstance()))->GetDeviceContext();
 				context->Map(VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subData);
@@ -26,10 +26,7 @@ namespace AGE{
 				memcpy(subData.pData, Mesh->GetVertexData(), Mesh->GetNumberOfVertex() * sizeof(Mesh::Vertex));
 
 				context->Unmap(VertexBuffer, 0);
-			} else {
-
-				printf("vertexbuffer == 0\n");
-			}*/
+			} 
 		}
 
 		void Destroy()

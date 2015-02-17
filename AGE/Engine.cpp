@@ -15,7 +15,7 @@ Engine::Engine() :mLastTimeUpdate(0), mScene(0)
 int Engine::StartUp()
 {
 	mApp.StartUp();
-	RenderEngine::SetEngineType(RenderEngine::Type::Direct3D11);
+	RenderEngine::SetEngineType(RenderEngine::Type::OpenGL);
 	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	PhysicsEngine::GetInstance()->StartUp();

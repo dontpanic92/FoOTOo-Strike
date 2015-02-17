@@ -45,7 +45,10 @@ namespace AGE
 		//uint GetNumberOfVertex() const { return mVertexNum; }
 
 		uint GetNumberOfRenderObjects() const { return mRenderObjects.size(); }
+
 		RenderObject* GetRenderObject(uint i) { return mRenderObjects[i]; }
+
+		uint GetNumberOfVertex() { return mNumberOfVertex; }
 
 		void UpdateSkinnedVertex();
 
@@ -57,7 +60,7 @@ namespace AGE
 
 		//Mesh::Vertex* mVertex;
 		//Mesh::Vertex* mVertexBindPose;
-		//uint mVertexNum;
+		uint mNumberOfVertex;
 
 		std::vector<RenderObject*> mRenderObjects;
 		Skeleton* mSkeleton;

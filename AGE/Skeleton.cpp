@@ -127,19 +127,28 @@ void Skeleton::Update(float time)
 		Mesh* mesh = mRenderable->GetRenderObject(i)->Mesh;
 		const Mesh::SkeletonData* skeletonData = mesh->GetSkeletonData();
 		Mesh::Vertex* vertex = mesh->GetVertexData();
+		const Mesh::Vertex* vertexBindPose = mesh->GetVertexBindPose();
 		for (uint j = 0; j < mesh->GetNumberOfVertex(); j++) {
-			if (mVertexBoneBind[i].Bones[0] == 0)
-				continue;
+			//if (mVertexBoneBind[i].Bones[0] == 0)
+			//	continue;
 			//if (mVertexBoneBind[i].Bones[0]->GetID() != 2)
 			//continue;
 			//uint id = mVertexBoneBind[i].Bones[0]->GetInternalID();
 			//float weight = mVertexBoneBind[i].weight[0];
-			uint id = skeletonData[j].BoneID[0];
+			//if (mVertexBoneBind[i].Bones[0] == 0)
+				//continue;
+			uint id = FindBone(skeletonData[j].BoneID[0])->GetInternalID();
+			Bone* bone = FindBone(skeletonData[j].BoneID[0]);
+			if (!bone)
+				continue;
 			float weigt = skeletonData[j].weight[0];
-			Matrix4x4f trans = FindBone(id)->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
-			Vector3f v = vertex[j].Position;
+			Matrix4x4f trans = bone->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
+			Vector3f v = vertexBindPose[j].Position;
 			v = v * trans;
 			memcpy(vertex[j].Position, v, sizeof(float) * 3);
+			//v = vertexBindPose[j].Normal;
+			//v = v * trans;
+			//memcpy(vertex[j].Normal, v, sizeof(float) * 3);
 		}
 
 		mRenderable->GetRenderObject(i)->Update();

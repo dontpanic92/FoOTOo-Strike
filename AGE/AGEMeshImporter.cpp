@@ -24,11 +24,12 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename)
 	//renderable->SetVertexData(vertex, fileHeader.VertexNum);
 
 	uint32_t ** vertexIndices = new uint32_t *[fileHeader.MaterialNum];
-
+	Mesh** meshes = new Mesh *[fileHeader.MaterialNum];
 	AM1MaterialHeader matHeader;
 	for (int i = 0; i < fileHeader.MaterialNum; i++) {
 		fread(&matHeader, 1, sizeof(matHeader), filp);
 		Mesh* mesh = new Mesh(renderable);
+		meshes[i] = mesh;
 		vertexIndices[i] = new uint32_t[matHeader.VertexNum];
 		float* normal = new float[matHeader.VertexNum * 3];
 		float* textureCoord = new float[matHeader.VertexNum * 2];
@@ -90,7 +91,7 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename)
 		}
 
 		for (int i = 0; i < fileHeader.MaterialNum; i++) {
-			Mesh* mesh = renderable->GetRenderObject(i)->Mesh;
+			Mesh* mesh =meshes[i];
 
 			for (int j = 0; j < mesh->GetNumberOfVertex(); j++) {
 				mesh->SetSkeletonData(j, skeletonData[vertexIndices[i][j]]);
@@ -106,6 +107,7 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename)
 
 	fclose(filp);
 	delete[] vertex;
+	delete[] meshes;
 	for (int i = 0; i < fileHeader.MaterialNum; i++) {
 		delete[] vertexIndices[i];
 	}

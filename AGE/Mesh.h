@@ -62,6 +62,8 @@ namespace AGE
 		//void SetTexCoordByFace(uint nface, float* texCoord6);
 
 		Vertex* GetVertexData() { return mVertexData; }
+		const Vertex* GetVertexBindPose() const { return mBindposeVertexData; }
+
 		//Vertex* GetVertexData() { return mVertexData; }
 		void SetVertexData(Vertex* vertex, uint vertexNum);
 

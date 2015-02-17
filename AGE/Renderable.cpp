@@ -2,7 +2,7 @@
 #include "Primitive.h"
 using namespace AGE;
 
-Renderable::Renderable() : /*mVertex(0), mVertexBindPose(0), */mSkeleton(0)
+Renderable::Renderable() : mNumberOfVertex(0), mSkeleton(0)
 {
 
 }
@@ -21,6 +21,7 @@ Renderable::~Renderable()
 void Renderable::AddRenderObject(RenderObject* object)
 {
 	mRenderObjects.push_back(object);
+	mNumberOfVertex += object->Mesh->GetNumberOfVertex();
 }
 
 /*void Renderable::SetVertexData(GLfloat* vertex, uint vertexNum)

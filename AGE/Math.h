@@ -46,7 +46,7 @@ namespace AGE
 	public:
 		Vector3f() { Set(Zero[0], Zero[1], Zero[2]); }
 		Vector3f(float _0, float _1, float _2) { Set(_0, _1, _2); }
-		Vector3f(float v[3]) { memcpy(mVector, v, sizeof(mVector)); }
+		Vector3f(const float v[3]) { memcpy(mVector, v, sizeof(mVector)); }
 
 		float& operator[](int index) { return mVector[index]; }
 		float operator[](int index) const { return mVector[index]; }
