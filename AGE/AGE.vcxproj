@@ -94,6 +94,7 @@
     <ClInclude Include="InputEngine.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="Logic.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLRenderer\GLSLShader.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="InputEngine.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Logic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mesh.cpp" />

@@ -17,5 +17,5 @@ void InputEngine::StartUp(Window window)
 	mInputManager->enableAddOnFactory(InputManager::AddOn_All);
 
 	mKeyboard = (Keyboard*)mInputManager->createInputObject(OISKeyboard, false);
-	mMouse = (Mouse*)mInputManager->createInputObject(OISMouse, true);
+	mMouse = (Mouse*)mInputManager->createInputObject(OISMouse, false);
 }

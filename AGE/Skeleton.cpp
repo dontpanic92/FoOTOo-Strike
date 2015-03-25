@@ -104,7 +104,7 @@ void Skeleton::SetBoneBindPoseMatrixInv(int ID, float matrix[16])
 }
 */
 
-void Skeleton::StartPlay(const char* name)
+void Skeleton::StartPlay(const char* name, bool loop)
 {
 	mPlaying = false;
 	mCurrentAnimation = mAnimations.find(name);
@@ -113,6 +113,7 @@ void Skeleton::StartPlay(const char* name)
 	mTime = 0;
 	mCurrentFrame = 0;
 	mPlaying = true;
+	mLoop = loop;
 }
 
 void Skeleton::Update(float time)
@@ -121,7 +122,10 @@ void Skeleton::Update(float time)
 		return;
 	//printf("%f %f %f\n", time, mStartTime, mCurrentAnimation->second->GetFrame(mCurrentFrame)->Time);
 	mTime += time;
-	if (mTime < mCurrentAnimation->second->GetFrame(mCurrentFrame)->Time)
+
+	SkeletonAnimation* currentAnim = mCurrentAnimation->second;
+
+	if (mTime < currentAnim->GetFrame(mCurrentFrame)->Time)
 		return;
 	for (uint i = 0; i < mRenderable->GetNumberOfRenderObjects(); i++) {
 		Mesh* mesh = mRenderable->GetRenderObject(i)->Mesh;
@@ -136,13 +140,13 @@ void Skeleton::Update(float time)
 			//uint id = mVertexBoneBind[i].Bones[0]->GetInternalID();
 			//float weight = mVertexBoneBind[i].weight[0];
 			//if (mVertexBoneBind[i].Bones[0] == 0)
-				//continue;
+			//continue;
 			uint id = FindBone(skeletonData[j].BoneID[0])->GetInternalID();
 			Bone* bone = FindBone(skeletonData[j].BoneID[0]);
 			if (!bone)
 				continue;
 			float weigt = skeletonData[j].weight[0];
-			Matrix4x4f trans = bone->GetBindPoseMatrixInv() * mAnimations["default"]->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
+			Matrix4x4f trans = bone->GetBindPoseMatrixInv() * currentAnim->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
 			Vector3f v = vertexBindPose[j].Position;
 			v = v * trans;
 			memcpy(vertex[j].Position, v, sizeof(float) * 3);
@@ -156,12 +160,18 @@ void Skeleton::Update(float time)
 	}
 
 	//mRenderable->UpdateSkinnedVertex();
-
-	mCurrentFrame = (mCurrentFrame + 1) % mAnimations["default"]->GetFrameNum();
-
-	float t2 = mAnimations["default"]->GetFrame(mAnimations["default"]->GetFrameNum() - 1)->Time;
+	float t2 = currentAnim->GetFrame(currentAnim->GetFrameNum() - 1)->Time;
 	while (mTime > t2)
 		mTime -= t2;
+
+	mCurrentFrame = (mCurrentFrame + 1);
+	if (mCurrentFrame >= currentAnim->GetFrameNum()) {
+		if (mLoop) {
+			mCurrentFrame %= currentAnim->GetFrameNum();
+		} else {
+			mPlaying = false;
+		}
+	}
 }
 
 

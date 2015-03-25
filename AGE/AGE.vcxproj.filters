@@ -138,6 +138,9 @@
     <ClInclude Include="UIEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Logic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -247,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="D3D11Renderer\D3D11RenderTarget.cpp">
       <Filter>D3D11Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

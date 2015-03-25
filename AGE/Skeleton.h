@@ -3,6 +3,7 @@
 #include "Math.h"
 #include <vector>
 #include <map>
+#include <string>
 
 namespace AGE
 {
@@ -109,11 +110,13 @@ namespace AGE
 
 		const Matrix4x4f* GetVertexTransform() { return mVertexTransform; }
 
-		void StartPlay(const char* name);
+		void StartPlay(const char* name, bool loop = true);
 
 		void Update(float time);
 
 		bool IsPlaying() { return mPlaying; }
+
+		//bool IsFinished() { return mFinished; }
 
 	private:
 		Bone* FindBone(int ID);
@@ -138,6 +141,8 @@ namespace AGE
 
 		uint mCurrentFrame;
 		bool mPlaying;
+		bool mLoop;
+		//bool mFinished;
 	};
 
 	class SkeletonAnimation

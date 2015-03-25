@@ -4,6 +4,8 @@
 #include "AGESkeletonAnimationImporter.h"
 #include "PhysicsEngine.h"
 
+#include "Logic.h"
+
 #include <bullet/BulletDynamics/Character/btKinematicCharacterController.h>
 #include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
 
@@ -12,6 +14,177 @@ using namespace OIS;
 
 SceneNode* CameraNode;
 
+
+class KeyboardLogicEvent : public LogicEvent
+{
+public:
+	int GetEventType()
+	{
+		return 0;
+	}
+
+	int KeyID;
+};
+
+class MouseLogicEvent : public LogicEvent
+{
+public:
+	int GetEventType()
+	{
+		return 1;
+	}
+
+	MouseEvent mouseEvent;
+};
+
+
+class ActorLogicIdle : public LogicState
+{
+public:
+	ActorLogicIdle(int id, Logic* logic, Skeleton* skel)
+		:LogicState(id, logic), mSkeleton(skel)
+	{
+	}
+
+	void Enter() override
+	{
+		mSkeleton->StartPlay("default");
+	}
+
+	void React(LogicEvent* evt) override
+	{
+		//if (evt->GetEventType() == 1) {
+		//	MouseLogicEvent* e = (MouseLogicEvent*)evt;
+		//	e->mouseEvent.
+		//}
+	}
+
+	void Update(float deltaTime) override
+	{
+		mSkeleton->Update(deltaTime);
+		char keys[256];
+		InputEngine::GetInstance()->GetKeyStates(keys);
+		if (keys[KC_R]) {
+			mLogic->Transit(2);
+		}
+
+		const MouseState& state = InputEngine::GetInstance()->GetMouseState();
+		if (state.buttonDown(OIS::MouseButtonID::MB_Left)) {
+			mLogic->Transit(3);
+		}
+	}
+	void Exit() override
+	{
+		
+	}
+private:
+	Skeleton* mSkeleton;
+	MouseState state;
+};
+
+class ActorLogicReload : public LogicState
+{
+public:
+	ActorLogicReload(int id, Logic* logic, Skeleton* skel)
+		:LogicState(id, logic), mSkeleton(skel)
+	{
+	}
+
+	virtual void Enter()
+	{
+		mSkeleton->StartPlay("reload", false);
+	}
+
+	void React(LogicEvent* evt) override
+	{
+	}
+
+	virtual void Update(float deltaTime)
+	{
+		if (mSkeleton->IsPlaying())
+			mSkeleton->Update(deltaTime);
+		else
+			mLogic->Transit(1);
+	}
+
+	virtual void Exit()
+	{
+
+	}
+private:
+	Skeleton* mSkeleton;
+};
+
+
+class ActorLogicShoot1 : public LogicState
+{
+public:
+	ActorLogicShoot1(int id, Logic* logic, Skeleton* skel)
+		:LogicState(id, logic), mSkeleton(skel)
+	{
+	}
+
+	void Enter() override
+	{
+		mSkeleton->StartPlay("shoot1", false);
+	}
+
+	void Update(float deltaTime) override
+	{
+		if (mSkeleton->IsPlaying())
+			mSkeleton->Update(deltaTime);
+		else
+			mLogic->Transit(1);
+	}
+	void Exit() override
+	{
+
+	}
+private:
+	Skeleton* mSkeleton;
+};
+
+class Actor
+{
+public:
+
+	Actor()
+	{
+		AGEMeshImporter importer;
+		mRenderable = importer.LoadFromFile("../Resources/Models/c.AMESH");
+		AGESkeletonAnimationImporter importer2;
+		mSkeleton = mRenderable->GetSkeleton();
+		SkeletonAnimation* idleAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.IDLE.AANIM");
+		SkeletonAnimation* reloadAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.RELOAD.AANIM");
+		SkeletonAnimation* shoot1Animation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.SHOOT1.AANIM");
+		mSkeleton->AddAnimation("default", idleAnimation);
+		mSkeleton->AddAnimation("reload", reloadAnimation);
+		mSkeleton->AddAnimation("shoot1", shoot1Animation);
+
+		mLogic.NewState<ActorLogicIdle>(1, &mLogic, mSkeleton);
+		mLogic.NewState<ActorLogicReload>(2, &mLogic, mSkeleton);
+		mLogic.NewState<ActorLogicShoot1>(3, &mLogic, mSkeleton);
+
+		mLogic.SetInitialState(1);
+	}
+
+	Renderable* GetRenderable() { return mRenderable; }
+
+	Skeleton* GetSkeleton() { return mSkeleton; }
+
+	void Update(float deltaTime)
+	{
+		mLogic.GetCurrentState()->Update(deltaTime);
+	}
+
+private:
+	Logic mLogic;
+
+	Renderable* mRenderable;
+	Skeleton* mSkeleton;
+};
+Actor * actor;
+
 void GameLogicImp::StartUp()
 {
 	InputEngine::GetInstance()->RegisterMouseListener(this);
@@ -19,18 +192,13 @@ void GameLogicImp::StartUp()
 
 	AGEMeshImporter importer;
 	Renderable* r1 = importer.LoadFromFile("../Resources/Models/a.AMESH");
-	Renderable* r2 = importer.LoadFromFile("../Resources/Models/c.AMESH");
-	AGESkeletonAnimationImporter importer2;
-	mSkeleton = r2->GetSkeleton();
-	SkeletonAnimation* idleAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.IDLE.AANIM");
-	SkeletonAnimation* reloadAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.RELOAD.AANIM");
-	mSkeleton->AddAnimation("default", idleAnimation);
-	mSkeleton->AddAnimation("reload", reloadAnimation);
+
+	actor = new Actor;
 
 	SceneNode* node2 = Engine::GetInstance()->GetScene()->CreateSceneNode();
 	SceneNode* node = Engine::GetInstance()->GetScene()->CreateSceneNode();
 
-	node2->Attach(r2);
+	node2->Attach(actor->GetRenderable());
 	node->Attach(r1);
 	
 
@@ -130,12 +298,15 @@ bool GameLogicImp::Update(float time)
 	//static int itime = 0;
 
 	//if ((itime++) % 10 == 0)
-	if (!mSkeleton->IsPlaying())
-		mSkeleton->StartPlay("default");
-	mSkeleton->Update(time);
+	//if (!mSkeleton->IsPlaying())
+	///	mSkeleton->StartPlay("default");
+	///mSkeleton->Update(time);
+	ProcessMouse(InputEngine::GetInstance()->GetMouseState());
+	actor->Update(time);
 
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
+
 	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	float speed = 0.5;// time / 5;// / 100;
 	Vector3f v = Vector3f(0, 0, 0);
@@ -201,15 +372,14 @@ bool GameLogicImp::Update(float time)
 	return true;
 }
 
-bool GameLogicImp::mouseMoved(const MouseEvent &arg)
+void GameLogicImp::ProcessMouse(const MouseState &state)
 {
-	//printf("abs: %d, rel: %d\n", arg.state.X.abs, arg.state.X.rel);
 	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	static float pitchDegree = 0.0f;
 	static float yawDegree = 0.0f;
 
-	float speed = -arg.state.X.rel / 5.0f;
-	float yspeed = -arg.state.Y.rel / 5.0f;
+	float speed = -state.X.rel / 5.0f;
+	float yspeed = -state.Y.rel / 5.0f;
 
 	pitchDegree += yspeed;
 	yawDegree += speed;
@@ -237,5 +407,11 @@ bool GameLogicImp::mouseMoved(const MouseEvent &arg)
 	//btQuaternion q = trans.getRotation();
 	//btVector3 v3 = q.getAxis();
 	//cameraTransform->RotateByRadian(Deg2Rad(q.getAngle()), v3.x(), v3.y(), v3.z());
+}
+
+bool GameLogicImp::mouseMoved(const MouseEvent &arg)
+{
+	//printf("abs: %d, rel: %d\n", arg.state.X.abs, arg.state.X.rel);
+	ProcessMouse(arg.state);
 	return true;
 }

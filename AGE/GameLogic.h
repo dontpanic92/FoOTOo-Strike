@@ -14,8 +14,6 @@ namespace AGE
 
 		virtual void StartUp() = 0;
 		virtual bool Update(float time) = 0;
-
-		Skeleton* mSkeleton;
 	};
 
 
@@ -28,6 +26,7 @@ namespace AGE
 		void InitPhysics(Renderable *r1);
 
 		bool Update(float time);
+		void ProcessMouse(const MouseState &state);
 
 		bool keyPressed(const KeyEvent &arg) { return false; }
 		bool keyReleased(const KeyEvent &arg) { return false; }

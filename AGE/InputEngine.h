@@ -20,6 +20,11 @@ namespace AGE
 			mKeyboard->copyKeyStates(keys);
 		}
 
+		const OIS::MouseState& GetMouseState()
+		{
+			return mMouse->getMouseState();
+		}
+
 		//OIS::Keyboard * GetKeyboard(){return mKeyboard;}
 		void Update()
 		{
