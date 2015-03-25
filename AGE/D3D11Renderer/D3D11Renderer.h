@@ -5,10 +5,10 @@
 
 #include "../Window.h"
 #include "../RenderEngine.h"
+#include "D3D11Def.h"
+#include "D3D11RenderTarget.h"
 
 namespace AGE{
-
-#define SafeRelease(x) { if(x){ x->Release(); x = 0; } }
 
 	class D3D11Renderer : public RenderEngine
 	{
@@ -29,26 +29,25 @@ namespace AGE{
 
 		void Render();
 
-		void Begin();
-
-		void End();
-
 		ID3D11Device* GetDevice() { return mD3DDevice; }
 
-		ID3D11DeviceContext* GetDeviceContext() { return mD3DImmediateContext; };
+		ID3D11DeviceContext* GetDeviceContext() { return mD3DImmediateContext; }
 
 	protected:
 
 	private:
 
+		void ShadowMapPass();
+
 		ID3D11Device* mD3DDevice;
 		ID3D11DeviceContext* mD3DImmediateContext;
 		IDXGISwapChain* mSwapChain;
-		ID3D11Texture2D* mDepthStencilBuffer;
-		ID3D11RenderTargetView* mRenderTargetView;
-		ID3D11DepthStencilView* mDepthStencilView;
 		ID3D11RasterizerState* mRasterizerState;
-		D3D11_VIEWPORT mScreenViewport;
+		ID3D11RasterizerState* mNoCullRasterizerState;
+
+		D3D11NormalTarget* mNormalTarget;
+		D3D11ShadowMapTarget* mShadowMapTarget;
+		
 		D3D_DRIVER_TYPE mD3DDriverType;
 
 		HGLRC mRC;

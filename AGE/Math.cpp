@@ -117,23 +117,24 @@ Matrix4x4f::operator float*()const
 	return (float*)mMatrix;
 }
 
-bool Matrix4x4f::operator != (const Matrix4x4f& mat)
+bool Matrix4x4f::operator != (const Matrix4x4f& mat) const
 {
 	return !memcmp(mMatrix, mat.mMatrix, sizeof(mMatrix));;
 }
 
-Matrix4x4f& Matrix4x4f::Transpose()
+Matrix4x4f Matrix4x4f::Transpose() const
 {
-	swap(&mMatrix[0][1], &mMatrix[1][0]);
-	swap(&mMatrix[0][2], &mMatrix[2][0]);
-	swap(&mMatrix[0][3], &mMatrix[3][0]);
-	swap(&mMatrix[1][2], &mMatrix[2][1]);
-	swap(&mMatrix[1][3], &mMatrix[3][1]);
-	swap(&mMatrix[2][3], &mMatrix[3][2]);
+	Matrix4x4f transposeMatrix(*this);
+	swap(&transposeMatrix.mMatrix[0][1], &transposeMatrix.mMatrix[1][0]);
+	swap(&transposeMatrix.mMatrix[0][2], &transposeMatrix.mMatrix[2][0]);
+	swap(&transposeMatrix.mMatrix[0][3], &transposeMatrix.mMatrix[3][0]);
+	swap(&transposeMatrix.mMatrix[1][2], &transposeMatrix.mMatrix[2][1]);
+	swap(&transposeMatrix.mMatrix[1][3], &transposeMatrix.mMatrix[3][1]);
+	swap(&transposeMatrix.mMatrix[2][3], &transposeMatrix.mMatrix[3][2]);
 	return *this;
 }
 
-Matrix4x4f& Matrix4x4f::Inverse()
+Matrix4x4f Matrix4x4f::Inverse() const
 {
 	/*
 	* http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html
@@ -263,7 +264,7 @@ Matrix4x4f Transform::GetInverseTransformMatrix()
 {
 	/*
 	 * http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html
-	 *
+	 * NOTE: NO SCALE!
 	 */
 	Matrix3x3f inverseMatrix(mTransformMatrix);
 	swap(&inverseMatrix[0][1], &inverseMatrix[1][0]);
@@ -303,4 +304,15 @@ Matrix4x4f Quaternion::ToRotationMatrix()
 	matrix[2][2] = 1 - 2 * (x2 - y2);
 
 	return matrix;
+}
+
+
+Matrix4x4f AGE::MakeOrthoProjectionMatrix(float width, float height, float near, float far)
+{
+	Matrix4x4f proj;
+	proj[0][0] = 2 / width;
+	proj[1][1] = 2 / height;
+	proj[2][2] = 1 / (far - near);
+	proj[3][2] = near / (far - near);
+	return proj;
 }

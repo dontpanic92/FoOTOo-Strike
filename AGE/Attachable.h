@@ -14,7 +14,7 @@ namespace AGE
 		virtual ~Attachable() {};
 		Transform* GetTramsform() { return &mTransform; }
 
-		void SetParent(SceneNode* parent) { mParent = parent; }
+		void SetParent(SceneNode* parent);
 		SceneNode* GetParent() { return mParent; }
 
 		void UpdateWorldMatrix(const Matrix4x4f& parentMatrix)

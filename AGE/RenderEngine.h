@@ -43,6 +43,8 @@ namespace AGE{
 
 		virtual void Render() = 0;
 
+		//virtual bool AddLight() = 0;
+
 	protected:
 		RenderEngine() {}
 

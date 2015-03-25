@@ -83,13 +83,16 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Attachable.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="D3D11Renderer\D3D11Def.h" />
     <ClInclude Include="D3D11Renderer\D3D11Renderer.h" />
     <ClInclude Include="D3D11Renderer\D3D11RenderObject.h" />
+    <ClInclude Include="D3D11Renderer\D3D11RenderTarget.h" />
     <ClInclude Include="D3D11Renderer\D3D11Texture.h" />
     <ClInclude Include="D3D11Renderer\HLSLShader.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="InputEngine.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
@@ -110,6 +113,7 @@
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIEngine.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -123,8 +127,10 @@
     <ClCompile Include="AGEMeshImporter.cpp" />
     <ClCompile Include="AGESkeletonAnimationImporter.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Attachable.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11Renderer.cpp" />
+    <ClCompile Include="D3D11Renderer\D3D11RenderTarget.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11Texture.cpp" />
     <ClCompile Include="D3D11Renderer\HLSLShader.cpp" />
     <ClCompile Include="Engine.cpp" />

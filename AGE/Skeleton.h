@@ -50,8 +50,12 @@ namespace AGE
 		//BoneAnimation* GetAnimation() { return mAnimation; }
 
 	private:
+
+		//BoneID is the Node ID in 3dsmax
 		int mBoneID;
 		int mParentID;
+
+		//InternalID is the ID in current Skeleton's mAllBones
 		int mInternalID;
 		Bone* mParent;
 

@@ -126,6 +126,18 @@
     <ClInclude Include="D3D11Renderer\D3D11Texture.h">
       <Filter>D3D11Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Renderer\D3D11RenderTarget.h">
+      <Filter>D3D11Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Renderer\D3D11Def.h">
+      <Filter>D3D11Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="UIEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -228,6 +240,12 @@
       <Filter>OpenGLRenderer</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Renderer\D3D11Texture.cpp">
+      <Filter>D3D11Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Attachable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Renderer\D3D11RenderTarget.cpp">
       <Filter>D3D11Renderer</Filter>
     </ClCompile>
   </ItemGroup>

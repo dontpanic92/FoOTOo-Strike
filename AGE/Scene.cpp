@@ -16,14 +16,52 @@ SceneNode::~SceneNode()
 {
 }
 
-void SceneNode::Attach(Attachable* attach)
+void SceneNode::Attach(Renderable* renderable)
 {
-	mAttachable.push_back(attach);
+	mRenderables.push_back(renderable);
 }
 
 void SceneNode::Attach(SceneNode* attach)
 {
+	if (attach->mParent)
+		attach->mParent->Detach(attach);
+	attach->mParent = this;
 	mNodes.push_back(attach);
+}
+
+void SceneNode::Attach(Attachable* otherObjects)
+{
+	if (otherObjects->GetParent())
+		otherObjects->GetParent()->Detach(otherObjects);
+	otherObjects->SetParent(this);
+	mOtherObjects.push_back(otherObjects);
+}
+
+void SceneNode::Detach(Renderable* renderable)
+{
+	for (auto it = mRenderables.begin(); it != mRenderables.end(); it++)
+		if (*it == renderable)
+			mRenderables.erase(it);
+}
+
+void SceneNode::Detach(SceneNode* node)
+{
+	for (auto it = mNodes.begin(); it != mNodes.end(); it++) {
+		if (*it == node) {
+			mNodes.erase(it);
+			break;
+		}
+	}
+}
+
+void SceneNode::Detach(Attachable* otherObjects)
+{
+	for (auto it = mOtherObjects.begin(); it != mOtherObjects.end(); it++) {
+		if (*it == otherObjects) {
+			mOtherObjects.erase(it);
+			break;
+		}
+	}
 }
 
 void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix)
@@ -31,17 +69,17 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 
 	//const vector<Attachable*>& attachable = mRoot.GetAttachable();
 	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
-	for (int i = 0; i < mAttachable.size(); i++) {
-		Shader* shader = dynamic_cast<Renderable*>(mAttachable[i])->GetRenderObject(0)->Shader;
+	for (int i = 0; i < mRenderables.size(); i++) {
+		Shader* shader = mRenderables[i]->GetRenderObject(0)->Shader;
 
-		Transform* translate = mAttachable[i]->GetTramsform();
+		Transform* translate = mRenderables[i]->GetTramsform();
 		GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
 		DefaultShaderData shaderData;
 		shaderData.ColorVector = vBlack;
 
-		shaderData.MMatrix = translate->GetTransformMatrix() * currentMatrix;
-		shaderData.VMatrix = viewMatrix; //GetTransform()->GetInverseTransformMatrix();
-		shaderData.PMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetProjectMatrix();
+		///shaderData.MMatrix = translate->GetTransformMatrix() * currentMatrix;
+		///shaderData.VMatrix = viewMatrix; //GetTransform()->GetInverseTransformMatrix();
+		///shaderData.PMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetProjectMatrix();
 
 		shader->Use();
 		shader->UpdateShaderData(shaderData);
@@ -57,21 +95,26 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 
 void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
 {
-	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
-	for each(auto attachable in mAttachable)
+	mWorldTransform = mTransform.GetTransformMatrix() * parentMatrix;
+	for each(auto renderable in mRenderables)
 	{
-		attachable->UpdateWorldMatrix(currentMatrix);
+		renderable->UpdateWorldMatrix(mWorldTransform);
 		//printf("scenenode: %p, attachable: %p\n", this, attachable);
-		RenderQueue::GetInstance()->PushRenderable(dynamic_cast<const Renderable*>(attachable));
+		RenderQueue::GetInstance()->PushRenderable(renderable);
+	}
+
+	for each(auto obj in mOtherObjects)
+	{
+		obj->UpdateWorldMatrix(mWorldTransform);
 	}
 
 	for each(auto node in mNodes)
 	{
-		node->UpdateAndCulling(currentMatrix);
+		node->UpdateAndCulling(mWorldTransform);
 	}
 }
 
-Matrix4x4f SceneNode::CalcWorldTransformMatrix()
+/*Matrix4x4f SceneNode::CalcWorldTransformMatrix()
 {
 	Matrix4x4f matrix;
 	std::stack<Matrix4x4f> s;
@@ -88,7 +131,7 @@ Matrix4x4f SceneNode::CalcWorldTransformMatrix()
 	}
 
 	return matrix;
-}
+}*/
 
 Scene::Scene() {}
 
@@ -100,9 +143,10 @@ void Scene::StartUp()
 
 Scene::~Scene()
 {
-	//for(unsigned int i = 0; i < mAttachable.size(); i++){
-	//	delete mAttachable[i];
-	//}
+	for each(auto light in mLights)
+	{
+		delete light;
+	}
 }
 
 void Scene::AttachCameraOnNode(SceneNode* node)
@@ -110,26 +154,7 @@ void Scene::AttachCameraOnNode(SceneNode* node)
 	mCamera.SetParent(node);
 }
 
-/*Renderable* Scene::LoadMesh(){
-	Vector3f points[4];
 
-	points[0].Set(10, -1, 10);
-	points[1].Set(10, -1, -10);
-	points[2].Set(-10, -1, -10);
-	points[3].Set(-10, -1, 10);
-	//Primitive::GetInstance()->CreatePlaneUnmanage(points);//
-	Renderable * attObj = Primitive::GetInstance()->CreateTorusUnmanage();//
-	attObj->GetTramsform()->Translate(Vector3f(0, 0, -2.5), Transform::Local);
-
-	mAttachable.push_back(attObj);
-
-	Renderable* attObj2 = Primitive::GetInstance()->CreatePlaneUnmanage(points);
-
-	mAttachable.push_back(attObj2);
-
-	return attObj;
-	}
-	*/
 void Scene::Render()
 {
 
@@ -161,4 +186,23 @@ void Scene::Render()
 void Scene::UpdateAndCulling()
 {
 	mRoot.UpdateAndCulling(Matrix4x4f::Identity);
+}
+
+SceneNode* Scene::CreateSceneNode(SceneNode* parent)
+{
+	if (parent == NULL)
+		parent = &mRoot;
+	SceneNode* node = new SceneNode();
+	parent->Attach(node);
+	return node;
+}
+
+Light* Scene::CreateLight(SceneNode* parent)
+{
+	if (parent == NULL)
+		parent = &mRoot;
+	Light* light = new Light;
+	//parent->Attach(light);
+	mLights.push_back(light);
+	return light;
 }

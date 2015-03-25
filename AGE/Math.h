@@ -78,12 +78,12 @@ namespace AGE
 		operator float*() const;
 		//operator const float*() const{ return (const float*)mMatrix; }
 
-		Matrix4x4f& Transpose();
-		Matrix4x4f& Inverse();
+		Matrix4x4f Transpose() const;
+		Matrix4x4f Inverse() const;
 
 		Matrix4x4f operator *(const Matrix4x4f& mul) const;
 
-		bool operator != (const Matrix4x4f& mat);
+		bool operator != (const Matrix4x4f& mat) const;
 
 		void MakeIdentity() { memcpy(mMatrix, IdentityFloat, sizeof(IdentityFloat)); }
 
@@ -143,6 +143,9 @@ namespace AGE
 	private:
 		float mQuaternion[4];
 	};
+
+
+	Matrix4x4f MakeOrthoProjectionMatrix(float width, float height, float near, float far);
 }
 
 #endif

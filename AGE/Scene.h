@@ -6,38 +6,50 @@
 #include "Math.h"
 #include "Renderable.h"
 #include "Camera.h"
+#include "Light.h"
 
 //using std::shared_ptr;
 using std::vector;
 
 namespace AGE
 {
+
 	class SceneNode
 	{
 	public:
 		SceneNode();
 		~SceneNode();
 
-		SceneNode* CreateNode();
-		void Attach(Attachable* attach);
+		void Attach(Renderable* renderable);
 		void Attach(SceneNode* node);
-		void SetParent(SceneNode* parent) { mParent = parent; }
+		void Attach(Attachable* otherObjects);
+		void Detach(Renderable* renderable); 
+		void Detach(SceneNode* node);
+		void Detach(Attachable* otherObjects);
+
 		SceneNode* GetParent() { return mParent; }
 		const vector<SceneNode*>& GetChildren() { return mNodes; }
-		const vector<Attachable*>& GetAttachable() { return mAttachable; }
+		const vector<Renderable*>& GetRenderables() { return mRenderables; }
 
 		void Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix);
 		void UpdateAndCulling(const Matrix4x4f& parentMatrix);
 
 		Transform* GetTransform() { return &mTransform; }
-		Matrix4x4f CalcWorldTransformMatrix();
+		const Matrix4x4f& GetWorldTransform() { return mWorldTransform; }
+		//Matrix4x4f CalcWorldTransformMatrix();
+
 	private:
+		void SetParent(SceneNode* parent) { mParent = parent; }
+
 		vector<SceneNode*> mNodes;
-		vector<Attachable*> mAttachable;
+		vector<Renderable*> mRenderables;
+		vector<Attachable*> mOtherObjects;
 
 		SceneNode* mParent;
 
 		Transform mTransform;
+
+		Matrix4x4f mWorldTransform;
 	};
 
 	class Scene
@@ -56,10 +68,17 @@ namespace AGE
 		void AttachCameraOnNode(SceneNode* node);
 
 		Camera* GetCurrentCamera() { return &mCamera; }
+
+		SceneNode* CreateSceneNode(SceneNode* parent = NULL);
+
+		Light* CreateLight(SceneNode* parent = NULL);
+
+		vector<Light*>& GetLights() { return mLights; }
+
 		//Attachable* GetAttachable() { return mAttachable[0]; }
 	private:
 		SceneNode mRoot;
-		//vector<Attachable*> mAttachable;
+		vector<Light*> mLights;
 
 		Camera mCamera;
 

@@ -18,31 +18,37 @@ void GameLogicImp::StartUp()
 	InputEngine::GetInstance()->RegisterKeyListener(this);
 
 	AGEMeshImporter importer;
-	Renderable* r1 = importer.LoadFromFile("../Resources/Models/b.AMESH");
+	Renderable* r1 = importer.LoadFromFile("../Resources/Models/a.AMESH");
 	Renderable* r2 = importer.LoadFromFile("../Resources/Models/c.AMESH");
 	AGESkeletonAnimationImporter importer2;
 	mSkeleton = r2->GetSkeleton();
-	SkeletonAnimation* animation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.ABONE");
-	mSkeleton->AddAnimation("default", animation);
+	SkeletonAnimation* idleAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.IDLE.AANIM");
+	SkeletonAnimation* reloadAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.RELOAD.AANIM");
+	mSkeleton->AddAnimation("default", idleAnimation);
+	mSkeleton->AddAnimation("reload", reloadAnimation);
 
-	SceneNode* node2 = new SceneNode();
-	SceneNode* node = new SceneNode();
+	SceneNode* node2 = Engine::GetInstance()->GetScene()->CreateSceneNode();
+	SceneNode* node = Engine::GetInstance()->GetScene()->CreateSceneNode();
 
 	node2->Attach(r2);
 	node->Attach(r1);
 	
 
-	CameraNode = new SceneNode();
+	CameraNode = Engine::GetInstance()->GetScene()->CreateSceneNode();
 	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, -50));
 	CameraNode->Attach(node2);
 	node2->GetTransform()->Translate(Vector3f(0, 0, -5));
 	node2->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
 	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
 
-	Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
-	Engine::GetInstance()->GetScene()->GetRoot()->Attach(node);
-	Engine::GetInstance()->GetScene()->GetRoot()->Attach(CameraNode);
-
+	//Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
+	CameraNode->Attach(Engine::GetInstance()->GetScene()->GetCurrentCamera());
+	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node);
+	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(CameraNode);
+	Light* l = Engine::GetInstance()->GetScene()->CreateLight();
+	l->Direction[0] = -1;
+	l->Direction[1] = -1;
+	l->Direction[2] = -1;
 	InitPhysics(r1);
 }
 btKinematicCharacterController* m_character;
@@ -86,8 +92,8 @@ void GameLogicImp::InitPhysics(Renderable *r1)
 
 	//btTransform startTransform;
 	startTransform.setIdentity();
-	//startTransform.setOrigin (btVector3(0.0, 4.0, 0.0));
-	startTransform.setOrigin(btVector3(-1400, 0, -1800));
+	startTransform.setOrigin (btVector3(111.0, 4000.0, 0.0));
+	//startTransform.setOrigin(btVector3(-1400, 0, -1800));
 
 
 	m_ghostObject = new btPairCachingGhostObject();

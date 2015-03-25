@@ -188,8 +188,8 @@ void OpenGLRenderer::Render()
 	GLfloat vBlack[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DefaultShaderData shaderData;
 	shaderData.ColorVector = vBlack;
-	shaderData.VMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->CalcViewMatrix();
-	shaderData.PMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetProjectMatrix();
+	//shaderData.VMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->CalcViewMatrix();
+	//shaderData.PMatrix = Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetProjectMatrix();
 
 	/*printf("vmatrix \n");
 	for (int i = 0; i < 16; i++) {
@@ -214,7 +214,7 @@ void OpenGLRenderer::Render()
 		{
 			OpenGLRenderObject* openGLObject = (OpenGLRenderObject*)object;
 			Matrix4x4f t = openGLObject->Parent->GetWorldMatrix();
-			shaderData.MMatrix = t;
+			//shaderData.MMatrix = t;
 
 			openGLObject->Shader->UpdateShaderData(shaderData);
 			openGLObject->Shader->Use();

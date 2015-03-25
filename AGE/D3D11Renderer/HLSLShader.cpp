@@ -93,6 +93,12 @@ bool HLSLShader::ProcessParameter(const ShaderUniformParameter& parameter)
 		var->AsShaderResource()->SetResource((*(D3D11Texture**)parameter.Parameter)->TextureSRV);
 		return true;
 		break;
+	case ShaderUniformParameter::Type::LIGHT:
+		float color[4];
+		memcpy(color, (*(Light**)parameter.Parameter)->Direction, 3 * sizeof(float));
+		var->SetRawValue(color, 0, sizeof(color));
+		return true;
+		break;
 	}
 	return false;
 }

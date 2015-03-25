@@ -15,7 +15,7 @@ Engine::Engine() :mLastTimeUpdate(0), mScene(0)
 int Engine::StartUp()
 {
 	mApp.StartUp();
-	RenderEngine::SetEngineType(RenderEngine::Type::OpenGL);
+	RenderEngine::SetEngineType(RenderEngine::Type::Direct3D11);
 	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	PhysicsEngine::GetInstance()->StartUp();
@@ -44,8 +44,8 @@ int Engine::Update()
 
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	float delta = now - mLastTimeUpdate;
-	//if (delta < 10)
-	//return 1;
+	if (delta < 10)
+		return 1;
 
 	RtInfomation::GetInstance()->FrameStart();
 
