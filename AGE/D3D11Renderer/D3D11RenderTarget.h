@@ -2,7 +2,7 @@
 #define __AGE_D3D11RENDERTARGET_HEADER__
 
 #include <d3d11.h>
-#include "../Math.h"
+#include "../LinearMath.h"
 #include "D3D11Def.h"
 
 namespace AGE{
@@ -33,13 +33,24 @@ namespace AGE{
 			return mDepthMapSRV;
 		}
 
+		ID3D11DepthStencilView* GetDepthStencilView()
+		{
+			return mDepthMapDSV;
+		}
+
+		ID3D11Texture2D* GetDepthMap()
+		{
+			return mDepthMap;
+		}
+
 	protected:
 
 		uint mWidth;
 		uint mHeight;
-		ID3D11ShaderResourceView* mDepthMapSRV;
-		ID3D11DepthStencilView* mDepthMapDSV;
+		ID3D11ShaderResourceView* mDepthMapSRV = NULL;
+		ID3D11DepthStencilView* mDepthMapDSV = NULL;
 		D3D11_VIEWPORT mViewport;
+		ID3D11Texture2D* mDepthMap = NULL;
 	};
 
 	class D3D11NormalTarget : public D3D11RenderTarget

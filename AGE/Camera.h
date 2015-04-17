@@ -1,7 +1,7 @@
 #ifndef __AGE_CAMERA_HEADER__
 #define __AGE_CAMERA_HEADER__
 
-#include "Math.h"
+#include "LinearMath.h"
 #include "Attachable.h"
 
 namespace AGE

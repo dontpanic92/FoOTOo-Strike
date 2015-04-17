@@ -4,18 +4,23 @@
 #include "RenderEngine.h"
 #include "Scene.h"
 #include "GameLogic.h"
+#include "Def.h"
 
 namespace AGE{
-	class Engine : public Singleton < Engine >
+	class AGE_EXPORT Engine : public Singleton < Engine >
 	{
 	public:
 		~Engine();
 
 		int StartUp();
 
+		void ShutDown();
+
 		int Run();
 
 		int Update();
+
+		void SetGameLogic(GameLogic* logic);
 
 		Scene* GetScene() { return mScene; }
 		Window GetMainWindow() { return mApp.GetMainWindow(); }
@@ -26,7 +31,7 @@ namespace AGE{
 	private:
 		Application mApp;
 		Scene * mScene;
-		GameLogicImp* mGameLogic;
+		GameLogic* mGameLogic;
 
 		float mLastTimeUpdate;
 

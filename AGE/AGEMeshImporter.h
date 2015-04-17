@@ -3,9 +3,11 @@
 
 #include "Renderable.h"
 #include "Scene.h"
+#include "Def.h"
+
 namespace AGE
 {
-	class AGEMeshImporter
+	class AGE_EXPORT AGEMeshImporter
 	{
 	public:
 

@@ -3,18 +3,20 @@
 
 #include <vector>
 
+#include "Def.h"
+
 namespace AGE{
 
 
 	class Logic;
 
-	class LogicEvent
+	class AGE_EXPORT LogicEvent
 	{
 	public:
 		virtual int GetEventType() = 0;
 	};
 
-	class LogicState
+	class AGE_EXPORT LogicState
 	{
 	public:
 		LogicState(int id, Logic* logic);
@@ -31,8 +33,8 @@ namespace AGE{
 		Logic* mLogic;
 		int mID;
 	};
-
-	class Logic
+	
+	class AGE_EXPORT Logic
 	{
 	public:
 		~Logic();

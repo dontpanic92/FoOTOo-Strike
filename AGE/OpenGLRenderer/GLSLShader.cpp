@@ -2,7 +2,7 @@
 #include "GLSLShader.h"
 #include "OpenGLTexture.h"
 #include "../ResourceManager.h"
-#include "../Math.h"
+#include "../LinearMath.h"
 #include "../Log.h"
 
 using namespace AGE;

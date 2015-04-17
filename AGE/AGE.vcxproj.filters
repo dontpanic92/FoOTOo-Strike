@@ -45,9 +45,6 @@
     <ClInclude Include="Scene.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Primitive.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -141,6 +138,18 @@
     <ClInclude Include="Logic.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="AudioEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AGE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearMath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Def.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -170,9 +179,6 @@
     <ClCompile Include="Renderable.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Math.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -190,9 +196,6 @@
     </ClCompile>
     <ClCompile Include="..\3rd\GLTools\src\math3d.cpp">
       <Filter>GLTools</Filter>
-    </ClCompile>
-    <ClCompile Include="GameLogic.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="InputEngine.cpp">
       <Filter>源文件</Filter>
@@ -252,6 +255,12 @@
       <Filter>D3D11Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Logic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearMath.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

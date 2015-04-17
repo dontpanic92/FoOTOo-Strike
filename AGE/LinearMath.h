@@ -2,6 +2,7 @@
 #define __AGE_MATH_HEADER__
 
 #include <cstring>
+#include "Def.h"
 
 namespace AGE
 {
@@ -18,7 +19,7 @@ namespace AGE
 	inline float Rad2Deg(float Rad) { return Rad * _180_DIV_PI; }
 
 	class Matrix4x4f;
-	class Matrix3x3f
+	class AGE_EXPORT Matrix3x3f
 	{
 	public:
 		Matrix3x3f() { MakeIdentity(); }
@@ -41,7 +42,7 @@ namespace AGE
 	};
 
 	class Matrix4x4f;
-	class Vector3f
+	class AGE_EXPORT Vector3f
 	{
 	public:
 		Vector3f() { Set(Zero[0], Zero[1], Zero[2]); }
@@ -65,7 +66,7 @@ namespace AGE
 		float mVector[3];
 	};
 
-	class Matrix4x4f
+	class AGE_EXPORT Matrix4x4f
 	{
 	public:
 		Matrix4x4f() { MakeIdentity(); }
@@ -83,6 +84,8 @@ namespace AGE
 
 		Matrix4x4f operator *(const Matrix4x4f& mul) const;
 
+		Matrix4x4f operator = (float a[16]) { memcpy(mMatrix, a, sizeof(mMatrix)); return *this; }
+
 		bool operator != (const Matrix4x4f& mat) const;
 
 		void MakeIdentity() { memcpy(mMatrix, IdentityFloat, sizeof(IdentityFloat)); }
@@ -94,7 +97,7 @@ namespace AGE
 		float mMatrix[4][4];
 	};
 
-	class Transform
+	class AGE_EXPORT Transform
 	{
 	public:
 		enum CoordSystem { World, Local };
@@ -104,7 +107,7 @@ namespace AGE
 
 		void Translate(const Vector3f& translation, CoordSystem coordSystem = Local);
 		void SetPosition(const Vector3f& position);
-		Vector3f GetPosition();
+		Vector3f GetPosition() const;
 		void RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem = Local);
 		void ClearRotation();
 
@@ -112,7 +115,7 @@ namespace AGE
 
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 
-		Matrix4x4f GetTransformMatrix() { return mTransformMatrix; }
+		Matrix4x4f GetTransformMatrix() const { return mTransformMatrix; }
 		void SetTransformMatrix(const Matrix4x4f& matrix) { mTransformMatrix = matrix; }
 
 		Matrix4x4f GetInverseTransformMatrix();
@@ -121,7 +124,7 @@ namespace AGE
 	};
 
 
-	class Quaternion
+	class AGE_EXPORT Quaternion
 	{
 	public:
 		Quaternion() {}
@@ -145,7 +148,7 @@ namespace AGE
 	};
 
 
-	Matrix4x4f MakeOrthoProjectionMatrix(float width, float height, float near, float far);
+	Matrix4x4f MakeOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far);
 }
 
 #endif

@@ -4,11 +4,12 @@
 #include "Window.h"
 #include "Singleton.h"
 #include <Windows.h>
+#include "Def.h"
 
 namespace AGE
 {
 
-	class WindowsApplication
+	class AGE_EXPORT WindowsApplication
 	{
 	public:
 		int MainLoop();

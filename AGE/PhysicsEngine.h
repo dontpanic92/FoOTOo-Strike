@@ -4,10 +4,11 @@
 #include "Singleton.h"
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/btBulletDynamicsCommon.h>
+#include "Def.h"
 
 namespace AGE
 {
-	class PhysicsEngine : public Singleton < PhysicsEngine >
+	class AGE_EXPORT PhysicsEngine : public Singleton < PhysicsEngine >
 	{
 	public:
 		PhysicsEngine();

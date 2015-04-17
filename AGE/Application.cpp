@@ -46,6 +46,7 @@ LRESULT CALLBACK WindowEventHandler(HWND hwnd, UINT message, WPARAM wParam, LPAR
 	case WM_ERASEBKGND:
 		return 1;
 	case WM_DESTROY:
+		Engine::GetInstance()->ShutDown();
 		PostQuitMessage(0);
 		return 0;
 	default:

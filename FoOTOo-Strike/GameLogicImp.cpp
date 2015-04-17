@@ -1,189 +1,22 @@
-#include "GameLogic.h"
+#include "GameLogicImp.h"
 #include "Engine.h"
-#include "AGEMeshImporter.h"
-#include "AGESkeletonAnimationImporter.h"
 #include "PhysicsEngine.h"
 
-#include "Logic.h"
+#include "AudioEngine.h"
 
 #include <bullet/BulletDynamics/Character/btKinematicCharacterController.h>
 #include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
+
+#include "Actor.h"
 
 using namespace AGE;
 using namespace OIS;
 
 SceneNode* CameraNode;
 
-
-class KeyboardLogicEvent : public LogicEvent
-{
-public:
-	int GetEventType()
-	{
-		return 0;
-	}
-
-	int KeyID;
-};
-
-class MouseLogicEvent : public LogicEvent
-{
-public:
-	int GetEventType()
-	{
-		return 1;
-	}
-
-	MouseEvent mouseEvent;
-};
-
-
-class ActorLogicIdle : public LogicState
-{
-public:
-	ActorLogicIdle(int id, Logic* logic, Skeleton* skel)
-		:LogicState(id, logic), mSkeleton(skel)
-	{
-	}
-
-	void Enter() override
-	{
-		mSkeleton->StartPlay("default");
-	}
-
-	void React(LogicEvent* evt) override
-	{
-		//if (evt->GetEventType() == 1) {
-		//	MouseLogicEvent* e = (MouseLogicEvent*)evt;
-		//	e->mouseEvent.
-		//}
-	}
-
-	void Update(float deltaTime) override
-	{
-		mSkeleton->Update(deltaTime);
-		char keys[256];
-		InputEngine::GetInstance()->GetKeyStates(keys);
-		if (keys[KC_R]) {
-			mLogic->Transit(2);
-		}
-
-		const MouseState& state = InputEngine::GetInstance()->GetMouseState();
-		if (state.buttonDown(OIS::MouseButtonID::MB_Left)) {
-			mLogic->Transit(3);
-		}
-	}
-	void Exit() override
-	{
-		
-	}
-private:
-	Skeleton* mSkeleton;
-	MouseState state;
-};
-
-class ActorLogicReload : public LogicState
-{
-public:
-	ActorLogicReload(int id, Logic* logic, Skeleton* skel)
-		:LogicState(id, logic), mSkeleton(skel)
-	{
-	}
-
-	virtual void Enter()
-	{
-		mSkeleton->StartPlay("reload", false);
-	}
-
-	void React(LogicEvent* evt) override
-	{
-	}
-
-	virtual void Update(float deltaTime)
-	{
-		if (mSkeleton->IsPlaying())
-			mSkeleton->Update(deltaTime);
-		else
-			mLogic->Transit(1);
-	}
-
-	virtual void Exit()
-	{
-
-	}
-private:
-	Skeleton* mSkeleton;
-};
-
-
-class ActorLogicShoot1 : public LogicState
-{
-public:
-	ActorLogicShoot1(int id, Logic* logic, Skeleton* skel)
-		:LogicState(id, logic), mSkeleton(skel)
-	{
-	}
-
-	void Enter() override
-	{
-		mSkeleton->StartPlay("shoot1", false);
-	}
-
-	void Update(float deltaTime) override
-	{
-		if (mSkeleton->IsPlaying())
-			mSkeleton->Update(deltaTime);
-		else
-			mLogic->Transit(1);
-	}
-	void Exit() override
-	{
-
-	}
-private:
-	Skeleton* mSkeleton;
-};
-
-class Actor
-{
-public:
-
-	Actor()
-	{
-		AGEMeshImporter importer;
-		mRenderable = importer.LoadFromFile("../Resources/Models/c.AMESH");
-		AGESkeletonAnimationImporter importer2;
-		mSkeleton = mRenderable->GetSkeleton();
-		SkeletonAnimation* idleAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.IDLE.AANIM");
-		SkeletonAnimation* reloadAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.RELOAD.AANIM");
-		SkeletonAnimation* shoot1Animation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.SHOOT1.AANIM");
-		mSkeleton->AddAnimation("default", idleAnimation);
-		mSkeleton->AddAnimation("reload", reloadAnimation);
-		mSkeleton->AddAnimation("shoot1", shoot1Animation);
-
-		mLogic.NewState<ActorLogicIdle>(1, &mLogic, mSkeleton);
-		mLogic.NewState<ActorLogicReload>(2, &mLogic, mSkeleton);
-		mLogic.NewState<ActorLogicShoot1>(3, &mLogic, mSkeleton);
-
-		mLogic.SetInitialState(1);
-	}
-
-	Renderable* GetRenderable() { return mRenderable; }
-
-	Skeleton* GetSkeleton() { return mSkeleton; }
-
-	void Update(float deltaTime)
-	{
-		mLogic.GetCurrentState()->Update(deltaTime);
-	}
-
-private:
-	Logic mLogic;
-
-	Renderable* mRenderable;
-	Skeleton* mSkeleton;
-};
 Actor * actor;
+
+AIActor* leet;
 
 void GameLogicImp::StartUp()
 {
@@ -191,9 +24,15 @@ void GameLogicImp::StartUp()
 	InputEngine::GetInstance()->RegisterKeyListener(this);
 
 	AGEMeshImporter importer;
-	Renderable* r1 = importer.LoadFromFile("../Resources/Models/a.AMESH");
+	Renderable* r1 = importer.LoadFromFile("../Resources/Models/b.AMESH");
 
 	actor = new Actor;
+	leet = new AIActor;
+
+
+	SceneNode* leetNode = Engine::GetInstance()->GetScene()->CreateSceneNode();
+	leetNode->Attach(leet->GetRenderable());
+	leet->GetRenderable()->SetParent(leetNode);
 
 	SceneNode* node2 = Engine::GetInstance()->GetScene()->CreateSceneNode();
 	SceneNode* node = Engine::GetInstance()->GetScene()->CreateSceneNode();
@@ -209,18 +48,16 @@ void GameLogicImp::StartUp()
 	node2->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
 	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
 
-	//Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
+	Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
 	CameraNode->Attach(Engine::GetInstance()->GetScene()->GetCurrentCamera());
-	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node);
-	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(CameraNode);
 	Light* l = Engine::GetInstance()->GetScene()->CreateLight();
 	l->Direction[0] = -1;
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
 	InitPhysics(r1);
+
 }
-btKinematicCharacterController* m_character;
-btPairCachingGhostObject* m_ghostObject;
+
 void GameLogicImp::InitPhysics(Renderable *r1)
 {
 
@@ -263,24 +100,20 @@ void GameLogicImp::InitPhysics(Renderable *r1)
 	startTransform.setOrigin (btVector3(111.0, 4000.0, 0.0));
 	//startTransform.setOrigin(btVector3(-1400, 0, -1800));
 
+	actor->InitPhysics(startTransform);
 
-	m_ghostObject = new btPairCachingGhostObject();
-	m_ghostObject->setWorldTransform(startTransform);
-	//sweepBP->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	startTransform.setOrigin(btVector3(200.0, 4000.0, 0.0));
+	leet->InitPhysics(startTransform);
 
-	btScalar characterHeight = 10;
-	btScalar characterWidth = 30;
-	btConvexShape* capsule = new btCapsuleShape(characterWidth, characterHeight);
-	m_ghostObject->setCollisionShape(capsule);
-	m_ghostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	auto aObject = actor->GetPhysicsObject();
+	auto aController = actor->GetPhysicsController();
 
-	btScalar stepHeight = btScalar(0);
-	m_character = new btKinematicCharacterController(m_ghostObject, capsule, stepHeight);
-	m_character->setJumpSpeed(30);
-	m_character->setGravity(10);
-
-	GetPhysicsEngine()->GetWorld()->addCollisionObject(m_ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
-	GetPhysicsEngine()->GetWorld()->addAction(m_character);
+	GetPhysicsEngine()->GetWorld()->addCollisionObject(leet->GetPhysicsObject(),1, /* btBroadphaseProxy::CharacterFilter, */btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+	GetPhysicsEngine()->GetWorld()->addAction(leet->GetPhysicsController());
+	
+	GetPhysicsEngine()->GetWorld()->addCollisionObject(aObject,1, /*btBroadphaseProxy::CharacterFilter,*/ btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+	GetPhysicsEngine()->GetWorld()->addAction(aController);
+	
 	GetPhysicsEngine()->GetWorld()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
 }
@@ -303,35 +136,38 @@ bool GameLogicImp::Update(float time)
 	///mSkeleton->Update(time);
 	ProcessMouse(InputEngine::GetInstance()->GetMouseState());
 	actor->Update(time);
+	leet->Update(time);
 
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
 
 	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	float speed = 0.5;// time / 5;// / 100;
+
+	auto aController = actor->GetPhysicsController();
 	Vector3f v = Vector3f(0, 0, 0);
 	if (keys[KC_W]) {
 		//cameraTransform->Translate(Vector3f(0, 0, -speed));
 
-		m_character->setWalkDirection(btVector3(0, 0, -speed));
+		aController->setWalkDirection(btVector3(0, 0, -speed));
 		v[2] += -1;
 	}
 
 	if (keys[KC_S]) {
 		//cameraTransform->Translate(Vector3f(0, 0, speed));
-		m_character->setWalkDirection(btVector3(0, 0, speed));
+		aController->setWalkDirection(btVector3(0, 0, speed));
 		v[2] += 1;
 	}
 
 	if (keys[KC_A]) {
 		//cameraTransform->Translate(Vector3f(-speed, 0, 0));
-		m_character->setWalkDirection(btVector3(-speed, 0, 0));
+		aController->setWalkDirection(btVector3(-speed, 0, 0));
 		v[0] += -1;
 	}
 
 	if (keys[KC_D]) {
 		//cameraTransform->Translate(Vector3f(speed, 0, 0));
-		m_character->setWalkDirection(btVector3(speed, 0, 0));
+		aController->setWalkDirection(btVector3(speed, 0, 0));
 		v[0] += 1;
 	}
 
@@ -341,18 +177,16 @@ bool GameLogicImp::Update(float time)
 
 	if (keys[KC_SPACE]) {
 		//cameraTransform->Translate(Vector3f(0, speed, 0), Transform::World);
-		m_character->jump();
+		aController->jump();
 	}
-
-	v.Normalize();
-	v = v * speed;
-
 
 	//printf("%f %f %f\n", v[0], v[1], v[2]);
 
 	Matrix3x3f ma = cameraTransform->GetTransformMatrix();
 	v = v * ma;
 	v[1] = 0;
+	v.Normalize();
+	v = v * speed;
 	//btMatrix3x3 m;
 	//m.setValue(ma[0][0], ma[0][1], ma[0][2], ma[1][0], ma[1][1], ma[1][2], ma[2][0], ma[2][1], ma[2][2]);
 	//btScalar r, y, p;
@@ -360,12 +194,12 @@ bool GameLogicImp::Update(float time)
 	//btQuaternion q(r, y, p);
 
 	//v.rotate(q.getAxis(), q.getAngle());
-	m_character->setWalkDirection(btVector3(v[0], v[1], v[2]));
+	aController->setWalkDirection(btVector3(v[0], v[1], v[2]));
 
 	//if (v.x() != 0 || v.y() != 0 || v.z() != 0)
 	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
 
-	btTransform trans = m_character->getGhostObject()->getWorldTransform();
+	btTransform trans = aController->getGhostObject()->getWorldTransform();
 	btVector3 v2 = trans.getOrigin();
 	cameraTransform->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
 	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
@@ -398,11 +232,11 @@ void GameLogicImp::ProcessMouse(const MouseState &state)
 	cameraTransform->RotateByRadian(Deg2Rad(yawDegree), 0, 1, 0);
 	cameraTransform->RotateByRadian(Deg2Rad(pitchDegree), 1, 0, 0);
 
-	btTransform trans;
-	trans.setIdentity();
-	btQuaternion q;
-	q.setEuler(yawDegree, 0, 0);
-	m_character->getGhostObject()->getWorldTransform().setRotation(q);
+	////////btTransform trans;
+	////////trans.setIdentity();
+	////////btQuaternion q;
+	////////q.setEuler(yawDegree, 0, 0);
+	//////actor->GetPhysicsObject()->getWorldTransform().setRotation(q);
 	//cameraTransform->ClearRotation();
 	//btQuaternion q = trans.getRotation();
 	//btVector3 v3 = q.getAxis();

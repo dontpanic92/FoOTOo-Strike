@@ -11,7 +11,7 @@ bool D3D11Texture::Load(const char* path)
 
 	switch (mDepth) {
 	case 4:
-		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; //DXGI_FORMAT_R8G8B8A8_UNORM; //
 		break;
 	}
 	ID3D11Texture2D* texture2d;
@@ -32,6 +32,7 @@ bool D3D11Texture::Load(const char* path)
 
 	texture2d->Release();
 
+	delete[] pBits;
 	return true;
 
 }

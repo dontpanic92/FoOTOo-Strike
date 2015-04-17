@@ -3,18 +3,18 @@
 //#include <memory>
 #include <vector>
 #include "Mesh.h"
-#include "Math.h"
+#include "LinearMath.h"
 #include "Renderable.h"
 #include "Camera.h"
 #include "Light.h"
-
+#include "Def.h"
 //using std::shared_ptr;
 using std::vector;
 
 namespace AGE
 {
 
-	class SceneNode
+	class AGE_EXPORT SceneNode
 	{
 	public:
 		SceneNode();
@@ -52,7 +52,7 @@ namespace AGE
 		Matrix4x4f mWorldTransform;
 	};
 
-	class Scene
+	class AGE_EXPORT Scene
 	{
 	public:
 		Scene();

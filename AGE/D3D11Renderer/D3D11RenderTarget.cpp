@@ -25,29 +25,30 @@ D3D11ShadowMapTarget::D3D11ShadowMapTarget(ID3D11Device* device, uint width, uin
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
-	ID3D11Texture2D* depthMap = 0;
-	device->CreateTexture2D(&texDesc, 0, &depthMap);
+	mDepthMap = 0;
+	TESTRESULT(device->CreateTexture2D(&texDesc, 0, &mDepthMap));
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	dsvDesc.Flags = 0;
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
-	(device->CreateDepthStencilView(depthMap, &dsvDesc, &mDepthMapDSV));
+	TESTRESULT(device->CreateDepthStencilView(mDepthMap, &dsvDesc, &mDepthMapDSV));
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 	srvDesc.Texture2D.MostDetailedMip = 0;
-	(device->CreateShaderResourceView(depthMap, &srvDesc, &mDepthMapSRV));
+	TESTRESULT(device->CreateShaderResourceView(mDepthMap, &srvDesc, &mDepthMapSRV));
 
 	// View saves a reference to the texture so we can release our reference.
-	SafeRelease(depthMap);
+	
 }
 
 D3D11ShadowMapTarget::~D3D11ShadowMapTarget()
 {
+	SafeRelease(mDepthMap);
 	SafeRelease(mDepthMapSRV);
 	SafeRelease(mDepthMapDSV);
 }
@@ -56,6 +57,7 @@ void D3D11ShadowMapTarget::SetRenderTarget(ID3D11DeviceContext* dc)
 {
 	dc->RSSetViewports(1, &mViewport);
 	ID3D11RenderTargetView* renderTargets[1] = { 0 };
+	
 	dc->OMSetRenderTargets(1, renderTargets, mDepthMapDSV);
 	dc->ClearDepthStencilView(mDepthMapDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
@@ -111,7 +113,8 @@ D3D11NormalTarget::~D3D11NormalTarget()
 
 void D3D11NormalTarget::SetRenderTarget(ID3D11DeviceContext* dc)
 {
-	dc->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	ID3D11RenderTargetView* renderTargets[1] = { mRenderTargetView };
+	dc->OMSetRenderTargets(1, renderTargets, mDepthStencilView);
 	dc->RSSetViewports(1, &mViewport);
 }
 

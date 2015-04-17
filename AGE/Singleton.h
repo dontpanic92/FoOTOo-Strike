@@ -1,15 +1,16 @@
 #ifndef __AGE_SINGLETON_HEADER__
 #define __AGE_SINGLETON_HEADER__
+#include "Def.h"
 
 namespace AGE
 {
-	class NonCopyable
+	class AGE_EXPORT NonCopyable
 	{
 	protected:
 		NonCopyable() {}
 	private:
-		NonCopyable & operator=(const NonCopyable&) {};
-		NonCopyable(const NonCopyable&) {};
+		NonCopyable & operator=(const NonCopyable&) = delete;
+		NonCopyable(const NonCopyable&) = delete;
 	};
 
 	template<class T>

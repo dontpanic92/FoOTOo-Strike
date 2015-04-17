@@ -1,7 +1,7 @@
 #ifndef __AGE_WINDOW_HEADER__
 #define __AGE_WINDOW_HEADER__
 #include <Windows.h>
-#include "Math.h"
+#include "LinearMath.h"
 
 namespace AGE
 {

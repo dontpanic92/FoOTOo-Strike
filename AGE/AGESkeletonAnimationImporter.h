@@ -1,10 +1,11 @@
 #ifndef __AGE_AGESKELETONIMPORTER_HEADER__
 #define __AGE_AGESKELETONIMPORTER_HEADER__
 #include "Skeleton.h"
+#include "Def.h"
 
 namespace AGE
 {
-	class AGESkeletonAnimationImporter
+	class AGE_EXPORT AGESkeletonAnimationImporter
 	{
 	public:
 		struct AM1BoneFileHeader

@@ -113,7 +113,7 @@ int D3D11Renderer::StartUp(Window window)
 	mD3DImmediateContext->RSSetState(mRasterizerState);
 
 	D3D11_RASTERIZER_DESC nocullDesc;
-	ZeroMemory(&rsDesc, sizeof(D3D11_RASTERIZER_DESC));
+	ZeroMemory(&nocullDesc, sizeof(D3D11_RASTERIZER_DESC));
 	nocullDesc.FillMode = D3D11_FILL_SOLID;
 	nocullDesc.CullMode = D3D11_CULL_NONE;
 	nocullDesc.FrontCounterClockwise = true;
@@ -189,13 +189,13 @@ Texture2D* D3D11Renderer::CreateTextrue2D(const char* path)
 struct SceneBounds
 {
 	Vector3f Center = Vector3f(0, 0, 0);
-	float	 Radius = 8000;
+	float	 Radius = 3000;
 }SceneBounds;
 
-Matrix4x4f OrthoProjectionMatrix = MakeOrthoProjectionMatrix(SceneBounds.Radius * 2, SceneBounds.Radius * 2, 1, SceneBounds.Radius * 2);
+Matrix4x4f lightProjMatrix;// = MakeOrthoProjectionMatrix(SceneBounds.Radius * 2, SceneBounds.Radius * 2, 1, SceneBounds.Radius * 2);
 Matrix4x4f ShadowVPTMatrix;
-Matrix4x4f viewMatrix;
-Matrix4x4f projMatrix, tMatrix;
+Matrix4x4f lightViewMatrix;
+Matrix4x4f tMatrix;
 
 void D3D11Renderer::ShadowMapPass()
 {
@@ -221,35 +221,40 @@ void D3D11Renderer::ShadowMapPass()
 	private:
 		std::vector<ShaderUniformParameter> mParameters;
 	}shaderData;
-	
+
+	mShadowMapTarget->SetRenderTarget(mD3DImmediateContext);
 	mD3DImmediateContext->RSSetState(mNoCullRasterizerState);
 
-	Light* l = Engine::GetInstance()->GetScene()->GetLights()[0];
+	Light l = *Engine::GetInstance()->GetScene()->GetLights()[0];
 	Transform tran;
-	Vector3f lightDir = l->Direction;
+	Vector3f lightDir = l.Direction;
 	lightDir.Normalize();
-	Vector3f lightPos = lightDir * -SceneBounds.Radius;
+	Vector3f lightPos = lightDir * (-SceneBounds.Radius) * 2;
 
 	tran.SetPosition(lightPos);
-	//tran.RotateByRadian(Deg2Rad(-45), 0, 0, 1);
-
-	//tran.SetPosition(Vector3f(1000, 1000, 1000));
 	tran.RotateByRadian(Deg2Rad(-135), 0, 1, 0);
 	tran.RotateByRadian(Deg2Rad(45), 1, 0, 0);
-	viewMatrix = tran.GetTransformMatrix().Transpose().Inverse();
-	//viewMatrix = viewMatrix.Transpose().Inverse();
-	//viewMatrix = viewMatrix.Transpose().Inverse();//l->GetWorldMatrix().Transpose().Inverse();
-	projMatrix = OrthoProjectionMatrix;
+	//tran.SetPosition(Vector3f(1000, 1000, 1000));
+	lightViewMatrix = tran.GetTransformMatrix().Transpose().Inverse();
+
+	Vector3f transedCenter = SceneBounds.Center * lightViewMatrix;
+	float left = transedCenter[0] - SceneBounds.Radius;
+	float bottom = transedCenter[1] - SceneBounds.Radius;
+	float n = transedCenter[2] - SceneBounds.Radius;
+	float right = transedCenter[0] + SceneBounds.Radius;
+	float top = transedCenter[1] + SceneBounds.Radius;
+	float f = transedCenter[2] + SceneBounds.Radius;
+	lightProjMatrix = MakeOrthoProjectionMatrix(left, right, bottom, top, n, f);
+
 	float t[] = { 0.5f, 0.0f, 0.0f, 0.0f,
 				0.0f, -0.5f, 0.0f, 0.0f,
 				0.0f, 0.0f, 1.0f, 0.0f,
 				0.5f, 0.5f, 0.0f, 1.0f };
 	tMatrix = t;
 
-	//ShadowVPTMatrix = viewMatrix * projMatrix * t;
+	//ShadowVPTMatrix = lightViewMatrix * lightProjMatrix * t;
 
 	const RenderQueue::RenderQueueMap& map = RenderQueue::GetInstance()->GetQueue();
-	mShadowMapTarget->SetRenderTarget(mD3DImmediateContext);
 
 	mD3DImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	for each (auto& pair in map)
@@ -257,14 +262,15 @@ void D3D11Renderer::ShadowMapPass()
 		for each (auto object in pair.second)
 		{
 			D3D11RenderObject* d3d11Object = (D3D11RenderObject*)object;
-			HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
-			Matrix4x4f MPVMatrix = d3d11Object->Parent->GetWorldMatrix() * viewMatrix * projMatrix;
-			shaderData.MVPMatrix = MPVMatrix;
+			//HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
+			Matrix4x4f MVPMatrix = d3d11Object->Parent->GetWorldMatrix() * lightViewMatrix * lightProjMatrix;
+			shaderData.MVPMatrix = MVPMatrix;
 
-			shader->UpdateShaderData(shaderData);
+
+			shadowShader->UpdateShaderData(shaderData);
 			//shader->Use();
 			//mD3DImmediateContext->IASetInputLayout(shader->InputLayout);
-			shader->Technique->GetPassByIndex(0)->Apply(0, mD3DImmediateContext);
+			shadowShader->Technique->GetPassByIndex(0)->Apply(0, mD3DImmediateContext);
 
 			UINT offset = 0;
 			UINT stride = sizeof(Mesh::Vertex);
@@ -274,33 +280,28 @@ void D3D11Renderer::ShadowMapPass()
 		}
 	}
 
-	mD3DImmediateContext->RSSetState(mRasterizerState);
-	mNormalTarget->SetRenderTarget(mD3DImmediateContext);
-
-	//ID3D11Resource* res;
-	//mShadowMapTarget->GetShaderResourceView()->GetResource(&res);
-	//HRESULT hr = D3DX11SaveTextureToFile(mD3DImmediateContext, res, D3DX11_IFF_DDS, L"Z:\\1.dds");
-	//printf("%lX\n", hr);
 }
 
 void D3D11Renderer::Render()
 {
+
 	ShadowMapPass();
+	//mD3DImmediateContext->RSSetState(0);
+	mNormalTarget->SetRenderTarget(mD3DImmediateContext);
+	mNormalTarget->ClearView(mD3DImmediateContext);
+	mD3DImmediateContext->RSSetState(mRasterizerState);
+	mD3DImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	const RenderQueue::RenderQueueMap& map = RenderQueue::GetInstance()->GetQueue();
 
-	GLfloat vBlack[] = { 1.0, 1.0, 1.0, 1.0f };
+	GLfloat vBlack[] = { 0.0, 0.0, 0.0, 1.0f };
 	DefaultShaderData shaderData;
 	shaderData.ColorVector = vBlack;
 	Camera* camera = Engine::GetInstance()->GetScene()->GetCurrentCamera();
 
 	Light l = *Engine::GetInstance()->GetScene()->GetLights()[0];
-	l.Direction = l.Direction * (Matrix3x3f)camera->CalcViewMatrix();
+	l.Direction = l.Direction * (Matrix3x3f)camera->GetWorldMatrix().Transpose().Inverse();//camera->CalcViewMatrix();//
 	shaderData.Light = &l;
-
-
-	mNormalTarget->ClearView(mD3DImmediateContext);
-	mD3DImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	D3D11Texture shadowTexture(mD3DDevice);
 	shadowTexture.TextureSRV = mShadowMapTarget->GetShaderResourceView();
@@ -316,16 +317,17 @@ void D3D11Renderer::Render()
 			D3D11RenderObject* d3d11Object = (D3D11RenderObject*)object;
 			HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
 
-			Matrix4x4f NormalMatrix = d3d11Object->Parent->GetWorldMatrix() * camera->GetWorldMatrix().Transpose().Inverse();
-			Matrix4x4f MVPMatrix = NormalMatrix * camera->GetProjectMatrix();
+			Matrix4x4f NormalMatrix = d3d11Object->Parent->GetWorldMatrix() * camera->GetWorldMatrix().Transpose().Inverse();//lightViewMatrix;//
+			Matrix4x4f MVPMatrix = NormalMatrix * camera->GetProjectMatrix();//lightProjMatrix;//
 			shaderData.MVPMatrix = MVPMatrix;
 			shaderData.NormalMatrix = NormalMatrix;
-			shaderData.ShadowMatrix = d3d11Object->Parent->GetWorldMatrix() * viewMatrix * projMatrix * tMatrix;
+			Matrix4x4f ShadowMatrix = d3d11Object->Parent->GetWorldMatrix() * lightViewMatrix * lightProjMatrix * tMatrix;
+			shaderData.ShadowMatrix = ShadowMatrix;
 
 			shader->UpdateShaderData(shaderData);
 
 			//shader->Use();
-			//mD3DImmediateContext->IASetInputLayout(shader->InputLayout);
+			mD3DImmediateContext->IASetInputLayout(shader->InputLayout);
 			shader->Technique->GetPassByIndex(0)->Apply(0, mD3DImmediateContext);
 
 			UINT offset = 0;
@@ -338,6 +340,10 @@ void D3D11Renderer::Render()
 		}
 	}
 
+	//mD3DImmediateContext->RSSetState(0);
+	//mD3DImmediateContext->OMSetDepthStencilState(0, 0);
+	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
+	mD3DImmediateContext->PSSetShaderResources(0, 16, nullSRV);
 	(mSwapChain->Present(0, 0));
 	RenderQueue::GetInstance()->ClearQueue();
 }

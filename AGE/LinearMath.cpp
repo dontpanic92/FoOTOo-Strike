@@ -1,4 +1,4 @@
-#include "Math.h"
+#include "LinearMath.h"
 #include <cmath>
 #include <cstdio>
 using namespace AGE;
@@ -193,7 +193,7 @@ void Transform::SetPosition(const Vector3f& position)
 	mTransformMatrix[3][2] = position[2];
 }
 
-Vector3f Transform::GetPosition()
+Vector3f Transform::GetPosition() const
 {
 	Vector3f position;
 	position[0] = mTransformMatrix[3][0];
@@ -307,12 +307,15 @@ Matrix4x4f Quaternion::ToRotationMatrix()
 }
 
 
-Matrix4x4f AGE::MakeOrthoProjectionMatrix(float width, float height, float near, float far)
+Matrix4x4f AGE::MakeOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far)
 {
 	Matrix4x4f proj;
-	proj[0][0] = 2 / width;
-	proj[1][1] = 2 / height;
+	proj[0][0] = 2 / (right - left);
+	proj[1][1] = 2 / (top - bottom);
 	proj[2][2] = 1 / (far - near);
-	proj[3][2] = near / (far - near);
+	proj[3][0] = -(right + left) / (right - left);
+	proj[3][1] = -(top + bottom) / (top - bottom);
+	proj[3][2] =  near / (near - far);
+	proj[3][3] = 1;
 	return proj;
 }

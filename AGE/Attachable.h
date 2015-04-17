@@ -1,35 +1,44 @@
 #ifndef __AGE_ATTACHABLE_HEADER__
 #define __AGE_ATTACHABLE_HEADER__
 
-#include "Math.h"
+#include "LinearMath.h"
+#include "Def.h"
 
 namespace AGE
 {
 	class SceneNode;
-	class Attachable
+	class AGE_EXPORT Attachable
 	{
 	public:
 		Attachable() :mParent(0) {}
 
 		virtual ~Attachable() {};
-		Transform* GetTramsform() { return &mTransform; }
+		Transform* GetTransform() { return &mTransform; }
 
 		void SetParent(SceneNode* parent);
 		SceneNode* GetParent() { return mParent; }
 
 		void UpdateWorldMatrix(const Matrix4x4f& parentMatrix)
 		{
-			mWorldMatrix = mTransform.GetTransformMatrix() * parentMatrix;
+			//mWorldMatrix = mTransform.GetTransformMatrix() * parentMatrix;
+			mWorldTransform = mTransform;
+			mWorldTransform.Multiply(parentMatrix);
 		}
 
-		const Matrix4x4f& GetWorldMatrix()
+		Matrix4x4f GetWorldMatrix() const
 		{
-			return mWorldMatrix;
+			return mWorldTransform.GetTransformMatrix();
+		}
+
+		const Transform& GetWorldTransform() const
+		{
+			return mWorldTransform;
 		}
 
 	protected:
 		Transform mTransform;
-		Matrix4x4f mWorldMatrix;
+		//Matrix4x4f mWorldMatrix;
+		Transform mWorldTransform;
 		SceneNode* mParent;
 
 	};

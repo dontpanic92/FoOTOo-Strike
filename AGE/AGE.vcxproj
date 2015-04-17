@@ -16,13 +16,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -50,12 +50,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_MBCS;AGE_SOURCE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dx11d.lib;D3DCompiler.lib;Effects11d.lib;dxerr.lib;dxgi.lib;dxguid.lib;BulletCollision_vs2010_debug.lib;BulletDynamics_vs2010_debug.lib;Bullet3Collision_vs2010_debug.lib;Bullet3Dynamics_vs2010_debug.lib;LinearMath_vs2010_debug.lib;jpeg.lib;lib3ds.lib;ois_static_d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;yse_dll.lib;d3d11.lib;d3dx11d.lib;D3DCompiler.lib;Effects11d.lib;dxerr.lib;dxgi.lib;dxguid.lib;BulletCollision_vs2010_debug.lib;BulletDynamics_vs2010_debug.lib;Bullet3Collision_vs2010_debug.lib;Bullet3Dynamics_vs2010_debug.lib;LinearMath_vs2010_debug.lib;lib3ds.lib;ois_static_d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,13 +64,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_MBCS;AGE_SOURCE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d11.lib;d3dx11d.lib;D3DCompiler.lib;Effects11.lib;dxerr.lib;dxgi.lib;dxguid.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;Bullet3Collision_vs2010.lib;Bullet3Dynamics_vs2010.lib;LinearMath_vs2010.lib;jpeg.lib;lib3ds.lib;OIS_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;yse_dll.lib;d3d11.lib;d3dx11d.lib;D3DCompiler.lib;Effects11.lib;dxerr.lib;dxgi.lib;dxguid.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;Bullet3Collision_vs2010.lib;Bullet3Dynamics_vs2010.lib;LinearMath_vs2010.lib;lib3ds.lib;OIS_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TreatLinkerWarningAsErrors>
       </TreatLinkerWarningAsErrors>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -78,10 +78,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="3DSMeshImporter.h" />
+    <ClInclude Include="AGE.h" />
     <ClInclude Include="AGEMeshImporter.h" />
     <ClInclude Include="AGESkeletonAnimationImporter.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Attachable.h" />
+    <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="D3D11Renderer\D3D11Def.h" />
     <ClInclude Include="D3D11Renderer\D3D11Renderer.h" />
@@ -89,13 +91,14 @@
     <ClInclude Include="D3D11Renderer\D3D11RenderTarget.h" />
     <ClInclude Include="D3D11Renderer\D3D11Texture.h" />
     <ClInclude Include="D3D11Renderer\HLSLShader.h" />
+    <ClInclude Include="Def.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="InputEngine.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logic.h" />
-    <ClInclude Include="Math.h" />
+    <ClInclude Include="LinearMath.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLRenderer\GLSLShader.h" />
     <ClInclude Include="OpenGLRenderer\OpenGLRenderer.h" />
@@ -129,18 +132,18 @@
     <ClCompile Include="AGESkeletonAnimationImporter.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Attachable.cpp" />
+    <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11Renderer.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11RenderTarget.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11Texture.cpp" />
     <ClCompile Include="D3D11Renderer\HLSLShader.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="InputEngine.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Math.cpp" />
+    <ClCompile Include="LinearMath.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OpenGLRenderer\GLSLShader.cpp" />
     <ClCompile Include="OpenGLRenderer\OpenGLRenderer.cpp" />

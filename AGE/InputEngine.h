@@ -4,10 +4,11 @@
 #include "Singleton.h"
 #include "Window.h"
 #include <ois/OIS.h>
+#include "Def.h"
 
 namespace AGE
 {
-	class InputEngine : public Singleton < InputEngine >
+	class AGE_EXPORT InputEngine : public Singleton < InputEngine >
 	{
 	public:
 		InputEngine() {}

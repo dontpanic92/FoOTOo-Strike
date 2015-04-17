@@ -1,14 +1,16 @@
 #ifndef __AGE_SKELETON_HEADER__
 #define __AGE_SKELETON_HEADER__
-#include "Math.h"
+#include "LinearMath.h"
 #include <vector>
 #include <map>
 #include <string>
 
+#include "Def.h"
+
 namespace AGE
 {
 
-	class Bone
+	class AGE_EXPORT Bone
 	{
 	public:
 
@@ -70,7 +72,7 @@ namespace AGE
 
 	class Renderable;
 	class SkeletonAnimation;
-	class Skeleton
+	class AGE_EXPORT Skeleton
 	{
 	public:
 
@@ -112,6 +114,8 @@ namespace AGE
 
 		void StartPlay(const char* name, bool loop = true);
 
+		uint GetCurrentFrameNumber() const { return mCurrentFrame; }
+
 		void Update(float time);
 
 		bool IsPlaying() { return mPlaying; }
@@ -145,7 +149,7 @@ namespace AGE
 		//bool mFinished;
 	};
 
-	class SkeletonAnimation
+	class AGE_EXPORT SkeletonAnimation
 	{
 	public:
 

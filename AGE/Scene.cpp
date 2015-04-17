@@ -72,7 +72,7 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 	for (int i = 0; i < mRenderables.size(); i++) {
 		Shader* shader = mRenderables[i]->GetRenderObject(0)->Shader;
 
-		Transform* translate = mRenderables[i]->GetTramsform();
+		Transform* translate = mRenderables[i]->GetTransform();
 		GLfloat vBlack[] = { .6f, 0.6f, 0.6f, 1.0f };
 		DefaultShaderData shaderData;
 		shaderData.ColorVector = vBlack;

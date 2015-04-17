@@ -72,6 +72,8 @@ bool HLSLShader::Load(const char* shaderName)
 bool HLSLShader::ProcessParameter(const ShaderUniformParameter& parameter)
 {
 	ID3DX11EffectVariable* var = Effect->GetVariableByName(parameter.Name.c_str());
+	if (parameter.Parameter == NULL || (*((void**)parameter.Parameter)) == NULL || var == NULL)
+		return false;
 	switch (parameter.ParameterType) {
 	case ShaderUniformParameter::Type::INT1:
 		var->AsScalar()->SetInt(*(int*)parameter.Parameter);
