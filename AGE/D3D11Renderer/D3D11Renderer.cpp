@@ -6,6 +6,7 @@
 #include "../Engine.h"
 #include "../RtInfomation.h"
 #include "../ResourceManager.h"
+#include "../LevelManager.h"
 //#pragma comment(lib, "d3d11.lib")
 //#pragma comment(lib, "d3d11d.lib")
 
@@ -17,7 +18,7 @@ int D3D11Renderer::StartUp(Window window)
 	mMainWindow = window;
 
 	UINT createDeviceFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)  
+#if 0//defined(DEBUG) || defined(_DEBUG)  
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -225,7 +226,7 @@ void D3D11Renderer::ShadowMapPass()
 	mShadowMapTarget->SetRenderTarget(mD3DImmediateContext);
 	mD3DImmediateContext->RSSetState(mNoCullRasterizerState);
 
-	Light l = *Engine::GetInstance()->GetScene()->GetLights()[0];
+	Light l = *GetScene()->GetLights()[0];
 	Transform tran;
 	Vector3f lightDir = l.Direction;
 	lightDir.Normalize();
@@ -297,9 +298,9 @@ void D3D11Renderer::Render()
 	GLfloat vBlack[] = { 0.0, 0.0, 0.0, 1.0f };
 	DefaultShaderData shaderData;
 	shaderData.ColorVector = vBlack;
-	Camera* camera = Engine::GetInstance()->GetScene()->GetCurrentCamera();
+	Camera* camera = GetScene()->GetCurrentCamera();
 
-	Light l = *Engine::GetInstance()->GetScene()->GetLights()[0];
+	Light l = *GetScene()->GetLights()[0];
 	l.Direction = l.Direction * (Matrix3x3f)camera->GetWorldMatrix().Transpose().Inverse();//camera->CalcViewMatrix();//
 	shaderData.Light = &l;
 

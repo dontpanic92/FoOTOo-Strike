@@ -2,15 +2,15 @@
 #include "Primitive.h"
 #include "AGEMeshImporter.h"
 #include "Timer.h"
+#include "InputEngine.h"
 #include "PhysicsEngine.h"
 #include "AudioEngine.h"
 #include "RtInfomation.h"
+#include "LevelManager.h"
 using namespace AGE;
 
-Engine::Engine() :mLastTimeUpdate(0), mScene(0)
+Engine::Engine() :mLastTimeUpdate(0)
 {
-	mScene = new Scene();
-	mGameLogic = 0;
 }
 
 int Engine::StartUp()
@@ -22,8 +22,6 @@ int Engine::StartUp()
 	PhysicsEngine::GetInstance()->StartUp();
 	AudioEngine::GetInstance()->StartUp(); 
 	Timer::GetInstance()->StartUp();
-
-	mScene->StartUp();
 
 	//mGameLogic->StartUp();
 
@@ -37,6 +35,7 @@ void Engine::ShutDown()
 
 	//Timer::GetInstance()->ShutDown();
 	AudioEngine::GetInstance()->ShutDown();
+	GetLevelManager()->UnloadLevel();
 	//PhysicsEngine::GetInstance()->ShutDown();
 	//InputEngine::GetInstance()->ShutDown();
 	//RenderEngine::GetInstance()->ShutDown();
@@ -50,13 +49,7 @@ int Engine::Run()
 
 Engine::~Engine()
 {
-	delete mScene;
-}
-
-void Engine::SetGameLogic(GameLogic* logic)
-{
-	mGameLogic = logic;
-	logic->StartUp();
+	ShutDown();
 }
 
 int Engine::Update()
@@ -64,18 +57,20 @@ int Engine::Update()
 
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	float delta = now - mLastTimeUpdate;
-	//if (delta < 10)
-	//	return 1;
+	//printf("fps: %f\r", 1000.0 / delta);
+	if (delta < 10)
+		return 1;
 
 	RtInfomation::GetInstance()->FrameStart();
 
 	InputEngine::GetInstance()->Update();
 	AudioEngine::GetInstance()->Update();
 	PhysicsEngine::GetInstance()->Update(delta);
-	mGameLogic->Update(delta);
+	if (GetLevel())
+		GetLevel()->Update(delta);
 	RtInfomation::GetInstance()->FrameLogicEnd();
-	//mScene->Render();
-	mScene->UpdateAndCulling();
+	if (GetScene())
+		GetScene()->UpdateAndCulling();
 	RtInfomation::GetInstance()->FrameCullingEnd();
 	RenderEngine::GetInstance()->Render();
 	RtInfomation::GetInstance()->FrameEnd();

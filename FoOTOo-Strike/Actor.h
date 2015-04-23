@@ -63,9 +63,11 @@ public:
 		mGhostObject->setWorldTransform(startTransform);
 		//sweepBP->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-		btScalar characterHeight = 10;
-		btScalar characterWidth = 30;
+		btScalar characterHeight = 20;
+		btScalar characterWidth = 20;
 		btConvexShape* capsule = new btCapsuleShape(characterWidth, characterHeight);
+		//mGhostObject->setUserIndex(0);
+		mGhostObject->setUserPointer(this);
 		mGhostObject->setCollisionShape(capsule);
 		mGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
@@ -73,6 +75,9 @@ public:
 		mCharacterController = new btKinematicCharacterController(mGhostObject, capsule, stepHeight);
 		mCharacterController->setJumpSpeed(30);
 		mCharacterController->setGravity(10);
+
+		GetPhysicsEngine()->GetWorld()->addCollisionObject(mGhostObject, 1, /*btBroadphaseProxy::CharacterFilter,*/ btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+		GetPhysicsEngine()->GetWorld()->addAction(mCharacterController);
 	}
 
 	btKinematicCharacterController* GetPhysicsController()
@@ -151,9 +156,11 @@ public:
 		mGhostObject->setWorldTransform(startTransform);
 		//sweepBP->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-		btScalar characterHeight = 10;
-		btScalar characterWidth = 30;
+		btScalar characterHeight = 25;
+		btScalar characterWidth = 25;
 		btConvexShape* capsule = new btCapsuleShape(characterWidth, characterHeight);
+		//mGhostObject->setUserIndex(1);
+		mGhostObject->setUserPointer(this);
 		mGhostObject->setCollisionShape(capsule);
 		mGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
@@ -163,6 +170,9 @@ public:
 		mCharacterController = new btKinematicCharacterController(mGhostObject, capsule, stepHeight);
 		mCharacterController->setJumpSpeed(30);
 		mCharacterController->setGravity(10);
+
+		GetPhysicsEngine()->GetWorld()->addCollisionObject(mGhostObject, 1, /* btBroadphaseProxy::CharacterFilter, */btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+		GetPhysicsEngine()->GetWorld()->addAction(mCharacterController);
 	}
 
 	btKinematicCharacterController* GetPhysicsController()

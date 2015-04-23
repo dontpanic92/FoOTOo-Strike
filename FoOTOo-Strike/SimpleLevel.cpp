@@ -1,64 +1,57 @@
-#include "GameLogicImp.h"
-#include "Engine.h"
-#include "PhysicsEngine.h"
+#include "SimpleLevel.h"
 
-#include "AudioEngine.h"
-
-#include <bullet/BulletDynamics/Character/btKinematicCharacterController.h>
-#include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
-
-#include "Actor.h"
-
-using namespace AGE;
-using namespace OIS;
-
-SceneNode* CameraNode;
-
-Actor * actor;
-
-AIActor* leet;
-
-void GameLogicImp::StartUp()
+bool SimpleLevel::StartUp()
 {
+	ShutDown();
+	mScene = new Scene();
+	mScene->StartUp();
+
 	InputEngine::GetInstance()->RegisterMouseListener(this);
 	InputEngine::GetInstance()->RegisterKeyListener(this);
 
 	AGEMeshImporter importer;
-	Renderable* r1 = importer.LoadFromFile("../Resources/Models/b.AMESH");
+	Renderable* r1 = importer.LoadFromFile("../Resources/Models/a.AMESH");
 
 	actor = new Actor;
 	leet = new AIActor;
 
 
-	SceneNode* leetNode = Engine::GetInstance()->GetScene()->CreateSceneNode();
+	SceneNode* leetNode = mScene->CreateSceneNode();
 	leetNode->Attach(leet->GetRenderable());
 	leet->GetRenderable()->SetParent(leetNode);
 
-	SceneNode* node2 = Engine::GetInstance()->GetScene()->CreateSceneNode();
-	SceneNode* node = Engine::GetInstance()->GetScene()->CreateSceneNode();
+	SceneNode* node2 = mScene->CreateSceneNode();
+	SceneNode* node = mScene->CreateSceneNode();
 
 	node2->Attach(actor->GetRenderable());
 	node->Attach(r1);
-	
 
-	CameraNode = Engine::GetInstance()->GetScene()->CreateSceneNode();
+
+	CameraNode = mScene->CreateSceneNode();
 	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, -50));
 	CameraNode->Attach(node2);
 	node2->GetTransform()->Translate(Vector3f(0, 0, -5));
 	node2->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
 	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
 
-	Engine::GetInstance()->GetScene()->GetCurrentCamera()->SetParent(CameraNode);
-	CameraNode->Attach(Engine::GetInstance()->GetScene()->GetCurrentCamera());
-	Light* l = Engine::GetInstance()->GetScene()->CreateLight();
+	mScene->GetCurrentCamera()->SetParent(CameraNode);
+	CameraNode->Attach(mScene->GetCurrentCamera());
+	Light* l = mScene->CreateLight();
 	l->Direction[0] = -1;
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
 	InitPhysics(r1);
 
+	return true;
 }
 
-void GameLogicImp::InitPhysics(Renderable *r1)
+void SimpleLevel::ShutDown()
+{
+	delete mScene;
+	mScene = 0;
+}
+
+void SimpleLevel::InitPhysics(Renderable *r1)
 {
 
 	int vertStride = sizeof(btVector3);
@@ -88,8 +81,9 @@ void GameLogicImp::InitPhysics(Renderable *r1)
 
 
 		btTriangleIndexVertexArray *indexArray = new btTriangleIndexVertexArray(r1->GetRenderObject(i)->Mesh->GetNumberOfVertex() / 3, indices, stripe,
-																				(int)r1->GetRenderObject(i)->Mesh->GetNumberOfVertex(), (btScalar*)r1->GetRenderObject(i)->Mesh->GetVertexData(), (int)sizeof(Mesh::Vertex));
+			(int)r1->GetRenderObject(i)->Mesh->GetNumberOfVertex(), (btScalar*)r1->GetRenderObject(i)->Mesh->GetVertexData(), (int)sizeof(Mesh::Vertex));
 		btCollisionShape *shape = new btBvhTriangleMeshShape(indexArray, true);
+
 		btRigidBody* ground = GetPhysicsEngine()->CreateRigidBody(0.f, startTransform, shape);
 	}
 
@@ -97,7 +91,7 @@ void GameLogicImp::InitPhysics(Renderable *r1)
 
 	//btTransform startTransform;
 	startTransform.setIdentity();
-	startTransform.setOrigin (btVector3(111.0, 4000.0, 0.0));
+	startTransform.setOrigin(btVector3(111.0, 4000.0, 0.0));
 	//startTransform.setOrigin(btVector3(-1400, 0, -1800));
 
 	actor->InitPhysics(startTransform);
@@ -105,35 +99,12 @@ void GameLogicImp::InitPhysics(Renderable *r1)
 	startTransform.setOrigin(btVector3(200.0, 4000.0, 0.0));
 	leet->InitPhysics(startTransform);
 
-	auto aObject = actor->GetPhysicsObject();
-	auto aController = actor->GetPhysicsController();
-
-	GetPhysicsEngine()->GetWorld()->addCollisionObject(leet->GetPhysicsObject(),1, /* btBroadphaseProxy::CharacterFilter, */btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
-	GetPhysicsEngine()->GetWorld()->addAction(leet->GetPhysicsController());
-	
-	GetPhysicsEngine()->GetWorld()->addCollisionObject(aObject,1, /*btBroadphaseProxy::CharacterFilter,*/ btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
-	GetPhysicsEngine()->GetWorld()->addAction(aController);
-	
 	GetPhysicsEngine()->GetWorld()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
 }
-#include <iostream>
 
-bool GameLogicImp::Update(float time)
+bool SimpleLevel::Update(float time)
 {
-	//Renderable* renderable = dynamic_cast<Renderable*>(Engine::GetInstance()->GetScene()->GetAttachable());
-	//Transform* translate = renderable->GetTramsform();
-
-	//float yRot = time * 60.0f / 1000.0f;
-	//translate->Translate(Vector3f(0, 0, -time / 1000), Transform::Local);
-	//translate->RotateByRadian(Deg2Rad(yRot), 0, 1, 0);
-
-	//static int itime = 0;
-
-	//if ((itime++) % 10 == 0)
-	//if (!mSkeleton->IsPlaying())
-	///	mSkeleton->StartPlay("default");
-	///mSkeleton->Update(time);
 	ProcessMouse(InputEngine::GetInstance()->GetMouseState());
 	actor->Update(time);
 	leet->Update(time);
@@ -141,8 +112,8 @@ bool GameLogicImp::Update(float time)
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
 
-	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
-	float speed = 0.5;// time / 5;// / 100;
+	Transform* cameraTransform = CameraNode->GetTransform();
+	float speed = 0.5;
 
 	auto aController = actor->GetPhysicsController();
 	Vector3f v = Vector3f(0, 0, 0);
@@ -206,7 +177,7 @@ bool GameLogicImp::Update(float time)
 	return true;
 }
 
-void GameLogicImp::ProcessMouse(const MouseState &state)
+void SimpleLevel::ProcessMouse(const MouseState &state)
 {
 	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	static float pitchDegree = 0.0f;
@@ -241,11 +212,4 @@ void GameLogicImp::ProcessMouse(const MouseState &state)
 	//btQuaternion q = trans.getRotation();
 	//btVector3 v3 = q.getAxis();
 	//cameraTransform->RotateByRadian(Deg2Rad(q.getAngle()), v3.x(), v3.y(), v3.z());
-}
-
-bool GameLogicImp::mouseMoved(const MouseEvent &arg)
-{
-	//printf("abs: %d, rel: %d\n", arg.state.X.abs, arg.state.X.rel);
-	ProcessMouse(arg.state);
-	return true;
 }

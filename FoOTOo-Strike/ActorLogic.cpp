@@ -1,3 +1,6 @@
+
+#include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
+
 #include "ActorLogic.h"
 #include "Actor.h"
 
@@ -43,6 +46,26 @@ void ActorLogicReload::Update(float deltaTime)
 void ActorLogicShoot1::Enter() 
 {
 	mActor->GetSkeleton()->StartPlay("shoot1", false);
+
+	Transform worldTran = GetScene()->GetCurrentCamera()->GetWorldMatrix();
+	Vector3f v = worldTran.GetPosition();
+	Vector3f toVector = Vector3f(0, 0, -1000) * worldTran.GetTransformMatrix();
+
+	printf("from: %f %f %f, to: %f %f %f\n", v[0], v[1], v[2], toVector[0], toVector[1], toVector[2]);
+
+	btVector3 from(v[0], v[1], v[2]);
+	btVector3 to(toVector[0], toVector[1],  toVector[2]);
+	btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
+	allResults.m_flags |= btTriangleRaycastCallback::kF_KeepUnflippedNormal;
+	GetPhysicsEngine()->GetWorld()->rayTest(from, to, allResults); 
+	if (allResults.m_hitFractions.size()) {
+		printf("hit: %u\n", allResults.m_hitFractions.size());
+		for (int i = 0; i < allResults.m_collisionObjects.size(); i++)
+			if (allResults.m_collisionObjects[i]->getUserPointer())
+				printf("hitted! %d\n", i);
+	} else {
+		printf("no hit\n");
+	}
 }
 
 void ActorLogicShoot1::Update(float deltaTime)

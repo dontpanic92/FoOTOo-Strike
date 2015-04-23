@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "RenderEngine.h"
 #include "Scene.h"
-#include "GameLogic.h"
 #include "Def.h"
 
 namespace AGE{
@@ -20,9 +19,7 @@ namespace AGE{
 
 		int Update();
 
-		void SetGameLogic(GameLogic* logic);
 
-		Scene* GetScene() { return mScene; }
 		Window GetMainWindow() { return mApp.GetMainWindow(); }
 
 	private:
@@ -30,8 +27,6 @@ namespace AGE{
 
 	private:
 		Application mApp;
-		Scene * mScene;
-		GameLogic* mGameLogic;
 
 		float mLastTimeUpdate;
 

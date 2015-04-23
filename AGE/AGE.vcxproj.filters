@@ -60,9 +60,6 @@
     <ClInclude Include="Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="GameLogic.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -148,6 +145,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Def.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -261,6 +261,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="LinearMath.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

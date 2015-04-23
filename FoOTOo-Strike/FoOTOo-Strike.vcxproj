@@ -89,14 +89,15 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="ActorLogic.h" />
-    <ClInclude Include="GameLogicImp.h" />
+    <ClInclude Include="SimpleLevel.h" />
+    <ClInclude Include="StaticObject.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="ActorLogic.cpp" />
     <ClCompile Include="FoOTOo-Strike.cpp" />
-    <ClCompile Include="GameLogicImp.cpp" />
+    <ClCompile Include="SimpleLevel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,5 +7,6 @@
 #include "AudioEngine.h"
 #include "InputEngine.h"
 #include "PhysicsEngine.h"
+#include "LevelManager.h"
 
 #endif
