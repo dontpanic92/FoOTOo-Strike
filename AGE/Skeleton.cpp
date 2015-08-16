@@ -141,10 +141,10 @@ void Skeleton::Update(float time)
 			//float weight = mVertexBoneBind[i].weight[0];
 			//if (mVertexBoneBind[i].Bones[0] == 0)
 			//continue;
-			uint id = FindBone(skeletonData[j].BoneID[0])->GetInternalID();
 			Bone* bone = FindBone(skeletonData[j].BoneID[0]);
 			if (!bone)
 				continue;
+			uint id = bone->GetInternalID();
 			float weigt = skeletonData[j].weight[0];
 			Matrix4x4f trans = bone->GetBindPoseMatrixInv() * currentAnim->GetFrame(mCurrentFrame)->Transforms[id].Matrix;
 			Vector3f v = vertexBindPose[j].Position;

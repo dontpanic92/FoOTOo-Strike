@@ -5,7 +5,7 @@
 #include "../Engine.h"
 #include "../Mesh.h"
 #include "../Log.h"
-#include "../RtInfomation.h"
+#include "../RtInformation.h"
 #include "../RenderQueue.h"
 
 using namespace AGE;
@@ -213,7 +213,7 @@ void OpenGLRenderer::Render()
 		for each (auto object in pair.second)
 		{
 			OpenGLRenderObject* openGLObject = (OpenGLRenderObject*)object;
-			Matrix4x4f t = openGLObject->Parent->GetWorldMatrix();
+			Matrix4x4f t = openGLObject->Parent->GetParent()->GetWorldMatrix();
 			//shaderData.MMatrix = t;
 
 			openGLObject->Shader->UpdateShaderData(shaderData);
@@ -221,7 +221,7 @@ void OpenGLRenderer::Render()
 
 			glBindVertexArray(openGLObject->VertexArrayBufferObject);
 			glDrawArrays(GL_TRIANGLES, 0, openGLObject->Mesh->GetNumberOfVertex());
-			RtInfomation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);
+			RtInformation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);
 		}
 	}
 	End();

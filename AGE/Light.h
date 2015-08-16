@@ -1,13 +1,9 @@
 #ifndef __AGE_LIGHT_HEADER__
 #define __AGE_LIGHT_HEADER__
 
-#include "Attachable.h"
+#include "SceneObject.h"
 
 namespace AGE {
-	class SceneObject : public Attachable
-	{
-	};
-
 
 	class Light : public SceneObject
 	{

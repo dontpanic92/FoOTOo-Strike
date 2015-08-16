@@ -5,7 +5,7 @@
 #include "InputEngine.h"
 #include "PhysicsEngine.h"
 #include "AudioEngine.h"
-#include "RtInfomation.h"
+#include "RtInformation.h"
 #include "LevelManager.h"
 using namespace AGE;
 
@@ -36,7 +36,7 @@ void Engine::ShutDown()
 	//Timer::GetInstance()->ShutDown();
 	AudioEngine::GetInstance()->ShutDown();
 	GetLevelManager()->UnloadLevel();
-	//PhysicsEngine::GetInstance()->ShutDown();
+	PhysicsEngine::GetInstance()->ShutDown();
 	//InputEngine::GetInstance()->ShutDown();
 	//RenderEngine::GetInstance()->ShutDown();
 	//mApp.ShutDown();
@@ -58,22 +58,24 @@ int Engine::Update()
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	float delta = now - mLastTimeUpdate;
 	//printf("fps: %f\r", 1000.0 / delta);
-	if (delta < 10)
-		return 1;
+	//if (delta < 10)
+	//	return 1;
+	
 
-	RtInfomation::GetInstance()->FrameStart();
+	RtInformation::GetInstance()->FrameStart();
 
 	InputEngine::GetInstance()->Update();
-	AudioEngine::GetInstance()->Update();
-	PhysicsEngine::GetInstance()->Update(delta);
 	if (GetLevel())
 		GetLevel()->Update(delta);
-	RtInfomation::GetInstance()->FrameLogicEnd();
+
+	AudioEngine::GetInstance()->Update();
+	PhysicsEngine::GetInstance()->Update(delta);
+	RtInformation::GetInstance()->FrameLogicEnd();
 	if (GetScene())
 		GetScene()->UpdateAndCulling();
-	RtInfomation::GetInstance()->FrameCullingEnd();
+	RtInformation::GetInstance()->FrameCullingEnd();
 	RenderEngine::GetInstance()->Render();
-	RtInfomation::GetInstance()->FrameEnd();
+	RtInformation::GetInstance()->FrameEnd();
 
 
 	mLastTimeUpdate = now;

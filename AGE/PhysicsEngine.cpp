@@ -1,69 +1,57 @@
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include "PhysicsEngine.h"
+#include "Renderable.h"
 
 using namespace AGE;
 
-PhysicsEngine::PhysicsEngine() : mDispatcher(0), mDynamicsWorld(0), mSolver(0), mCollisionConfiguration(0), mBroadphase(0) {}
+PhysicsEngine::PhysicsEngine() 
+	: mBroadphase(nullptr),
+	mDispatcher(nullptr),
+	mSolver(nullptr),
+	mCollisionConfiguration(nullptr),
+	mDynamicsWorld(nullptr)
+{
+	
+}
 
 PhysicsEngine::~PhysicsEngine()
 {
-	delete mDynamicsWorld;
-	delete mSolver;
-	delete mDispatcher;
-	delete mCollisionConfiguration;
-	delete mBroadphase;
+	ShutDown();
 }
 
 void PhysicsEngine::StartUp()
 {
-	mBroadphase = new btDbvtBroadphase();
-
-	// Set up the collision configuration and dispatcher
 	mCollisionConfiguration = new btDefaultCollisionConfiguration();
+	//m_collisionConfiguration->setConvexConvexMultipointIterations();
+
+	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 	mDispatcher = new btCollisionDispatcher(mCollisionConfiguration);
 
-	// The actual physics solver
-	mSolver = new btSequentialImpulseConstraintSolver;
+	mBroadphase = new btDbvtBroadphase();
 
-	// The world.
+	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
+	btSequentialImpulseConstraintSolver* sol = new btSequentialImpulseConstraintSolver;
+	mSolver = sol;
+
+	mBroadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+
 	mDynamicsWorld = new btDiscreteDynamicsWorld(mDispatcher, mBroadphase, mSolver, mCollisionConfiguration);
-	mDynamicsWorld->setGravity(btVector3(0, -10, 0));
-	mDynamicsWorld->getDispatchInfo().m_allowedCcdPenetration = 0.0001f;
+
+	
+
+	mDynamicsWorld->setGravity(btVector3(0, -600, 0));
 }
 
-//From Bullet Demo
-btRigidBody* PhysicsEngine::CreateRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape)
+void PhysicsEngine::ShutDown()
 {
-	btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
+	if (mDynamicsWorld) {
+		mDynamicsWorld = nullptr;
+	}
 
-	//rigidbody is dynamic if and only if mass is non zero, otherwise static
-	bool isDynamic = (mass != 0.f);
-
-	btVector3 localInertia(0, 0, 0);
-	if (isDynamic)
-		shape->calculateLocalInertia(mass, localInertia);
-
-	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-
-	//#define USE_MOTIONSTATE
-	/*#ifdef USE_MOTIONSTATE
-		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-
-		btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
-
-		btRigidBody* body = new btRigidBody(cInfo);
-		body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
-
-		#else*/
-	btRigidBody* body = new btRigidBody(mass, 0, shape, localInertia);
-	body->setWorldTransform(startTransform);
-	//#endif
-
-	mDynamicsWorld->addRigidBody(body);
-
-	return body;
 }
 
 void PhysicsEngine::Update(float time)
 {
-	mDynamicsWorld->stepSimulation(time * 0.01, 10);
+
+	mDynamicsWorld->stepSimulation(time / 1000);
 }

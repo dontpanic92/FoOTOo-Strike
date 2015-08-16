@@ -30,11 +30,11 @@ public:
 	MouseEvent mouseEvent;
 };
 
-class Actor;
+class FootooActor;
 class ActorLogicIdle : public LogicState
 {
 public:
-	ActorLogicIdle(int id, Logic* logic, Actor* actor)
+	ActorLogicIdle(int id, Logic* logic, FootooActor* actor)
 		:LogicState(id, logic), mActor(actor)
 	{
 	}
@@ -56,14 +56,14 @@ public:
 
 	}
 private:
-	Actor* mActor;
+	FootooActor* mActor;
 	MouseState state;
 };
 
 class ActorLogicReload : public LogicState
 {
 public:
-	ActorLogicReload(int id, Logic* logic, Actor* actor)
+	ActorLogicReload(int id, Logic* logic, FootooActor* actor)
 		:LogicState(id, logic), mActor(actor)
 	{
 	}
@@ -81,14 +81,14 @@ public:
 
 	}
 private:
-	Actor* mActor;
+	FootooActor* mActor;
 };
 
 
 class ActorLogicShoot1 : public LogicState
 {
 public:
-	ActorLogicShoot1(int id, Logic* logic, Actor* actor)
+	ActorLogicShoot1(int id, Logic* logic, FootooActor* actor)
 		:LogicState(id, logic), mActor(actor)
 	{
 	}
@@ -102,7 +102,7 @@ public:
 
 	}
 private:
-	Actor* mActor;
+	FootooActor* mActor;
 };
 
 

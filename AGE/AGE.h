@@ -8,5 +8,7 @@
 #include "InputEngine.h"
 #include "PhysicsEngine.h"
 #include "LevelManager.h"
+#include "StaticSceneObject.h"
+#include "Actor.h"
 
 #endif

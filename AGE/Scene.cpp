@@ -16,9 +16,12 @@ SceneNode::~SceneNode()
 {
 }
 
-void SceneNode::Attach(Renderable* renderable)
+void SceneNode::Attach(SceneObject* object)
 {
-	mRenderables.push_back(renderable);
+	if (object->GetParent())
+		object->GetParent()->Detach(object);
+	object->SetParent(this);
+	mObjects.push_back(object);
 }
 
 void SceneNode::Attach(SceneNode* attach)
@@ -29,19 +32,11 @@ void SceneNode::Attach(SceneNode* attach)
 	mNodes.push_back(attach);
 }
 
-void SceneNode::Attach(Attachable* otherObjects)
+void SceneNode::Detach(SceneObject* object)
 {
-	if (otherObjects->GetParent())
-		otherObjects->GetParent()->Detach(otherObjects);
-	otherObjects->SetParent(this);
-	mOtherObjects.push_back(otherObjects);
-}
-
-void SceneNode::Detach(Renderable* renderable)
-{
-	for (auto it = mRenderables.begin(); it != mRenderables.end(); it++)
-		if (*it == renderable)
-			mRenderables.erase(it);
+	for (auto it = mObjects.begin(); it != mObjects.end(); it++)
+		if (*it == object)
+			mObjects.erase(it);
 }
 
 void SceneNode::Detach(SceneNode* node)
@@ -54,21 +49,11 @@ void SceneNode::Detach(SceneNode* node)
 	}
 }
 
-void SceneNode::Detach(Attachable* otherObjects)
-{
-	for (auto it = mOtherObjects.begin(); it != mOtherObjects.end(); it++) {
-		if (*it == otherObjects) {
-			mOtherObjects.erase(it);
-			break;
-		}
-	}
-}
-
 void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix)
 {
 
 	//const vector<Attachable*>& attachable = mRoot.GetAttachable();
-	Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
+	/*Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
 	for (int i = 0; i < mRenderables.size(); i++) {
 		Shader* shader = mRenderables[i]->GetRenderObject(0)->Shader;
 
@@ -90,22 +75,19 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 
 	for (uint i = 0; i < mNodes.size(); i++) {
 		mNodes[i]->Render(currentMatrix, viewMatrix);
-	}
+	}*/
 }
 
 void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
 {
 	mWorldTransform = mTransform.GetTransformMatrix() * parentMatrix;
-	for each(auto renderable in mRenderables)
-	{
-		renderable->UpdateWorldMatrix(mWorldTransform);
-		//printf("scenenode: %p, attachable: %p\n", this, attachable);
-		RenderQueue::GetInstance()->PushRenderable(renderable);
-	}
-
-	for each(auto obj in mOtherObjects)
+	for each(auto obj in mObjects)
 	{
 		obj->UpdateWorldMatrix(mWorldTransform);
+		//printf("scenenode: %p, attachable: %p\n", this, attachable);
+		
+		if (Renderable* r = obj->GetRenderable())
+			RenderQueue::GetInstance()->PushRenderable(r);
 	}
 
 	for each(auto node in mNodes)

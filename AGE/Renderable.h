@@ -1,15 +1,16 @@
 #ifndef __AGE_RENDERABLE_HEADER__
 #define __AGE_RENDERABLE_HEADER__
 
-#include "Attachable.h"
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Skeleton.h"
+#include "SceneObject.h"
+
 
 namespace AGE
 {
-
+	//class Renderable;
 	class RenderObject
 	{
 	public:
@@ -23,7 +24,7 @@ namespace AGE
 		virtual ~RenderObject() { Destroy(); }
 	};
 
-	class Renderable : public Attachable
+	class Renderable
 	{
 	public:
 
@@ -55,6 +56,9 @@ namespace AGE
 		std::vector<RenderObject*>::const_iterator begin() const { return mRenderObjects.begin(); }
 		std::vector<RenderObject*>::const_iterator end() const { return mRenderObjects.end(); }
 
+
+		void SetParent(SceneObject* parent) { mParent = parent; }
+		SceneObject* GetParent() { return mParent; }
 	private:
 
 
@@ -64,6 +68,7 @@ namespace AGE
 
 		std::vector<RenderObject*> mRenderObjects;
 		Skeleton* mSkeleton;
+		SceneObject* mParent = 0;
 	};
 }
 

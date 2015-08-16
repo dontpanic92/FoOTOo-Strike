@@ -9,38 +9,44 @@ bool SimpleLevel::StartUp()
 	InputEngine::GetInstance()->RegisterMouseListener(this);
 	InputEngine::GetInstance()->RegisterKeyListener(this);
 
-	AGEMeshImporter importer;
-	Renderable* r1 = importer.LoadFromFile("../Resources/Models/a.AMESH");
-
-	actor = new Actor;
+	//GetPhysicsWorld()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	
+	ground = new StaticSceneObject("../Resources/Models/a.AMESH");
+	actor = new FootooActor;
 	leet = new AIActor;
 
-
 	SceneNode* leetNode = mScene->CreateSceneNode();
-	leetNode->Attach(leet->GetRenderable());
-	leet->GetRenderable()->SetParent(leetNode);
+	leetNode->Attach(leet);
+	leetNode->SetName("leetNode");
 
-	SceneNode* node2 = mScene->CreateSceneNode();
+	ActorNode = mScene->CreateSceneNode();
 	SceneNode* node = mScene->CreateSceneNode();
+	ActorNode->SetName("actornode");
+	node->SetName("node");
 
-	node2->Attach(actor->GetRenderable());
-	node->Attach(r1);
+	ActorNode->Attach(actor);
+	node->Attach(ground);
 
 
-	CameraNode = mScene->CreateSceneNode();
-	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, -50));
-	CameraNode->Attach(node2);
-	node2->GetTransform()->Translate(Vector3f(0, 0, -5));
-	node2->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
+	SceneNode* CameraNode = mScene->CreateSceneNode();
+
+	CameraNode->SetName("cameraNode");
+	ActorNode->Attach(CameraNode);
+
+	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, -5));
+	
+	//node2->GetTransform()->Translate(Vector3f(0, 0, -5));
+	CameraNode->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
 	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
 
-	mScene->GetCurrentCamera()->SetParent(CameraNode);
 	CameraNode->Attach(mScene->GetCurrentCamera());
 	Light* l = mScene->CreateLight();
 	l->Direction[0] = -1;
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
-	InitPhysics(r1);
+
+
+	Enter();
 
 	return true;
 }
@@ -51,55 +57,18 @@ void SimpleLevel::ShutDown()
 	mScene = 0;
 }
 
-void SimpleLevel::InitPhysics(Renderable *r1)
+void SimpleLevel::Enter()
 {
+	btTransform startTransform;
+	startTransform.setOrigin(btVector3(111.0, 4000.0, 100.0));
+	actor->GetPhysicsObject()->setWorldTransform(startTransform);
 
-	int vertStride = sizeof(btVector3);
-	int indexStride = 3 * sizeof(int);
+	startTransform.setOrigin(btVector3(200.0, 4000.0, 100.0));
+	leet->GetPhysicsObject()->setWorldTransform(startTransform);
+}
 
-
-	int totalTriangles = 0;
-
-	for (int i = 0; i < r1->GetNumberOfRenderObjects(); i++) {
-		const RenderObject * ro = r1->GetRenderObject(i);
-		totalTriangles += ro->Mesh->GetNumberOfVertex() / 3;
-	}
-
-
-	int *indices = new int[totalTriangles * 3];
-	int k = 0;
-
-	btTransform	startTransform;
-	startTransform.setIdentity();
-	int stripe = 3 * sizeof(int);
-
-	for (int i = 0; i < r1->GetNumberOfRenderObjects(); i++) {
-		//GLushort *idx = r1->GetRenderObject(i)->Mesh->GetIndexData();
-		for (int j = 0; j < r1->GetRenderObject(i)->Mesh->GetNumberOfVertex(); j++) {
-			indices[k++] = k;// idx[j];
-		}
-
-
-		btTriangleIndexVertexArray *indexArray = new btTriangleIndexVertexArray(r1->GetRenderObject(i)->Mesh->GetNumberOfVertex() / 3, indices, stripe,
-			(int)r1->GetRenderObject(i)->Mesh->GetNumberOfVertex(), (btScalar*)r1->GetRenderObject(i)->Mesh->GetVertexData(), (int)sizeof(Mesh::Vertex));
-		btCollisionShape *shape = new btBvhTriangleMeshShape(indexArray, true);
-
-		btRigidBody* ground = GetPhysicsEngine()->CreateRigidBody(0.f, startTransform, shape);
-	}
-
-
-
-	//btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(btVector3(111.0, 4000.0, 0.0));
-	//startTransform.setOrigin(btVector3(-1400, 0, -1800));
-
-	actor->InitPhysics(startTransform);
-
-	startTransform.setOrigin(btVector3(200.0, 4000.0, 0.0));
-	leet->InitPhysics(startTransform);
-
-	GetPhysicsEngine()->GetWorld()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+void SimpleLevel::Exit()
+{
 
 }
 
@@ -112,34 +81,34 @@ bool SimpleLevel::Update(float time)
 	char keys[256];
 	InputEngine::GetInstance()->GetKeyStates(keys);
 
-	Transform* cameraTransform = CameraNode->GetTransform();
-	float speed = 0.5;
+	Transform* cameraTransform = ActorNode->GetTransform();
+	float speed = 4;
 
-	auto aController = actor->GetPhysicsController();
+	auto aController = actor->GetActorController();
 	Vector3f v = Vector3f(0, 0, 0);
 	if (keys[KC_W]) {
 		//cameraTransform->Translate(Vector3f(0, 0, -speed));
 
-		aController->setWalkDirection(btVector3(0, 0, -speed));
-		v[2] += -1;
+		//aController->setWalkDirection(btVector3(0, 0, -speed));
+		v[2] += 1;
 	}
 
 	if (keys[KC_S]) {
 		//cameraTransform->Translate(Vector3f(0, 0, speed));
-		aController->setWalkDirection(btVector3(0, 0, speed));
-		v[2] += 1;
+		//aController->setWalkDirection(btVector3(0, 0, speed));
+		v[2] += -1;
 	}
 
 	if (keys[KC_A]) {
 		//cameraTransform->Translate(Vector3f(-speed, 0, 0));
-		aController->setWalkDirection(btVector3(-speed, 0, 0));
-		v[0] += -1;
+		//aController->setWalkDirection(btVector3(-speed, 0, 0));
+		v[0] += 1;
 	}
 
 	if (keys[KC_D]) {
 		//cameraTransform->Translate(Vector3f(speed, 0, 0));
-		aController->setWalkDirection(btVector3(speed, 0, 0));
-		v[0] += 1;
+		//aController->setWalkDirection(btVector3(speed, 0, 0));
+		v[0] += -1;
 	}
 
 	if (keys[KC_LCONTROL] || keys[KC_RCONTROL]) {
@@ -170,21 +139,21 @@ bool SimpleLevel::Update(float time)
 	//if (v.x() != 0 || v.y() != 0 || v.z() != 0)
 	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
 
-	btTransform trans = aController->getGhostObject()->getWorldTransform();
-	btVector3 v2 = trans.getOrigin();
-	cameraTransform->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
+	///////btTransform trans = aController->getGhostObject()->getWorldTransform();
+	///////btVector3 v2 = trans.getOrigin();
+	///////cameraTransform->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
 	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
 	return true;
 }
 
 void SimpleLevel::ProcessMouse(const MouseState &state)
 {
-	Transform* cameraTransform = CameraNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
+	Transform* cameraTransform = ActorNode->GetTransform();// Engine::GetInstance()->GetScene()->GetCurrentCamera()->GetTransform();
 	static float pitchDegree = 0.0f;
 	static float yawDegree = 0.0f;
 
 	float speed = -state.X.rel / 5.0f;
-	float yspeed = -state.Y.rel / 5.0f;
+	float yspeed = state.Y.rel / 5.0f;
 
 	pitchDegree += yspeed;
 	yawDegree += speed;

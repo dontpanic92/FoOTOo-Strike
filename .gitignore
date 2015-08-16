@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 
+3rd/bullet/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

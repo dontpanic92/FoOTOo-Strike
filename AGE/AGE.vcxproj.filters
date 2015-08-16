@@ -54,9 +54,6 @@
     <ClInclude Include="Renderable.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Attachable.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -79,9 +76,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsEngine.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RtInfomation.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="RenderQueue.h">
@@ -148,6 +142,27 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticSceneObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RtInformation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableSceneObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicSceneObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="btKinematicCharacterController.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -248,9 +263,6 @@
     <ClCompile Include="D3D11Renderer\D3D11Texture.cpp">
       <Filter>D3D11Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Attachable.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="D3D11Renderer\D3D11RenderTarget.cpp">
       <Filter>D3D11Renderer</Filter>
     </ClCompile>
@@ -264,6 +276,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="LevelManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticSceneObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="btKinematicCharacterController.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

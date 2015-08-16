@@ -2,11 +2,11 @@
 #define __AGE_CAMERA_HEADER__
 
 #include "LinearMath.h"
-#include "Attachable.h"
+#include "SceneObject.h"
 
 namespace AGE
 {
-	class Camera : public Attachable
+	class Camera : public SceneObject
 	{
 	public:
 		Camera() {}

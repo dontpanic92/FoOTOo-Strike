@@ -1,8 +1,6 @@
 
-#include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
-
 #include "ActorLogic.h"
-#include "Actor.h"
+#include "FootooActor.h"
 
 void ActorLogicIdle::Enter()
 {
@@ -53,7 +51,7 @@ void ActorLogicShoot1::Enter()
 
 	printf("from: %f %f %f, to: %f %f %f\n", v[0], v[1], v[2], toVector[0], toVector[1], toVector[2]);
 
-	btVector3 from(v[0], v[1], v[2]);
+	/*btVector3 from(v[0], v[1], v[2]);
 	btVector3 to(toVector[0], toVector[1],  toVector[2]);
 	btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
 	allResults.m_flags |= btTriangleRaycastCallback::kF_KeepUnflippedNormal;
@@ -65,7 +63,7 @@ void ActorLogicShoot1::Enter()
 				printf("hitted! %d\n", i);
 	} else {
 		printf("no hit\n");
-	}
+	}*/
 }
 
 void ActorLogicShoot1::Update(float deltaTime)

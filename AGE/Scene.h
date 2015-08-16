@@ -8,7 +8,6 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Def.h"
-//using std::shared_ptr;
 using std::vector;
 
 namespace AGE
@@ -20,16 +19,14 @@ namespace AGE
 		SceneNode();
 		~SceneNode();
 
-		void Attach(Renderable* renderable);
+		void Attach(SceneObject* object);
 		void Attach(SceneNode* node);
-		void Attach(Attachable* otherObjects);
-		void Detach(Renderable* renderable); 
+		void Detach(SceneObject* object); 
 		void Detach(SceneNode* node);
-		void Detach(Attachable* otherObjects);
 
 		SceneNode* GetParent() { return mParent; }
 		const vector<SceneNode*>& GetChildren() { return mNodes; }
-		const vector<Renderable*>& GetRenderables() { return mRenderables; }
+		const vector<SceneObject*>& GetObjects() { return mObjects; }
 
 		void Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix);
 		void UpdateAndCulling(const Matrix4x4f& parentMatrix);
@@ -38,18 +35,27 @@ namespace AGE
 		const Matrix4x4f& GetWorldTransform() { return mWorldTransform; }
 		//Matrix4x4f CalcWorldTransformMatrix();
 
+		void SetName(const char* name)
+		{
+#ifdef _DEBUG
+			mNodeName = name;
+#endif
+		}
+
 	private:
 		void SetParent(SceneNode* parent) { mParent = parent; }
 
 		vector<SceneNode*> mNodes;
-		vector<Renderable*> mRenderables;
-		vector<Attachable*> mOtherObjects;
+		vector<SceneObject*> mObjects;
 
 		SceneNode* mParent;
 
 		Transform mTransform;
 
 		Matrix4x4f mWorldTransform;
+#ifdef _DEBUG
+		std::string mNodeName;
+#endif
 	};
 
 	class AGE_EXPORT Scene

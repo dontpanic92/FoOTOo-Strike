@@ -14,7 +14,7 @@ void AudioEngine::ShutDown()
 
 Sound3D::Sound3D() : mAttachable(0) {}
 
-void Sound3D::SetParent(Attachable* parent)
+void Sound3D::SetParent(SceneObject* parent)
 {
 	mAttachable = parent;
 }

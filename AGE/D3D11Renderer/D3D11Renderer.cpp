@@ -4,7 +4,7 @@
 #include "D3D11Texture.h"
 #include "../RenderQueue.h"
 #include "../Engine.h"
-#include "../RtInfomation.h"
+#include "../RtInformation.h"
 #include "../ResourceManager.h"
 #include "../LevelManager.h"
 //#pragma comment(lib, "d3d11.lib")
@@ -39,10 +39,10 @@ int D3D11Renderer::StartUp(Window window)
 		return 0;
 	}
 
-	if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
-		MessageBox(0, L"Direct3D Feature Level 11 unsupported.", 0, 0);
-		return 0;
-	}
+	////if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
+	//	MessageBox(0, L"Direct3D Feature Level 11 unsupported.", 0, 0);
+	//	return 0;
+	//}
 
 
 	// Check 4X MSAA quality support for our back buffer format.
@@ -119,9 +119,9 @@ int D3D11Renderer::StartUp(Window window)
 	nocullDesc.CullMode = D3D11_CULL_NONE;
 	nocullDesc.FrontCounterClockwise = true;
 	nocullDesc.DepthClipEnable = true;
-	nocullDesc.DepthBias = 10000;
+	nocullDesc.DepthBias = 5000;
 	nocullDesc.DepthBiasClamp = 0.0f;
-	nocullDesc.SlopeScaledDepthBias = 1.0f;
+	nocullDesc.SlopeScaledDepthBias = 1.f;
 	(mD3DDevice->CreateRasterizerState(&nocullDesc, &mNoCullRasterizerState));
 
 	// Bind the render target view and depth/stencil view to the pipeline.
@@ -264,7 +264,7 @@ void D3D11Renderer::ShadowMapPass()
 		{
 			D3D11RenderObject* d3d11Object = (D3D11RenderObject*)object;
 			//HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
-			Matrix4x4f MVPMatrix = d3d11Object->Parent->GetWorldMatrix() * lightViewMatrix * lightProjMatrix;
+			Matrix4x4f MVPMatrix = d3d11Object->Parent->GetParent()->GetWorldMatrix() * lightViewMatrix * lightProjMatrix;
 			shaderData.MVPMatrix = MVPMatrix;
 
 
@@ -318,11 +318,11 @@ void D3D11Renderer::Render()
 			D3D11RenderObject* d3d11Object = (D3D11RenderObject*)object;
 			HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
 
-			Matrix4x4f NormalMatrix = d3d11Object->Parent->GetWorldMatrix() * camera->GetWorldMatrix().Transpose().Inverse();//lightViewMatrix;//
+			Matrix4x4f NormalMatrix = d3d11Object->Parent->GetParent()->GetWorldMatrix() * camera->GetWorldMatrix().Transpose().Inverse();//lightViewMatrix;//
 			Matrix4x4f MVPMatrix = NormalMatrix * camera->GetProjectMatrix();//lightProjMatrix;//
 			shaderData.MVPMatrix = MVPMatrix;
 			shaderData.NormalMatrix = NormalMatrix;
-			Matrix4x4f ShadowMatrix = d3d11Object->Parent->GetWorldMatrix() * lightViewMatrix * lightProjMatrix * tMatrix;
+			Matrix4x4f ShadowMatrix = d3d11Object->Parent->GetParent()->GetWorldMatrix() * lightViewMatrix * lightProjMatrix * tMatrix;
 			shaderData.ShadowMatrix = ShadowMatrix;
 
 			shader->UpdateShaderData(shaderData);
@@ -337,7 +337,7 @@ void D3D11Renderer::Render()
 			mD3DImmediateContext->IASetVertexBuffers(0, 1, &d3d11Object->VertexBuffer, &stride, &offset);
 			mD3DImmediateContext->Draw(d3d11Object->Mesh->GetNumberOfVertex(), 0);
 		
-			RtInfomation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);
+			RtInformation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);
 		}
 	}
 

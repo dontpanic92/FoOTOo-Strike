@@ -2,7 +2,7 @@
 #define __FOOTOOSTRIKE_SIMPLELEVEL_HEADER__
 
 #include <AGE.h>
-#include "Actor.h"
+#include "FootooActor.h"
 
 using namespace AGE;
 
@@ -12,13 +12,14 @@ public:
 	bool StartUp() override;
 	void ShutDown() override;
 
+	void Enter();
+	void Exit();
+
 	Scene* GetScene() override { return mScene; }
 
 	bool Update(float time) override;
 
 	void ProcessMouse(const OIS::MouseState &state);
-
-	void InitPhysics(Renderable *r1);
 
 	~SimpleLevel(){ ShutDown(); }
 
@@ -31,11 +32,13 @@ public:
 private:
 	Scene* mScene = 0;
 
-	SceneNode* CameraNode = 0;
+	SceneNode* ActorNode = 0;
 
-	Actor * actor = 0;
+	FootooActor * actor = 0;
 
 	AIActor* leet = 0;
+
+	StaticSceneObject* ground = 0;
 };
 
 

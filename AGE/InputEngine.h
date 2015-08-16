@@ -5,9 +5,33 @@
 #include "Window.h"
 #include <ois/OIS.h>
 #include "Def.h"
+#include <vector>
 
 namespace AGE
 {
+	class InputEngine;
+	class UnbufferedInputBase
+	{
+	public:
+		void ActiveInput() { mActive = true; }
+		void DeactiveInput() { mActive = false; }
+
+		virtual void ProcessInput() = 0;
+
+	protected:
+		void ProcessInputProtected()
+		{
+			if (mActive) {
+				ProcessInput();
+			}
+		}
+
+		bool	mActive = true;
+
+		friend class InputEngine;
+	};
+
+
 	class AGE_EXPORT InputEngine : public Singleton < InputEngine >
 	{
 	public:
@@ -26,10 +50,17 @@ namespace AGE
 			return mMouse->getMouseState();
 		}
 
-		//OIS::Keyboard * GetKeyboard(){return mKeyboard;}
 		void Update()
 		{
 			mKeyboard->capture(); mMouse->capture();
+			if (1) {
+				NotifyUnbufferedUpdate();
+			}
+		}
+
+		void RegisterUnbufferedInput(UnbufferedInputBase* input)
+		{
+			mUnbufferedInputInstances.push_back(input);
 		}
 
 		void RegisterKeyListener(OIS::KeyListener* keyListener)
@@ -43,13 +74,23 @@ namespace AGE
 		}
 
 	private:
+		void NotifyUnbufferedUpdate()
+		{
+			for (auto p : mUnbufferedInputInstances) {
+				p->ProcessInputProtected();
+			}
+		}
+
 		OIS::InputManager	*mInputManager;
 		OIS::Keyboard		*mKeyboard;
 		OIS::Mouse			*mMouse;
+
+		std::vector<UnbufferedInputBase*> mUnbufferedInputInstances;
+
 		//OIS::JoyStick* g_joys[4] = {0,0,0,0};
 	};
 
-	//inline InputEngine* GetInputEngine() { return InputEngine::GetInstance(); }
+	inline InputEngine* GetInputEngine() { return InputEngine::GetInstance(); }
 }
 
 #endif
