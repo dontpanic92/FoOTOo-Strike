@@ -3,7 +3,7 @@
 #include "RenderEngine.h"
 using namespace AGE;
 
-Renderable* AGEMeshImporter::LoadFromFile(const char* filename)
+Renderable* AGEMeshImporter::LoadFromFile(const char* filename, bool is_static)
 {
 	FILE* filp;
 
@@ -62,7 +62,7 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename)
 		//Texture2D* texture2 = ResourceManager::GetInstance()->LoadTexture2D(matHeader.TextureName);
 		//material->SetTexture(texture2);
 
-		renderable->AddRenderObject(RenderEngine::GetInstance()->CreateRenderObject(renderable, mesh, material, shader));
+		renderable->AddRenderObject(RenderEngine::GetInstance()->CreateRenderObject(renderable, mesh, material, shader, is_static));
 
 		delete[] normal;
 		delete[] textureCoord;

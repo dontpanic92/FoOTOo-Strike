@@ -18,6 +18,7 @@ namespace AGE
 		Mesh* Mesh;
 		Shader* Shader;
 		Material* Material;
+		bool IsStatic;
 
 		virtual void Update() {}
 		virtual void Destroy() {}

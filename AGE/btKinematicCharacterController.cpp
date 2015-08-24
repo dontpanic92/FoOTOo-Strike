@@ -383,7 +383,7 @@ void btKinematicCharacterController::stepForwardAndStrafe ( btCollisionWorld* co
 
 		if (callback.hasHit())
 		{	
-			printf("hit: %f %f %f\n", callback.m_hitNormalWorld.getX(), callback.m_hitNormalWorld.getY(), callback.m_hitNormalWorld.getZ());
+			//printf("hit: %f %f %f\n", callback.m_hitNormalWorld.getX(), callback.m_hitNormalWorld.getY(), callback.m_hitNormalWorld.getZ());
 			// we moved only a fraction
 			//btScalar hitDistance;
 			//hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();

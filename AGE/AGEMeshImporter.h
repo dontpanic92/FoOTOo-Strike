@@ -32,7 +32,7 @@ namespace AGE
 			float BindPoseMatrixInv[16];
 		};
 
-		Renderable* LoadFromFile(const char* filename);
+		Renderable* LoadFromFile(const char* filename, bool is_static);
 	};
 }
 

@@ -62,6 +62,7 @@ namespace AGE
 		};
 
 		RenderList(RenderListMemoryPool* pool);
+		~RenderList();
 
 		void Push(const RenderObject* object);
 
@@ -69,10 +70,13 @@ namespace AGE
 
 		const_iterator end() const { return const_iterator(this, 0); }
 
+		uint size() const { return mCount; }
+
 	private:
-		RenderListMemoryPool* mMemoryPool;
-		ListNode* mHead;
-		ListNode* mTail;
+		RenderListMemoryPool* mMemoryPool = nullptr;
+		ListNode* mHead = nullptr;
+		ListNode* mTail = nullptr;
+		uint mCount = 0;
 	};
 
 	class RenderListMemoryPool

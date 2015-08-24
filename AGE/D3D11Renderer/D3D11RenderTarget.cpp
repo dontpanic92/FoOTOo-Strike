@@ -12,7 +12,9 @@ D3D11ShadowMapTarget::D3D11ShadowMapTarget(ID3D11Device* device, uint width, uin
 	mViewport.MinDepth = 0;
 	mViewport.MaxDepth = 1;
 
+	//Create texture for stencil
 	D3D11_TEXTURE2D_DESC texDesc;
+	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.Width = mWidth;
 	texDesc.Height = mHeight;
 	texDesc.MipLevels = 1;
@@ -25,25 +27,62 @@ D3D11ShadowMapTarget::D3D11ShadowMapTarget(ID3D11Device* device, uint width, uin
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
-	mDepthMap = 0;
 	TESTRESULT(device->CreateTexture2D(&texDesc, 0, &mDepthMap));
 
+	//Create stencil view
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
 	dsvDesc.Flags = 0;
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 	TESTRESULT(device->CreateDepthStencilView(mDepthMap, &dsvDesc, &mDepthMapDSV));
 
+	//Create srv for stencil texture
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(srvDesc));
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	TESTRESULT(device->CreateShaderResourceView(mDepthMap, &srvDesc, &mDepthMapSRV));
 
-	// View saves a reference to the texture so we can release our reference.
+	//Create texture for render target
+	D3D11_TEXTURE2D_DESC texDesc2;
+	ZeroMemory(&texDesc2, sizeof(texDesc2));
+	texDesc2.Width = mWidth;
+	texDesc2.Height = mHeight;
+	texDesc2.MipLevels = 1;
+	texDesc2.ArraySize = 1;
+	texDesc2.Format = DXGI_FORMAT_R32G32_FLOAT;
+	texDesc2.SampleDesc.Count = 1;
+	texDesc2.SampleDesc.Quality = 0;
+	texDesc2.Usage = D3D11_USAGE_DEFAULT;
+	texDesc2.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	texDesc2.CPUAccessFlags = 0;
+	texDesc2.MiscFlags = 0;
+
+	TESTRESULT(device->CreateTexture2D(&texDesc2, 0, &mRenderTargetMap));
+
 	
+	//Create render target view
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+	renderTargetViewDesc.Format = texDesc2.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	TESTRESULT(device->CreateRenderTargetView(mRenderTargetMap, &renderTargetViewDesc, &mRenderTargetView));
+
+	//Create srv for render target texture
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc2;
+	ZeroMemory(&srvDesc2, sizeof(srvDesc2));
+	srvDesc2.Format = DXGI_FORMAT_R32G32_FLOAT;
+	srvDesc2.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc2.Texture2D.MipLevels = texDesc.MipLevels;
+	srvDesc2.Texture2D.MostDetailedMip = 0;
+	TESTRESULT(device->CreateShaderResourceView(mRenderTargetMap, &srvDesc2, &mRenderTargetMapSRV));
+
 }
 
 D3D11ShadowMapTarget::~D3D11ShadowMapTarget()
@@ -51,12 +90,15 @@ D3D11ShadowMapTarget::~D3D11ShadowMapTarget()
 	SafeRelease(mDepthMap);
 	SafeRelease(mDepthMapSRV);
 	SafeRelease(mDepthMapDSV);
+	SafeRelease(mRenderTargetMap);
+	SafeRelease(mRenderTargetMapSRV);
+	SafeRelease(mRenderTargetView);
 }
 
 void D3D11ShadowMapTarget::SetRenderTarget(ID3D11DeviceContext* dc)
 {
 	dc->RSSetViewports(1, &mViewport);
-	ID3D11RenderTargetView* renderTargets[1] = { 0 };
+	ID3D11RenderTargetView* renderTargets[1] = { mRenderTargetView };
 	
 	dc->OMSetRenderTargets(1, renderTargets, mDepthMapDSV);
 	dc->ClearDepthStencilView(mDepthMapDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);

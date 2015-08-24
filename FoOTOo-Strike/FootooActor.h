@@ -19,7 +19,7 @@ public:
 	FootooActor()
 	{
 		AGEMeshImporter importer;
-		mRenderable = importer.LoadFromFile("../Resources/Models/c.AMESH");
+		mRenderable = importer.LoadFromFile("../Resources/Models/c.AMESH", false);
 		mRenderable->SetParent(this);
 		AGESkeletonAnimationImporter importer2;
 		mSkeleton = mRenderable->GetSkeleton();
@@ -75,7 +75,7 @@ public:
 	AIActor()
 	{
 		AGEMeshImporter importer;
-		mRenderable = importer.LoadFromFile("../Resources/Models/leet.AMESH");
+		mRenderable = importer.LoadFromFile("../Resources/Models/leet.AMESH", false);
 		mRenderable->SetParent(this);
 		AGESkeletonAnimationImporter importer2;
 		mSkeleton = mRenderable->GetSkeleton();

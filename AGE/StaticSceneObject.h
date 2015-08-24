@@ -15,7 +15,7 @@ namespace AGE
 		{
 
 			AGEMeshImporter importer;
-			Renderable* r = importer.LoadFromFile(rp);
+			Renderable* r = importer.LoadFromFile(rp, true);
 			mRenderable = r;
 			r->SetParent(this);
 			InitPhysics();

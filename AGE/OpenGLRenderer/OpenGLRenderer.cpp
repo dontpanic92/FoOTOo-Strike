@@ -113,7 +113,7 @@ int OpenGLRenderer::StartUp(Window window)
 	return 1;
 }
 
-RenderObject* OpenGLRenderer::CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader)
+RenderObject* OpenGLRenderer::CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader, bool is_static)
 {
 	OpenGLRenderObject* object = new OpenGLRenderObject();
 	object->Parent = renderable;

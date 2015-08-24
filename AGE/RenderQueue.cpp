@@ -3,7 +3,7 @@
 using namespace std;
 using namespace AGE;
 
-RenderList::RenderList(RenderListMemoryPool* pool) : mMemoryPool(pool), mHead(0), mTail(0)
+RenderList::RenderList(RenderListMemoryPool* pool) : mMemoryPool(pool)
 {
 }
 
@@ -19,7 +19,14 @@ void RenderList::Push(const RenderObject* object)
 		mTail->Next->Next = 0;
 		mTail = mTail->Next;
 	}
+	mCount++;
 }
+
+RenderList::~RenderList()
+{
+	mCount = 0;
+}
+
 
 RenderListMemoryPool::RenderListMemoryPool()
 {

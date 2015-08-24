@@ -35,7 +35,7 @@ namespace AGE{
 
 		virtual int StartUp(Window window) = 0;
 
-		virtual RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader) = 0;
+		virtual RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader, bool is_static) = 0;
 
 		virtual Shader* CreateShader(const char* shaderName) { return NULL; }
 

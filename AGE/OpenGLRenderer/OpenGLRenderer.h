@@ -28,7 +28,7 @@ namespace AGE{
 
 		void Begin();
 
-		RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader) override;
+		RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader, bool is_static) override;
 
 		Shader* CreateShader(const char* shaderName) override;
 

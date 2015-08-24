@@ -10,6 +10,7 @@
 
 namespace AGE{
 
+	class RenderPath;
 	class D3D11Renderer : public RenderEngine
 	{
 	public:
@@ -21,7 +22,7 @@ namespace AGE{
 		void ShutDown();
 
 
-		RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader) override;
+		RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader, bool is_static) override;
 
 		Shader* CreateShader(const char* shaderName) override;
 
@@ -37,16 +38,10 @@ namespace AGE{
 
 	private:
 
-		void ShadowMapPass();
-
 		ID3D11Device* mD3DDevice;
 		ID3D11DeviceContext* mD3DImmediateContext;
 		IDXGISwapChain* mSwapChain;
-		ID3D11RasterizerState* mRasterizerState;
-		ID3D11RasterizerState* mNoCullRasterizerState;
-
-		D3D11NormalTarget* mNormalTarget;
-		D3D11ShadowMapTarget* mShadowMapTarget;
+		RenderPath*		mRenderPath;
 		
 		D3D_DRIVER_TYPE mD3DDriverType;
 

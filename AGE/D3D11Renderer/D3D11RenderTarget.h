@@ -28,7 +28,7 @@ namespace AGE{
 		~D3D11ShadowMapTarget();
 
 		void SetRenderTarget(ID3D11DeviceContext* dc);
-		ID3D11ShaderResourceView* GetShaderResourceView()
+		ID3D11ShaderResourceView* GetDepthShaderResourceView()
 		{
 			return mDepthMapSRV;
 		}
@@ -38,7 +38,18 @@ namespace AGE{
 			return mDepthMapDSV;
 		}
 
-		ID3D11Texture2D* GetDepthMap()
+		ID3D11ShaderResourceView* GetRenderTextureShaderResourceView()
+		{
+			return mRenderTargetMapSRV;
+		}
+
+
+		ID3D11Texture2D* GetRenderTexture()
+		{
+			return mRenderTargetMap;
+		}
+
+		ID3D11Texture2D* GetDepthTexture()
 		{
 			return mDepthMap;
 		}
@@ -47,10 +58,13 @@ namespace AGE{
 
 		uint mWidth;
 		uint mHeight;
-		ID3D11ShaderResourceView* mDepthMapSRV = NULL;
-		ID3D11DepthStencilView* mDepthMapDSV = NULL;
-		D3D11_VIEWPORT mViewport;
-		ID3D11Texture2D* mDepthMap = NULL;
+		ID3D11Texture2D*	mRenderTargetMap = nullptr;
+		ID3D11RenderTargetView*		mRenderTargetView = nullptr;
+		ID3D11ShaderResourceView*	mRenderTargetMapSRV = nullptr;
+		ID3D11DepthStencilView*		mDepthMapDSV = nullptr;
+		ID3D11ShaderResourceView*	mDepthMapSRV = nullptr;
+		D3D11_VIEWPORT		mViewport;
+		ID3D11Texture2D*	mDepthMap = nullptr;
 	};
 
 	class D3D11NormalTarget : public D3D11RenderTarget
@@ -68,8 +82,8 @@ namespace AGE{
 		uint mHeight;
 		ID3D11RenderTargetView* mRenderTargetView;
 		ID3D11DepthStencilView* mDepthStencilView;
-		ID3D11Texture2D* mDepthStencilBuffer;
-		D3D11_VIEWPORT mViewport;
+		ID3D11Texture2D*	mDepthStencilBuffer;
+		D3D11_VIEWPORT		mViewport;
 	};
 
 }

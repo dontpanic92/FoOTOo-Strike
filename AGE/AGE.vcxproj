@@ -89,6 +89,7 @@
     <ClInclude Include="btKinematicCharacterController.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="D3D11Renderer\D3D11Def.h" />
+    <ClInclude Include="D3D11Renderer\D3D11ForwardRendering.h" />
     <ClInclude Include="D3D11Renderer\D3D11Renderer.h" />
     <ClInclude Include="D3D11Renderer\D3D11RenderObject.h" />
     <ClInclude Include="D3D11Renderer\D3D11RenderTarget.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RenderableSceneObject.h" />
     <ClInclude Include="RenderEngine.h" />
+    <ClInclude Include="RenderPath.h" />
     <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RtInformation.h" />
@@ -142,6 +144,7 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="btKinematicCharacterController.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="D3D11Renderer\D3D11ForwardRendering.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11Renderer.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11RenderTarget.cpp" />
     <ClCompile Include="D3D11Renderer\D3D11Texture.cpp" />
