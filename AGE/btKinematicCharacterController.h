@@ -19,7 +19,7 @@ subject to the following restrictions:
 
 #include "LinearMath/btVector3.h"
 
-#include <BulletDynamics/Character/btCharacterControllerInterface.h>
+#include "btCharacterControllerInterface.h"
 
 #include "BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
 

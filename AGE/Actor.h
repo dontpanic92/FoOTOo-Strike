@@ -20,6 +20,8 @@ namespace AGE
 
 		virtual ~Actor();
 
+		virtual const char* GetRepr();
+
 		void InitPhysics();
 
 		btKinematicCharacterController* GetActorController()

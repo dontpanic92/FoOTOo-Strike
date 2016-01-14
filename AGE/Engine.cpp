@@ -13,9 +13,9 @@ Engine::Engine() :mLastTimeUpdate(0)
 {
 }
 
-int Engine::StartUp()
+int Engine::StartUp(HWND hWnd)
 {
-	mApp.StartUp();
+	mApp.StartUp(hWnd);
 	RenderEngine::SetEngineType(RenderEngine::Type::Direct3D11);
 	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
 	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
@@ -39,7 +39,7 @@ void Engine::ShutDown()
 	PhysicsEngine::GetInstance()->ShutDown();
 	//InputEngine::GetInstance()->ShutDown();
 	//RenderEngine::GetInstance()->ShutDown();
-	//mApp.ShutDown();
+	mApp.ShutDown();
 }
 
 int Engine::Run()

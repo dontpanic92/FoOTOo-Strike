@@ -214,3 +214,4 @@ int D3D11ForwardRendering::ExecuteRendering()
 	RenderQueue::GetInstance()->ClearQueue();
 	return 0;
 }
+

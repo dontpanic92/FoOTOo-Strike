@@ -30,10 +30,19 @@ int WindowsApplication::MainLoop()
 	return 0;
 }
 
-int WindowsApplication::StartUp()
+int WindowsApplication::StartUp(HWND hWnd)
 {
-	CreateApplicationWindow();
+	if (hWnd) {
+		mWindow.Set(hWnd, false);
+	}
+	else
+		CreateApplicationWindow();
 	return true;
+}
+
+void WindowsApplication::ShutDown()
+{
+	ReleaseDC(mWindow.hWnd, mWindow.hDC);
 }
 
 Window WindowsApplication::GetMainWindow()
@@ -80,11 +89,8 @@ bool WindowsApplication::CreateApplicationWindow()
 		return false;
 	}
 
-	mWindow.hWnd = hWnd;
-	mWindow.hDC = ::GetWindowDC(hWnd);
-	mWindow.Width = 800;
-	mWindow.Height = 600;
-
+	mWindow.Set(hWnd, true);
+	
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	return true;

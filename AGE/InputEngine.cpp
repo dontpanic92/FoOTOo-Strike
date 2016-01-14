@@ -8,6 +8,10 @@ using namespace std;
 
 void InputEngine::StartUp(Window window)
 {
+	if (!window.IsWindow) {
+		return;
+	}
+
 	ParamList pl;
 	std::ostringstream wnd;
 	wnd << (size_t)window.hWnd;

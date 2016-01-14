@@ -23,7 +23,11 @@ void Actor::InitPhysics()
 
 	GetPhysicsEngine()->GetWorld()->addCollisionObject(mGhostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
 	GetPhysicsEngine()->GetWorld()->addAction(mCharacterController);
-	printf("collision obj: %d\n", GetPhysicsWorld()->getNumCollisionObjects());
+}
+
+const char* Actor::GetRepr()
+{
+	return "Actor";
 }
 
 Actor::~Actor()

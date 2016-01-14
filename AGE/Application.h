@@ -14,7 +14,9 @@ namespace AGE
 	public:
 		int MainLoop();
 
-		int StartUp();
+		int StartUp(HWND hWnd = 0);
+
+		void ShutDown();
 
 		Window GetMainWindow();
 

@@ -279,10 +279,7 @@ void btKinematicCharacterController::stepUp ( btCollisionWorld* world)
 				m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
 			else
 				m_currentPosition = m_targetPosition;
-		} /*else
-		{
-			recoverFromPenetration(world);
-		}*/
+		}
 		m_verticalVelocity = 0.0;
 		m_verticalOffset = 0.0;
 	} else {
@@ -383,7 +380,6 @@ void btKinematicCharacterController::stepForwardAndStrafe ( btCollisionWorld* co
 
 		if (callback.hasHit())
 		{	
-			//printf("hit: %f %f %f\n", callback.m_hitNormalWorld.getX(), callback.m_hitNormalWorld.getY(), callback.m_hitNormalWorld.getZ());
 			// we moved only a fraction
 			//btScalar hitDistance;
 			//hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
@@ -392,7 +388,6 @@ void btKinematicCharacterController::stepForwardAndStrafe ( btCollisionWorld* co
 
 			updateTargetPositionBasedOnCollision (callback.m_hitNormalWorld);
 			btVector3 currentDir = m_targetPosition - m_currentPosition;
-
 			distance2 = currentDir.length2();
 			if (distance2 > SIMD_EPSILON)
 			{
@@ -669,8 +664,7 @@ void btKinematicCharacterController::playerStep (  btCollisionWorld* collisionWo
 
 	stepUp (collisionWorld);
 	if (m_useWalkDirection) {
-		if (!m_walkDirection.fuzzyZero())
-			stepForwardAndStrafe (collisionWorld, m_walkDirection);
+		stepForwardAndStrafe (collisionWorld, m_walkDirection);
 	} else {
 		//printf("  time: %f", m_velocityTimeInterval);
 		// still have some time left for moving!

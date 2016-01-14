@@ -11,7 +11,7 @@ namespace AGE{
 	public:
 		~Engine();
 
-		int StartUp();
+		int StartUp(HWND hWnd = 0);
 
 		void ShutDown();
 

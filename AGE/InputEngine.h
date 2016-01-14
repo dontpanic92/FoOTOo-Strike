@@ -42,17 +42,28 @@ namespace AGE
 
 		void GetKeyStates(char keys[256])
 		{
-			mKeyboard->copyKeyStates(keys);
+			if (mKeyboard)
+				mKeyboard->copyKeyStates(keys);
 		}
 
 		const OIS::MouseState& GetMouseState()
 		{
-			return mMouse->getMouseState();
+			static OIS::MouseState d = OIS::MouseState();
+			if (mMouse)
+				return mMouse->getMouseState();
+			return d;
 		}
 
 		void Update()
 		{
-			mKeyboard->capture(); mMouse->capture();
+			if (mKeyboard) {
+				mKeyboard->capture();
+			}
+
+			if (mMouse) {
+				mMouse->capture();
+			}
+
 			if (1) {
 				NotifyUnbufferedUpdate();
 			}
@@ -65,12 +76,14 @@ namespace AGE
 
 		void RegisterKeyListener(OIS::KeyListener* keyListener)
 		{
-			mKeyboard->setEventCallback(keyListener);
+			if (mKeyboard)
+				mKeyboard->setEventCallback(keyListener);
 		}
 
 		void RegisterMouseListener(OIS::MouseListener* mouseListener)
 		{
-			mMouse->setEventCallback(mouseListener);
+			if (mMouse)
+				mMouse->setEventCallback(mouseListener);
 		}
 
 	private:
@@ -81,9 +94,9 @@ namespace AGE
 			}
 		}
 
-		OIS::InputManager	*mInputManager;
-		OIS::Keyboard		*mKeyboard;
-		OIS::Mouse			*mMouse;
+		OIS::InputManager	*mInputManager = nullptr;
+		OIS::Keyboard		*mKeyboard = nullptr;
+		OIS::Mouse			*mMouse = nullptr;
 
 		std::vector<UnbufferedInputBase*> mUnbufferedInputInstances;
 

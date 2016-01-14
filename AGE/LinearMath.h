@@ -6,10 +6,6 @@
 
 namespace AGE
 {
-	typedef unsigned int uint;
-	typedef unsigned long ulong;
-	typedef unsigned short ushort;
-
 	const float PI = 3.14159265f; //3.141592653589793238;
 	const float DOUBLE_PI = 2 * PI;
 	const float _PI_DIV_180 = 0.0174532925f; //0.017453292519943296;
