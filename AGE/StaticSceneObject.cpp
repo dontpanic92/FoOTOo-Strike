@@ -1,31 +1,31 @@
 #include "StaticSceneObject.h"
 #include "PhysicsEngine.h"
+
 using namespace AGE;
 
 void StaticSceneObject::InitPhysics()
 {
-	btTriangleMesh* meshInterface = new btTriangleMesh();
+	int materialID = 0;
+	bool optimize = true;
 
-	for (int i = 0; i < mRenderable->GetNumberOfRenderObjects(); i++) 
+	NewtonCollision* collision = NewtonCreateTreeCollision(GetPhysicsWorld(), materialID);
+
+	NewtonTreeCollisionBeginBuild(collision);
+
+	for (int i = 0; i < mRenderable->GetNumberOfRenderObjects(); i++)
 	{
 		RenderObject* rObj = mRenderable->GetRenderObject(i);
 		Mesh::Vertex* vertex = rObj->Mesh->GetVertexData();
 
-		for (int j = 0; j < rObj->Mesh->GetNumberOfVertex(); j+=3)
+		for (int j = 0; j < rObj->Mesh->GetNumberOfVertex(); j += 3)
 		{
-			btVector3 a(vertex[j].Position[0], vertex[j].Position[1], vertex[j].Position[2]);
-			btVector3 b(vertex[j + 1].Position[0], vertex[j + 1].Position[1], vertex[j + 1].Position[2]);
-			btVector3 c(vertex[j + 2].Position[0], vertex[j + 2].Position[1], vertex[j + 2].Position[2]);
-
-			meshInterface->addTriangle(a, b, c);
+			NewtonTreeCollisionAddFace(collision, 3, vertex[j].Position, sizeof(vertex[j]), materialID);
 		}
 	}
+	NewtonTreeCollisionEndBuild(collision, optimize ? 1 : 0);
 
-	bool	useQuantizedAabbCompression = true;
-	btBvhTriangleMeshShape* trimeshShape = new btBvhTriangleMeshShape(meshInterface, useQuantizedAabbCompression);
+	NewtonBody* const body = NewtonCreateDynamicBody(GetPhysicsWorld(), collision, this->GetWorldMatrix());
+	NewtonBodySetUserData(body, nullptr/*this*/);
 
-	btTransform start;
-	start.setIdentity();
-
-	btRigidBody* body = GetPhysicsEngine()->CreateRigidBody(0, start, trimeshShape);
+	NewtonDestroyCollision(collision);
 }

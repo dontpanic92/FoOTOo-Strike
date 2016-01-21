@@ -18,12 +18,24 @@ const float Matrix4x4f::IdentityFloat[4][4] = {
 	0.0f, 0.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 0.0f, 1.0f
 };
-const Matrix4x4f Matrix4x4f::Identity;
 
-const float Matrix3x3f::Identity[3][3] = {
+const float Matrix4x4f::ZeroFloat[4][4] = {
+	0.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f
+};
+
+const float Matrix3x3f::IdentityFloat[3][3] = {
 	1.0f, 0.0f, 0.0f,
 	0.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 1.0f
+};
+
+const float Matrix3x3f::ZeroFloat[3][3] = {
+	0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f
 };
 
 const Vector3f Vector3f::Zero(0.0f, 0.0f, 0.0f);
@@ -101,6 +113,10 @@ Matrix3x3f::Matrix3x3f(const Matrix4x4f& copy)
 	memcpy(mMatrix[2], copy[2], sizeof(float) * 3);
 }
 
+Matrix3x3f::Matrix3x3f(float* m)
+{
+	memcpy(mMatrix, m, sizeof(mMatrix));
+}
 
 Matrix4x4f::Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector)
 {

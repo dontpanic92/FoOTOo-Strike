@@ -18,8 +18,9 @@ namespace AGE
 	class AGE_EXPORT Matrix3x3f
 	{
 	public:
-		Matrix3x3f() { MakeIdentity(); }
+		Matrix3x3f() { SetAsIdentity(); }
 		Matrix3x3f(const Matrix4x4f& copy);
+		Matrix3x3f(float* m);
 
 		Matrix3x3f& Transpose();
 
@@ -30,11 +31,17 @@ namespace AGE
 
 		operator float*();
 
-		void MakeIdentity() { memcpy(mMatrix, Identity, sizeof(Identity)); }
+		void SetAsIdentity() { memcpy(mMatrix, IdentityFloat, sizeof(IdentityFloat)); }
+		void SetAsZero() { memcpy(mMatrix, ZeroFloat, sizeof(ZeroFloat)); }
 
-		static const float Identity[3][3];
+		static Matrix3x3f  MakeIdentity() { return (float*)IdentityFloat; }
+		static Matrix3x3f  MakeZero() { return (float*)ZeroFloat; }
+
 	private:
 		float mMatrix[3][3];
+
+		static const float IdentityFloat[3][3];
+		static const float ZeroFloat[3][3];
 	};
 
 	class Matrix4x4f;
@@ -65,8 +72,8 @@ namespace AGE
 	class AGE_EXPORT Matrix4x4f
 	{
 	public:
-		Matrix4x4f() { MakeIdentity(); }
-		Matrix4x4f(float m[16]) { memcpy(mMatrix, m, sizeof(mMatrix)); }
+		Matrix4x4f() { SetAsIdentity(); }
+		Matrix4x4f(float* m) { memcpy(mMatrix, m, sizeof(mMatrix)); }
 		Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector);
 
 		float* operator[](int index) { return mMatrix[index]; }
@@ -84,13 +91,16 @@ namespace AGE
 
 		bool operator != (const Matrix4x4f& mat) const;
 
-		void MakeIdentity() { memcpy(mMatrix, IdentityFloat, sizeof(IdentityFloat)); }
+		void SetAsIdentity() { memcpy(mMatrix, IdentityFloat, sizeof(IdentityFloat)); }
 
-		static const Matrix4x4f Identity;
-		static const float IdentityFloat[4][4];
+		static Matrix4x4f MakeIdentity() { return (float*)IdentityFloat; }
+		static Matrix4x4f MakeZero() { return (float*)ZeroFloat; }
 
 	private:
 		float mMatrix[4][4];
+
+		static const float IdentityFloat[4][4];
+		static const float ZeroFloat[4][4];
 	};
 
 	class AGE_EXPORT Transform

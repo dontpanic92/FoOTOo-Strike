@@ -162,9 +162,6 @@
     <ClInclude Include="DynamicSceneObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="btKinematicCharacterController.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="RenderPath.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -291,9 +288,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="btKinematicCharacterController.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Renderer\D3D11ForwardRendering.cpp">

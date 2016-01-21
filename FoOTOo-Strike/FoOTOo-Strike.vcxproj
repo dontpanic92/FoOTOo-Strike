@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Projects\AGE\AGE;D:\Projects\AGE\3rd\include;D:\Projects\AGE\3rd\Newton;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\AGE\3rd\bullet\vs2013\lib\debug;D:\Projects\AGE\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\AGE\AGE;D:\Projects\AGE\3rd\include;D:\Projects\AGE\3rd\include\newton;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\AGE\3rd\lib\win32;D:\Projects\AGE\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Projects\AGE\AGE;D:\Projects\AGE\3rd\include;D:\Projects\AGE\3rd\Newton;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\AGE\3rd\bullet\vs2013\lib\Release;D:\Projects\AGE\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\AGE\AGE;D:\Projects\AGE\3rd\include;D:\Projects\AGE\3rd\include\newton;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\AGE\3rd\lib\win32;D:\Projects\AGE\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>BulletDynamics_Debug.lib;BulletCollision_debug.lib;LinearMath_debug.lib;AGE.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ampPhysics_d.lib;pthread_d.lib;physics_d.lib;core_d.lib;newton_d.lib;AGE.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;AGE.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>physics.lib;newton.lib;AGE.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

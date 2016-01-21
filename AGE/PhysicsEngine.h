@@ -1,11 +1,10 @@
 #ifndef __AGE_PHYSICSENGINE_HEADER__
 #define __AGE_PHYSICSENGINE_HEADER__
 
+#include <newton/Newton.h>
 #include "Singleton.h"
 #include "Def.h"
 #include "LinearMath.h"
-#include <btBulletCollisionCommon.h>
-#include <btBulletDynamicsCommon.h>
 
 namespace AGE
 {
@@ -22,9 +21,9 @@ namespace AGE
 
 		void Update(float time);
 
-		btDiscreteDynamicsWorld* GetWorld() { return mDynamicsWorld; }
+		NewtonWorld* GetWorld() { return mWorld; }
 
-		btRigidBody* CreateRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape, const btVector4& color = btVector4(1, 0, 0, 1))
+		/*btRigidBody* CreateRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape, const btVector4& color = btVector4(1, 0, 0, 1))
 		{
 			btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
@@ -43,20 +42,15 @@ namespace AGE
 			body->setUserIndex(-1);
 			mDynamicsWorld->addRigidBody(body);
 			return body;
-		}
+		}*/
 
 	private:
-		
-		btBroadphaseInterface*	mBroadphase;
-		btCollisionDispatcher*	mDispatcher;
-		btConstraintSolver*	mSolver;
-		btDefaultCollisionConfiguration* mCollisionConfiguration;
-		btDiscreteDynamicsWorld* mDynamicsWorld;
+		NewtonWorld* mWorld;
 	};
 
 	static inline PhysicsEngine* GetPhysicsEngine() { return PhysicsEngine::GetInstance(); }
 
-	static inline btDiscreteDynamicsWorld* GetPhysicsWorld() { return GetPhysicsEngine()->GetWorld(); }
+	static inline NewtonWorld* GetPhysicsWorld() { return GetPhysicsEngine()->GetWorld(); }
 }
 
 #endif

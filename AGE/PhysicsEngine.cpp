@@ -1,15 +1,10 @@
-#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include "PhysicsEngine.h"
 #include "Renderable.h"
 
 using namespace AGE;
 
 PhysicsEngine::PhysicsEngine() 
-	: mBroadphase(nullptr),
-	mDispatcher(nullptr),
-	mSolver(nullptr),
-	mCollisionConfiguration(nullptr),
-	mDynamicsWorld(nullptr)
+	: mWorld(nullptr)
 {
 	
 }
@@ -21,31 +16,22 @@ PhysicsEngine::~PhysicsEngine()
 
 void PhysicsEngine::StartUp()
 {
-	mCollisionConfiguration = new btDefaultCollisionConfiguration();
-	//m_collisionConfiguration->setConvexConvexMultipointIterations();
+	/*
+	mDynamicsWorld->setGravity(btVector3(0, -600, 0));*/
 
-	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
-	mDispatcher = new btCollisionDispatcher(mCollisionConfiguration);
+	mWorld = NewtonCreate();
 
-	mBroadphase = new btDbvtBroadphase();
+	NewtonWorldSetUserData(mWorld, this);
 
-	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
-	btSequentialImpulseConstraintSolver* sol = new btSequentialImpulseConstraintSolver;
-	mSolver = sol;
-
-	mBroadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
-
-	mDynamicsWorld = new btDiscreteDynamicsWorld(mDispatcher, mBroadphase, mSolver, mCollisionConfiguration);
-
-	
-
-	mDynamicsWorld->setGravity(btVector3(0, -600, 0));
 }
 
 void PhysicsEngine::ShutDown()
 {
-	if (mDynamicsWorld) {
-		mDynamicsWorld = nullptr;
+	if (mWorld) {
+		NewtonWaitForUpdateToFinish(mWorld);
+		NewtonDestroy(mWorld);
+
+		mWorld = nullptr;
 	}
 
 }
@@ -53,5 +39,5 @@ void PhysicsEngine::ShutDown()
 void PhysicsEngine::Update(float time)
 {
 
-	mDynamicsWorld->stepSimulation(time / 1000);
+	NewtonUpdate(mWorld, time);
 }

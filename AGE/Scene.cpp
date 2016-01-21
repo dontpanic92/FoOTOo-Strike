@@ -160,14 +160,14 @@ void Scene::Render()
 		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
 		}
 		*/
-	mRoot.Render(Matrix4x4f::Identity, viewMatrix);
+	mRoot.Render(Matrix4x4f::MakeIdentity(), viewMatrix);
 
 	//RenderEngine::GetInstance()->End();
 }
 
 void Scene::UpdateAndCulling()
 {
-	mRoot.UpdateAndCulling(Matrix4x4f::Identity);
+	mRoot.UpdateAndCulling(Matrix4x4f::MakeIdentity());
 }
 
 SceneNode* Scene::CreateSceneNode(SceneNode* parent)

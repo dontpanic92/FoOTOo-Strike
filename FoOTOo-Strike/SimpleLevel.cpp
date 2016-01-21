@@ -59,12 +59,8 @@ void SimpleLevel::ShutDown()
 
 void SimpleLevel::Enter()
 {
-	btTransform startTransform;
-	startTransform.setOrigin(btVector3(111.0, 4000.0, 100.0));
-	actor->GetPhysicsObject()->setWorldTransform(startTransform);
-
-	startTransform.setOrigin(btVector3(200.0, 4000.0, 100.0));
-	leet->GetPhysicsObject()->setWorldTransform(startTransform);
+	leet->SetPosition(Vector3f(200.0, 4000.0, 100.0));
+	actor->SetPosition(Vector3f(111.0, 4000.0, 100.0));
 }
 
 void SimpleLevel::Exit()
@@ -82,9 +78,9 @@ bool SimpleLevel::Update(float time)
 	InputEngine::GetInstance()->GetKeyStates(keys);
 
 	Transform* cameraTransform = ActorNode->GetTransform();
-	float speed = 4;
+	float speed = 40;
 
-	auto aController = actor->GetActorController();
+	//auto aController = actor->GetController();
 	Vector3f v = Vector3f(0, 0, 0);
 	if (keys[KC_W]) {
 		//cameraTransform->Translate(Vector3f(0, 0, -speed));
@@ -115,11 +111,6 @@ bool SimpleLevel::Update(float time)
 		//cameraTransform->Translate(Vector3f(0, -speed, 0), Transform::World);
 	}
 
-	if (keys[KC_SPACE]) {
-		//cameraTransform->Translate(Vector3f(0, speed, 0), Transform::World);
-		aController->jump();
-	}
-
 	//printf("%f %f %f\n", v[0], v[1], v[2]);
 
 	Matrix3x3f ma = cameraTransform->GetTransformMatrix();
@@ -127,6 +118,11 @@ bool SimpleLevel::Update(float time)
 	v[1] = 0;
 	v.Normalize();
 	v = v * speed;
+
+	if (keys[KC_SPACE] && !actor->GetController()->IsInFreeFall()) {
+		//cameraTransform->Translate(Vector3f(0, speed, 0), Transform::World);
+		v[1] = 50;
+	}
 	//btMatrix3x3 m;
 	//m.setValue(ma[0][0], ma[0][1], ma[0][2], ma[1][0], ma[1][1], ma[1][2], ma[2][0], ma[2][1], ma[2][2]);
 	//btScalar r, y, p;
@@ -134,15 +130,9 @@ bool SimpleLevel::Update(float time)
 	//btQuaternion q(r, y, p);
 
 	//v.rotate(q.getAxis(), q.getAngle());
-	aController->setWalkDirection(btVector3(v[0], v[1], v[2]));
+	actor->SetVelocity(Vector3f(v[0], v[1], v[2]));
+	
 
-	//if (v.x() != 0 || v.y() != 0 || v.z() != 0)
-	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
-
-	///////btTransform trans = aController->getGhostObject()->getWorldTransform();
-	///////btVector3 v2 = trans.getOrigin();
-	///////cameraTransform->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
-	//std::cout << v.x() << " " << v.y() << " " << v.z() << std::endl;
 	return true;
 }
 
