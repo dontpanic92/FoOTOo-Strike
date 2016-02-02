@@ -106,18 +106,18 @@ namespace AGE
 	class AGE_EXPORT Transform
 	{
 	public:
-		enum CoordSystem { World, Local };
+		enum CoordSpace { World, Local };
 
 		Transform() {}
 		Transform(const Matrix4x4f& matrix) :mTransformMatrix(matrix) {}
 
-		void Translate(const Vector3f& translation, CoordSystem coordSystem = Local);
+		void Translate(const Vector3f& translation, CoordSpace coordSpace = Local);
 		void SetPosition(const Vector3f& position);
 		Vector3f GetPosition() const;
-		void RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem = Local);
+		void RotateByRadian(float radian, float x, float y, float z, CoordSpace coordSpace = Local);
 		void ClearRotation();
 
-		void Multiply(const Matrix4x4f& matrix, CoordSystem coordSystem = Local);
+		void Multiply(const Matrix4x4f& matrix, CoordSpace coordSpace = Local);
 
 		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
 

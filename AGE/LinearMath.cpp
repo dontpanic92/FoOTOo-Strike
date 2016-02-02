@@ -185,7 +185,7 @@ Matrix4x4f Matrix4x4f::operator *(const Matrix4x4f& mul) const
 	return tmp;
 }
 
-void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem)
+void Transform::Translate(const Vector3f& translation, CoordSpace coordSpace)
 {
 
 	Matrix4x4f translateMatrix;
@@ -199,7 +199,7 @@ void Transform::Translate(const Vector3f& translation, CoordSystem coordSystem)
 		mTransformMatrix = mTransformMatrix * translateMatrix;
 		}*/
 
-	Multiply(translateMatrix, coordSystem);
+	Multiply(translateMatrix, coordSpace);
 }
 
 void Transform::SetPosition(const Vector3f& position)
@@ -218,7 +218,7 @@ Vector3f Transform::GetPosition() const
 	return position;
 }
 
-void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSystem coordSystem)
+void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSpace coordSpace)
 {
 	/*
 	*	http://en.wikipedia.org/wiki/Rotation_matrix
@@ -258,7 +258,7 @@ void Transform::RotateByRadian(float radian, float x, float y, float z, CoordSys
 		else
 		mTransformMatrix = mTransformMatrix * rotationMatrix;
 		*/
-	Multiply(rotationMatrix, coordSystem);
+	Multiply(rotationMatrix, coordSpace);
 }
 
 void Transform::ClearRotation()
@@ -268,9 +268,9 @@ void Transform::ClearRotation()
 		= mTransformMatrix[1][2] = mTransformMatrix[2][0] = mTransformMatrix[2][1] = 0.0f;
 }
 
-void Transform::Multiply(const Matrix4x4f& matrix, CoordSystem coordSystem)
+void Transform::Multiply(const Matrix4x4f& matrix, CoordSpace coordSpace)
 {
-	if (coordSystem == Local)
+	if (coordSpace == Local)
 		mTransformMatrix = matrix * mTransformMatrix;
 	else
 		mTransformMatrix = mTransformMatrix * matrix;

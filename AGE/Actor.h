@@ -38,7 +38,7 @@ namespace AGE
 		}
 	};
 
-	class AGE_EXPORT Actor : public RenderableSceneObject
+	class AGE_EXPORT Actor : public SceneObject
 	{
 	public:
 		Actor()

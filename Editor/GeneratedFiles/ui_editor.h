@@ -21,19 +21,23 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
+#include <../ModelViewer/RenderWidget.h>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_EditorClass
 {
 public:
-    QAction *actionBbb;
+    QAction *actionExit;
+    QAction *actionCS;
     QWidget *centralWidget;
-    QWidget *widget;
+    RenderWidget *widget;
     QPushButton *pushButton;
     QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QMenu *menuAaa;
+    QMenu *menu_I;
+    QMenu *menu;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -42,11 +46,13 @@ public:
         if (EditorClass->objectName().isEmpty())
             EditorClass->setObjectName(QStringLiteral("EditorClass"));
         EditorClass->resize(622, 400);
-        actionBbb = new QAction(EditorClass);
-        actionBbb->setObjectName(QStringLiteral("actionBbb"));
+        actionExit = new QAction(EditorClass);
+        actionExit->setObjectName(QStringLiteral("actionExit"));
+        actionCS = new QAction(EditorClass);
+        actionCS->setObjectName(QStringLiteral("actionCS"));
         centralWidget = new QWidget(EditorClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        widget = new QWidget(centralWidget);
+        widget = new RenderWidget(centralWidget);
         widget->setObjectName(QStringLiteral("widget"));
         widget->setGeometry(QRect(10, 10, 411, 291));
         pushButton = new QPushButton(centralWidget);
@@ -61,6 +67,10 @@ public:
         menuBar->setGeometry(QRect(0, 0, 622, 23));
         menuAaa = new QMenu(menuBar);
         menuAaa->setObjectName(QStringLiteral("menuAaa"));
+        menu_I = new QMenu(menuBar);
+        menu_I->setObjectName(QStringLiteral("menu_I"));
+        menu = new QMenu(menu_I);
+        menu->setObjectName(QStringLiteral("menu"));
         EditorClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(EditorClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -70,9 +80,13 @@ public:
         EditorClass->setStatusBar(statusBar);
 
         menuBar->addAction(menuAaa->menuAction());
-        menuAaa->addAction(actionBbb);
+        menuBar->addAction(menu_I->menuAction());
+        menuAaa->addAction(actionExit);
+        menu_I->addAction(menu->menuAction());
+        menu->addAction(actionCS);
 
         retranslateUi(EditorClass);
+        QObject::connect(actionExit, SIGNAL(triggered()), EditorClass, SLOT(close()));
 
         QMetaObject::connectSlotsByName(EditorClass);
     } // setupUi
@@ -80,10 +94,13 @@ public:
     void retranslateUi(QMainWindow *EditorClass)
     {
         EditorClass->setWindowTitle(QApplication::translate("EditorClass", "Editor", 0));
-        actionBbb->setText(QApplication::translate("EditorClass", "bbb", 0));
+        actionExit->setText(QApplication::translate("EditorClass", "\351\200\200\345\207\272(&E)", 0));
+        actionCS->setText(QApplication::translate("EditorClass", "CS 1.6 MDL\346\226\207\344\273\266 ...", 0));
         pushButton->setText(QApplication::translate("EditorClass", "Button1", 0));
         pushButton_2->setText(QApplication::translate("EditorClass", "Button2", 0));
-        menuAaa->setTitle(QApplication::translate("EditorClass", "aaa", 0));
+        menuAaa->setTitle(QApplication::translate("EditorClass", "\346\226\207\344\273\266(&F)", 0));
+        menu_I->setTitle(QApplication::translate("EditorClass", "\350\265\204\346\272\220(&R)", 0));
+        menu->setTitle(QApplication::translate("EditorClass", "\345\257\274\345\205\245", 0));
     } // retranslateUi
 
 };

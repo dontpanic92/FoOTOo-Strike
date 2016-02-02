@@ -56,6 +56,8 @@ namespace AGE
 #ifdef _DEBUG
 		std::string mNodeName;
 #endif
+
+		friend class Scene;
 	};
 
 	class AGE_EXPORT Scene

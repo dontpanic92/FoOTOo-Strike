@@ -1,6 +1,6 @@
 #include "editor.h"
 #include "SimpleLevel.h"
-
+#include "mdlimporterdlg.h"
 #include <qmessagebox.h>
 
 
@@ -9,10 +9,16 @@ Editor::Editor(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	mEngine = AGE::Engine::GetInstance();
+
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(OnButton1Clicked()));
 	connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(OnButton2Clicked()));
+	connect(ui.widget, SIGNAL(onEvent()), this, SLOT(OnButton2Clicked()));
+	connect(ui.actionCS, &QAction::triggered, [](){
+		MDLImporterDlg w;
+		w.exec(); 
+	});
 
-	mEngine = AGE::Engine::GetInstance();
 }
 
 void Editor::OnButton1Clicked()

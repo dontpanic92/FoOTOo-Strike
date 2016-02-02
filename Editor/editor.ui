@@ -14,7 +14,7 @@
    <string>Editor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="RenderWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -62,11 +62,24 @@
    </property>
    <widget class="QMenu" name="menuAaa">
     <property name="title">
-     <string>aaa</string>
+     <string>文件(&amp;F)</string>
     </property>
-    <addaction name="actionBbb"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menu_I">
+    <property name="title">
+     <string>资源(&amp;R)</string>
+    </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>导入</string>
+     </property>
+     <addaction name="actionCS"/>
+    </widget>
+    <addaction name="menu"/>
    </widget>
    <addaction name="menuAaa"/>
+   <addaction name="menu_I"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -77,15 +90,45 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionBbb">
+  <action name="actionExit">
    <property name="text">
-    <string>bbb</string>
+    <string>退出(&amp;E)</string>
+   </property>
+  </action>
+  <action name="actionCS">
+   <property name="text">
+    <string>CS 1.6 MDL文件 ...</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>RenderWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">renderwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="editor.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>EditorClass</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>310</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

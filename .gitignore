@@ -6,7 +6,8 @@
 *.user
 *.sln.docstates
 
-3rd/bullet/
+3rd/lib/
+*.lib
 
 FoOTOo-Strike/YSElog.txt
 
@@ -33,7 +34,6 @@ TestResult.xml
 [Dd]ebugPS/
 [Rr]eleasePS/
 dlldata.c
-3rd/lib/
 
 *_i.c
 *_p.c

@@ -57,11 +57,9 @@ namespace AGE
 		std::vector<RenderObject*>::const_iterator begin() const { return mRenderObjects.begin(); }
 		std::vector<RenderObject*>::const_iterator end() const { return mRenderObjects.end(); }
 
-
-		void SetParent(SceneObject* parent) { mParent = parent; }
 		SceneObject* GetParent() { return mParent; }
 	private:
-
+		void SetParent(SceneObject* parent) { mParent = parent; }
 
 		//Mesh::Vertex* mVertex;
 		//Mesh::Vertex* mVertexBindPose;
@@ -70,6 +68,8 @@ namespace AGE
 		std::vector<RenderObject*> mRenderObjects;
 		Skeleton* mSkeleton;
 		SceneObject* mParent = 0;
+
+		friend class SceneObject;
 	};
 }
 

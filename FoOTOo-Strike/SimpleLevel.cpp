@@ -9,8 +9,6 @@ bool SimpleLevel::StartUp()
 	InputEngine::GetInstance()->RegisterMouseListener(this);
 	InputEngine::GetInstance()->RegisterKeyListener(this);
 
-	//GetPhysicsWorld()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
-	
 	ground = new StaticSceneObject("../Resources/Models/a.AMESH");
 	actor = new FootooActor;
 	leet = new AIActor;
@@ -59,8 +57,8 @@ void SimpleLevel::ShutDown()
 
 void SimpleLevel::Enter()
 {
-	leet->SetPosition(Vector3f(200.0, 4000.0, 100.0));
-	actor->SetPosition(Vector3f(111.0, 4000.0, 100.0));
+	leet->SetPosition(Vector3f(200.0, 2500.0, 100.0));
+	actor->SetPosition(Vector3f(111.0, 2500, 100.0));
 }
 
 void SimpleLevel::Exit()

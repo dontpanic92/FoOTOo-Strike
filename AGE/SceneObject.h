@@ -13,12 +13,13 @@ namespace AGE
 	class AGE_EXPORT SceneObject
 	{
 	public:
-		virtual Renderable* GetRenderable() { return 0; }
+		Renderable* GetRenderable() { return mRenderable; }
+		Renderable* SetRenderable(Renderable* r);
+
 		virtual ~SceneObject() {}
 
 		Transform* GetTransform() { return &mTransform; }
 
-		void SetParent(SceneNode* parent) { mParent = parent; }
 		SceneNode* GetParent() { return mParent; }
 
 		void UpdateWorldMatrix(const Matrix4x4f& parentMatrix)
@@ -38,9 +39,15 @@ namespace AGE
 		}
 
 	protected:
+		void SetParent(SceneNode* parent) { mParent = parent; }
+
 		Transform mTransform;
 		Transform mWorldTransform;
-		SceneNode* mParent = 0;
+		SceneNode* mParent = nullptr;
+		Renderable* mRenderable = nullptr;
+
+		friend class SceneNode;
+		friend class Scene;
 	};
 }
 

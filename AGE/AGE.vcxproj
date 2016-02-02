@@ -111,7 +111,6 @@
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Renderable.h" />
-    <ClInclude Include="RenderableSceneObject.h" />
     <ClInclude Include="RenderEngine.h" />
     <ClInclude Include="RenderPath.h" />
     <ClInclude Include="RenderQueue.h" />

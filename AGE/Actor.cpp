@@ -29,7 +29,6 @@ void BasicPlayerControllerManager::ApplyPlayerMove(CustomPlayerController* const
 	controller->SetPlayerVelocity(v[0], v[2], v[1], player->GetHeadingAngle(), gravity, timestep);
 }
 
-
 BasicPlayerController* BasicPlayerControllerManager::CreatePlayer(dFloat mass, dFloat outerRadius, dFloat innerRadius, dFloat height, dFloat stairStep, const dMatrix& localAxis)
 {
 	BasicPlayerController* const controller = CreateController();

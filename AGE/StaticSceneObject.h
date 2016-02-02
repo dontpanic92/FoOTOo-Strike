@@ -4,11 +4,11 @@
 #include "Renderable.h"
 #include "AGEMeshImporter.h"
 #include "PhysicsEngine.h"
-#include "RenderableSceneObject.h"
+#include "SceneObject.h"
 
 namespace AGE
 {
-	class AGE_EXPORT StaticSceneObject : public RenderableSceneObject
+	class AGE_EXPORT StaticSceneObject : public SceneObject
 	{
 	public:
 		StaticSceneObject(const char* rp)
@@ -16,8 +16,7 @@ namespace AGE
 
 			AGEMeshImporter importer;
 			Renderable* r = importer.LoadFromFile(rp, true);
-			mRenderable = r;
-			r->SetParent(this);
+			this->SetRenderable(r);
 			InitPhysics();
 		}
 

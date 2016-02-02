@@ -156,9 +156,6 @@
     <ClInclude Include="Actor.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RenderableSceneObject.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="DynamicSceneObject.h">
       <Filter>头文件</Filter>
     </ClInclude>

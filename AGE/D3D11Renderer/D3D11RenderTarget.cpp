@@ -162,7 +162,7 @@ void D3D11NormalTarget::SetRenderTarget(ID3D11DeviceContext* dc)
 
 void D3D11NormalTarget::ClearView(ID3D11DeviceContext* dc)
 {
-	static float BackColor[] = { 0.8, 0.8, 0.8, 1.0 };
+	static float BackColor[] = { 0.1, 0.1, 0.1, 1.0 };
 
 	dc->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<const float*>(BackColor));
 	dc->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

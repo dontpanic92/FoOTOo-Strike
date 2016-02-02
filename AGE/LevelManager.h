@@ -27,17 +27,19 @@ namespace AGE
 	public:
 		~LevelManager() { UnloadLevel(); }
 
-		template<class Level, typename ...Args>
+		template<class LevelType, typename ...Args>
 		bool LoadLevel(Args&&... Param)
 		{
 			UnloadLevel();
-			mLevel = new Level(std::forward<Args>(Param)...);
+			mLevel = new LevelType(std::forward<Args>(Param)...);
 			if (!mLevel->StartUp()) {
 				mLevel->ShutDown();
 				delete mLevel;
 				mLevel = 0;
 				return false;
 			}
+			//auto f = [this]() -> LevelType*{ return (LevelType*)mLevel; };
+
 			return true;
 		}
 
@@ -55,6 +57,13 @@ namespace AGE
 			return mLevel;
 		}
 
+		//For convenience
+		template<class LevelType>
+		LevelType* GetLevel()
+		{
+			return (LevelType*)mLevel;
+		}
+
 	private:
 		Level* mLevel = 0;
 	};
@@ -67,6 +76,12 @@ namespace AGE
 	static inline Level* GetLevel()
 	{
 		return GetLevelManager()->GetLevel();
+	}
+
+	template<class LevelType>
+	static inline LevelType* GetLevel()
+	{
+		return (LevelType*)GetLevelManager()->GetLevel();
 	}
 
 	static inline Scene* GetScene()

@@ -27,6 +27,7 @@ namespace AGE{
 
 	private:
 		Application mApp;
+		bool mInitialized;
 
 		float mLastTimeUpdate;
 

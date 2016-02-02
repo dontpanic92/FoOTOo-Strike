@@ -1,7 +1,6 @@
 
 #include "ActorLogic.h"
 #include "FootooActor.h"
-#include <BulletCollision\NarrowPhaseCollision\btRaycastCallback.h>
 
 void ActorLogicIdle::Enter()
 {
@@ -52,21 +51,44 @@ void ActorLogicShoot1::Enter()
 
 	printf("from: %f %f %f, to: %f %f %f\n", v[0], v[1], v[2], toVector[0], toVector[1], toVector[2]);
 
-	btVector3 from(v[0], v[1], v[2]);
-	btVector3 to(toVector[0], toVector[1],  toVector[2]);
-	btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
-	allResults.m_flags |= btTriangleRaycastCallback::kF_KeepUnflippedNormal;
-	GetPhysicsEngine()->GetWorld()->rayTest(from, to, allResults);
-	if (allResults.m_hitFractions.size()) {
-		printf("hit: %u\n", allResults.m_hitFractions.size());
-		for (int i = 0; i < allResults.m_collisionObjects.size(); i++) {
-			void* p = allResults.m_collisionObjects[i]->getUserPointer();
-			if (p) {
-				printf("hitted! %p\n", p);
-			}
+	class RaycastRecord
+	{
+	public:
+		float IntersetParam = 999999.9f;
+		const NewtonBody* Body = nullptr;
+		const void* SelfEntity = nullptr;
+
+		RaycastRecord(void* self) :SelfEntity(self){}
+
+		static dFloat RaycastCallback(const NewtonBody* const body, const NewtonCollision* const collisionHit, const dFloat* const contact, const dFloat* const normal, dLong collisionID, void* const userData, dFloat intersetParam)
+		{
+			RaycastRecord* p = (RaycastRecord*)userData;
+			return p->pRaycastCallback(body, collisionHit, contact, normal, collisionID, intersetParam);
 		}
-	} else {
-		printf("no hit\n");
+	private:
+
+		dFloat pRaycastCallback(const NewtonBody* const body, const NewtonCollision* const collisionHit, const dFloat* const contact, const dFloat* const normal, dLong collisionID, dFloat intersetParam)
+		{
+			void* p = nullptr;
+			p = NewtonBodyGetUserData(body);
+			if (intersetParam < IntersetParam && (!p || p != SelfEntity)) {
+				IntersetParam = intersetParam;
+				Body = body;
+			}
+
+			return IntersetParam;
+		}
+	};
+
+	RaycastRecord record(this->mActor);
+
+	NewtonWorldRayCast(GetPhysicsWorld(), v, toVector, RaycastRecord::RaycastCallback, &record, nullptr, 0);
+
+	if (record.Body != nullptr) {
+		Actor* p = (Actor*)NewtonBodyGetUserData(record.Body);
+		if (p) {
+			printf("hitted! %s\n", p->GetRepr());
+		}
 	}
 }
 

@@ -9,6 +9,8 @@
 #include <Logic.h>
 #include "ActorLogic.h"
 
+#include <newton/CustomPlayerControllerManager.h>
+
 using namespace AGE;
 
 
@@ -19,8 +21,7 @@ public:
 	FootooActor()
 	{
 		AGEMeshImporter importer;
-		mRenderable = importer.LoadFromFile("../Resources/Models/c.AMESH", false);
-		mRenderable->SetParent(this);
+		this->SetRenderable(importer.LoadFromFile("../Resources/Models/c.AMESH", false));
 		AGESkeletonAnimationImporter importer2;
 		mSkeleton = mRenderable->GetSkeleton();
 		SkeletonAnimation* idleAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/c.AMESH.IDLE.AANIM");
@@ -51,13 +52,15 @@ public:
 	void Update(float deltaTime)
 	{
 		AudioEngine::GetInstance()->SetListenerPosition(GetWorldTransform().GetPosition());
-		SoundClipin.Update(); 
+		SoundClipin.Update();
 		SoundClipout.Update();
 		SoundShoot.Update();
 		mLogic.GetCurrentState()->Update(deltaTime);
-		btTransform trans = mCharacterController->getGhostObject()->getWorldTransform();
-		btVector3 v2 = trans.getOrigin();
-		GetParent()->GetTransform()->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
+
+		float m[3];
+		NewtonBodyGetPosition(mController->GetBody(), m);
+		m[1] += mHeight / 2;
+		GetParent()->GetTransform()->SetPosition(m);
 	}
 
 	Sound3D SoundShoot;
@@ -78,7 +81,7 @@ public:
 	{
 		AGEMeshImporter importer;
 		mRenderable = importer.LoadFromFile("../Resources/Models/leet.AMESH", false);
-		mRenderable->SetParent(this);
+		this->SetRenderable(mRenderable);
 		AGESkeletonAnimationImporter importer2;
 		mSkeleton = mRenderable->GetSkeleton();
 		SkeletonAnimation* idleAnimation = importer2.LoadFromeFile(mSkeleton, "../Resources/Models/leet.AMESH.IDLE.AANIM");
@@ -104,14 +107,14 @@ public:
 
 	void Update(float deltaTime)
 	{
-		//AudioEngine::GetInstance()->SetListenerPosition(mRenderable->GetWorldTransform().GetPosition());
-		//SoundClipin.Update();
-		//SoundClipout.Update();
-		//SoundShoot.Update();
-		//mLogic.GetCurrentState()->Update(deltaTime);
-		btTransform trans = mCharacterController->getGhostObject()->getWorldTransform();
+		/*btTransform trans = mCharacterController->getGhostObject()->getWorldTransform();
 		btVector3 v2 = trans.getOrigin();
-		GetParent()->GetTransform()->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));
+
+		GetParent()->GetTransform()->SetPosition(Vector3f(v2.x(), v2.y(), v2.z()));*/
+		float m[3];
+		NewtonBodyGetPosition(mController->GetBody(), m);
+		m[1] += mHeight / 2;
+		GetParent()->GetTransform()->SetPosition(m);
 		mSkeleton->Update(deltaTime);
 	}
 

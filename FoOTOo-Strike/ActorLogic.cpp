@@ -90,24 +90,6 @@ void ActorLogicShoot1::Enter()
 			printf("hitted! %s\n", p->GetRepr());
 		}
 	}
-
-	/*btVector3 from(v[0], v[1], v[2]);
-	btVector3 to(toVector[0], toVector[1],  toVector[2]);
-	btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
-	allResults.m_flags |= btTriangleRaycastCallback::kF_KeepUnflippedNormal;
-	GetPhysicsEngine()->GetWorld()->rayTest(from, to, allResults);
-	if (allResults.m_hitFractions.size()) {
-		printf("hit: %u\n", allResults.m_hitFractions.size());
-		for (int i = 0; i < allResults.m_collisionObjects.size(); i++) {
-			void* p = allResults.m_collisionObjects[i]->getUserPointer();
-			if (p) {
-				printf("hitted! %p\n", p);
-			}
-		}
-	} else {
-		printf("no hit\n");
-	}
-	*/
 }
 
 void ActorLogicShoot1::Update(float deltaTime)

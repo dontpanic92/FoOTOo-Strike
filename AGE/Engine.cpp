@@ -9,7 +9,7 @@
 #include "LevelManager.h"
 using namespace AGE;
 
-Engine::Engine() :mLastTimeUpdate(0)
+Engine::Engine() :mLastTimeUpdate(0), mInitialized(false)
 {
 }
 
@@ -25,6 +25,7 @@ int Engine::StartUp(HWND hWnd)
 
 	//mGameLogic->StartUp();
 
+	mInitialized = true;
 	return 0;
 }
 
@@ -40,6 +41,8 @@ void Engine::ShutDown()
 	//InputEngine::GetInstance()->ShutDown();
 	//RenderEngine::GetInstance()->ShutDown();
 	mApp.ShutDown();
+
+	mInitialized = false;
 }
 
 int Engine::Run()
@@ -54,6 +57,9 @@ Engine::~Engine()
 
 int Engine::Update()
 {
+	if (!mInitialized || !GetLevel()) {
+		return 1;
+	}
 
 	float now = Timer::GetInstance()->GetTotalMilliSeconds();
 	float delta = now - mLastTimeUpdate;
