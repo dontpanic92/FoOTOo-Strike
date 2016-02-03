@@ -10,7 +10,7 @@
 
 namespace AGE{
 
-	class RenderEngine : public NonCopyable
+	class AGE_EXPORT RenderEngine : public NonCopyable
 	{
 	public:
 
@@ -33,13 +33,15 @@ namespace AGE{
 			return mSingleton;
 		}
 
-		virtual int StartUp(Window window) = 0;
+		virtual int StartUp() = 0;
 
 		virtual RenderObject* CreateRenderObject(Renderable* renderable, Mesh* mesh, Material* material, Shader* shader, bool is_static) = 0;
 
 		virtual Shader* CreateShader(const char* shaderName) { return NULL; }
 
 		virtual Texture2D* CreateTextrue2D(const char* path) { return NULL; }
+		
+		virtual void ResizeToFit() {}
 
 		virtual void Render() = 0;
 

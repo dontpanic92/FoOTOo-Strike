@@ -17,7 +17,7 @@ namespace AGE{
 		D3D11Renderer() {}
 		~D3D11Renderer() { ShutDown(); }
 
-		int StartUp(Window window);
+		int StartUp();
 
 		void ShutDown();
 
@@ -28,7 +28,9 @@ namespace AGE{
 
 		Texture2D* CreateTextrue2D(const char* path) override;
 
-		void Render();
+		void ResizeToFit() override;
+
+		void Render() override;
 
 		ID3D11Device* GetDevice() { return mD3DDevice; }
 
@@ -45,8 +47,7 @@ namespace AGE{
 		
 		D3D_DRIVER_TYPE mD3DDriverType;
 
-		HGLRC mRC;
-		Window mMainWindow;
+		//uint mResolutionX, mResolutionY;
 	};
 }
 

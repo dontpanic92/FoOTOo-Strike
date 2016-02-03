@@ -14,9 +14,9 @@
 
 using namespace AGE;
 
-int D3D11Renderer::StartUp(Window window)
+int D3D11Renderer::StartUp()
 {
-	mMainWindow = window;
+	Window& window = Engine::GetInstance()->GetMainWindow();
 
 	UINT createDeviceFlags = 0;
 #if 0//defined(DEBUG) || defined(_DEBUG)  
@@ -54,6 +54,7 @@ int D3D11Renderer::StartUp(Window window)
 		DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m4xMsaaQuality));
 	assert(m4xMsaaQuality > 0);
 	*/
+	
 	// Fill out a DXGI_SWAP_CHAIN_DESC to describe our swap chain.
 
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -67,13 +68,13 @@ int D3D11Renderer::StartUp(Window window)
 
 	// Use 4X MSAA? 
 	/*if (mEnable4xMsaa) {
-		sd.SampleDesc.Count = 4;
-		sd.SampleDesc.Quality = m4xMsaaQuality - 1;
+	sd.SampleDesc.Count = 4;
+	sd.SampleDesc.Quality = m4xMsaaQuality - 1;
 	}
 	// No MSAA
 	else {*/
-		sd.SampleDesc.Count = 1;
-		sd.SampleDesc.Quality = 0;
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;
 	//}
 
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -102,7 +103,6 @@ int D3D11Renderer::StartUp(Window window)
 	SafeRelease(dxgiDevice);
 	SafeRelease(dxgiAdapter);
 	SafeRelease(dxgiFactory);
-
 
 	//HR(mSwapChain->ResizeBuffers(1, mClientWidth, mClientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
@@ -180,4 +180,65 @@ Texture2D* D3D11Renderer::CreateTextrue2D(const char* path)
 void D3D11Renderer::Render()
 {
 	mRenderPath->ExecuteRendering();
+}
+
+void D3D11Renderer::ResizeToFit()
+{
+	Window& window = Engine::GetInstance()->GetMainWindow();
+	window.Recalc();
+	
+	SafeRelease(mSwapChain);
+
+	DXGI_SWAP_CHAIN_DESC sd;
+	sd.BufferDesc.Width = window.Width;
+	sd.BufferDesc.Height = window.Height;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+	// Use 4X MSAA? 
+	/*if (mEnable4xMsaa) {
+	sd.SampleDesc.Count = 4;
+	sd.SampleDesc.Quality = m4xMsaaQuality - 1;
+	}
+	// No MSAA
+	else {*/
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;
+	//}
+
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.BufferCount = 1;
+	sd.OutputWindow = window.hWnd;
+	sd.Windowed = true;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sd.Flags = 0;
+
+	// To correctly create the swap chain, we must use the IDXGIFactory that was
+	// used to create the device.  If we tried to use a different IDXGIFactory instance
+	// (by calling CreateDXGIFactory), we get an error: "IDXGIFactory::CreateSwapChain: 
+	// This function is being called with a device from a different IDXGIFactory."
+
+	IDXGIDevice* dxgiDevice = 0;
+	(mD3DDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
+
+	IDXGIAdapter* dxgiAdapter = 0;
+	(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
+
+	IDXGIFactory* dxgiFactory = 0;
+	(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
+
+	(dxgiFactory->CreateSwapChain(mD3DDevice, &sd, &mSwapChain));
+
+	SafeRelease(dxgiDevice);
+	SafeRelease(dxgiAdapter);
+	SafeRelease(dxgiFactory);
+
+	//printf("resize: %X\n", h);
+	delete mRenderPath;
+	mRenderPath = new D3D11ForwardRendering(mD3DDevice, mD3DImmediateContext, mSwapChain, window);
+
+	GetScene()->UpdateCameraAspectRatio();
 }

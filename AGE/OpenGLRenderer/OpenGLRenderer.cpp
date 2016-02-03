@@ -88,9 +88,9 @@ void setupFBO()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-int OpenGLRenderer::StartUp(Window window)
+int OpenGLRenderer::StartUp()
 {
-	mMainWindow = window;
+	mMainWindow = Engine::GetInstance()->GetMainWindow();
 
 	if (!SetupPixelFormat())
 		return 0;
@@ -104,7 +104,7 @@ int OpenGLRenderer::StartUp(Window window)
 		return 0;
 	}
 
-	glViewport(0, 0, window.Width, window.Height);
+	glViewport(0, 0, mMainWindow.Width, mMainWindow.Height);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);

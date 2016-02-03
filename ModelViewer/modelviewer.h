@@ -16,9 +16,7 @@ public:
 
 public slots:
 
-	void OnButton1Clicked();
-
-	void OnButton2Clicked();
+	void UpdateRenderView();
 
 private:
 	Ui::ModelViewerClass ui;

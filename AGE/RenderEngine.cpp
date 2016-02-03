@@ -21,4 +21,3 @@ RenderEngine* RenderEngine::CreateRenderEngine()
 		return new OpenGLRenderer();
 	}
 }
-

@@ -18,7 +18,7 @@ namespace AGE
 
 		void ShutDown();
 
-		Window GetMainWindow();
+		Window& GetMainWindow();
 
 	protected:
 		bool CreateApplicationWindow();

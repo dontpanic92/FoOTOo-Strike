@@ -15,14 +15,17 @@ public:
 
 	bool Update(float time) override;
 
-	//bool Load(const char* path);
+	bool Load(const char* path);
+
+	void RotateCamera(int deltaX, int deltaY);
 
 	~ModelViewLevel() { ShutDown(); }
 
 private:
-	Scene* mScene = 0;
-	SceneNode* mSceneNode = 0;
-	SceneObject* mSceneObject = 0;
+	Scene* mScene = nullptr;
+	SceneObject* mSceneObject = nullptr;
+
+	float mDistance = 10;
 };
 
 

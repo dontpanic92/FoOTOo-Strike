@@ -17,8 +17,8 @@ int Engine::StartUp(HWND hWnd)
 {
 	mApp.StartUp(hWnd);
 	RenderEngine::SetEngineType(RenderEngine::Type::Direct3D11);
-	RenderEngine::GetInstance()->StartUp(mApp.GetMainWindow());
-	InputEngine::GetInstance()->StartUp(mApp.GetMainWindow());
+	RenderEngine::GetInstance()->StartUp();
+	InputEngine::GetInstance()->StartUp();
 	PhysicsEngine::GetInstance()->StartUp();
 	AudioEngine::GetInstance()->StartUp(); 
 	Timer::GetInstance()->StartUp();

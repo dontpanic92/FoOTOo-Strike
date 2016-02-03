@@ -1,10 +1,12 @@
 #include "RenderWidget.h"
 #include <qmessagebox.h>
+#include <qevent.h>
 
 RenderWidget::RenderWidget(QWidget *parent)
 	: QWidget(parent)
 {
-
+	setAttribute(Qt::WA_PaintOnScreen, true);
+	setAttribute(Qt::WA_NativeWindow, true);
 }
 
 RenderWidget::~RenderWidget()
@@ -12,9 +14,24 @@ RenderWidget::~RenderWidget()
 
 }
 
+void RenderWidget::mouseMoveEvent(QMouseEvent* e)
+{
+	QPoint d = e->pos();
+	emit onDrag(d - mDragStartPoint);
+	mDragStartPoint = d;
+}
+
+void RenderWidget::mousePressEvent(QMouseEvent *e)
+{
+	mDragStartPoint = e->pos();
+}
+
 void RenderWidget::paintEvent(QPaintEvent *e)
 {
-	//QMessageBox::information(nullptr, "adf", "asdf");
 	emit onRefresh();
-	//QWidget::paintEvent(e);
+}
+
+void RenderWidget::resizeEvent(QResizeEvent* e)
+{
+	emit onResize(e->size(), e->oldSize());
 }

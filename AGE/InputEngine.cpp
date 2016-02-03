@@ -6,8 +6,9 @@ using namespace AGE;
 using namespace OIS;
 using namespace std;
 
-void InputEngine::StartUp(Window window)
+void InputEngine::StartUp()
 {
+	const Window& window = Engine::GetInstance()->GetMainWindow();
 	if (!window.IsWindow) {
 		return;
 	}

@@ -18,13 +18,17 @@ namespace AGE
 		{
 			hWnd = h;
 			hDC = GetWindowDC(hWnd);
+			IsWindow = isWindow;
+			Recalc();
+		}
+
+		void Recalc()
+		{
 			RECT rc;
 			GetClientRect(hWnd, &rc);
 
 			Width = rc.right - rc.left;
 			Height = rc.bottom - rc.top;
-
-			IsWindow = isWindow;
 		}
 	};
 

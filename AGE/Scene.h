@@ -83,6 +83,8 @@ namespace AGE
 
 		vector<Light*>& GetLights() { return mLights; }
 
+		void UpdateCameraAspectRatio();
+
 		//Attachable* GetAttachable() { return mAttachable[0]; }
 	private:
 		SceneNode mRoot;

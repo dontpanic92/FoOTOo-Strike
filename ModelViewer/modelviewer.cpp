@@ -8,26 +8,33 @@ ModelViewer::ModelViewer(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-
 	mEngine = AGE::Engine::GetInstance();
+	mEngine->StartUp((HWND)ui.widget->winId());
+	GetLevelManager()->LoadLevel<ModelViewLevel>();
+	GetLevel<ModelViewLevel>()->Load("../Resources/Models/leet.AMESH");
 
-	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(OnButton1Clicked()));
-	connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(OnButton2Clicked()));
-	connect(ui.widget, SIGNAL(onRefresh()), this, SLOT(OnButton2Clicked()));
+	//connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(UpdateRenderView()));
+	connect(ui.widget, SIGNAL(onRefresh()), this, SLOT(UpdateRenderView()));
 
 	connect(ui.action_Open, &QAction::triggered, [this](){
 		QString fileName = QFileDialog::getOpenFileName(this,
 			tr("Open Mesh"), "", tr("Mesh Files (*.AMESH)"));
+		GetLevel<ModelViewLevel>()->Load(fileName.toLocal8Bit());
+		ui.widget->update();
+	});
+
+	connect(ui.widget, &RenderWidget::onResize, [this](QSize newSize, QSize oldSize){
+		RenderEngine::GetInstance()->ResizeToFit();
+		ui.widget->update();
+	});
+
+	connect(ui.widget, &RenderWidget::onDrag, [this](QPoint delta){
+		GetLevel<ModelViewLevel>()->RotateCamera(delta.x(), delta.y());
+		ui.widget->update();
 	});
 }
 
-void ModelViewer::OnButton1Clicked()
-{
-	mEngine->StartUp((HWND)ui.widget->winId());
-	GetLevelManager()->LoadLevel<ModelViewLevel>();
-}
-
-void ModelViewer::OnButton2Clicked()
+void ModelViewer::UpdateRenderView()
 {
 	mEngine->Update();
 }

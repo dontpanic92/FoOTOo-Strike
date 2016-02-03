@@ -38,7 +38,7 @@ namespace AGE
 		InputEngine() {}
 		~InputEngine() { OIS::InputManager::destroyInputSystem(mInputManager); }
 
-		void StartUp(Window window);
+		void StartUp();
 
 		void GetKeyStates(char keys[256])
 		{

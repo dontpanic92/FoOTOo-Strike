@@ -34,15 +34,21 @@ void SceneNode::Attach(SceneNode* attach)
 
 void SceneNode::Detach(SceneObject* object)
 {
-	for (auto it = mObjects.begin(); it != mObjects.end(); it++)
-		if (*it == object)
-			mObjects.erase(it);
+	for (auto it = mObjects.begin(); it != mObjects.end();) {
+		if (*it == object) {
+			(*it)->SetParent(nullptr);
+			it = mObjects.erase(it);
+		} else {
+			it++;
+		}
+	}
 }
 
 void SceneNode::Detach(SceneNode* node)
 {
 	for (auto it = mNodes.begin(); it != mNodes.end(); it++) {
 		if (*it == node) {
+			(*it)->SetParent(nullptr);
 			mNodes.erase(it);
 			break;
 		}
@@ -119,8 +125,14 @@ Scene::Scene() {}
 
 void Scene::StartUp()
 {
+	UpdateCameraAspectRatio();
+}
+
+void Scene::UpdateCameraAspectRatio()
+{
 	Window window = Engine::GetInstance()->GetMainWindow();
-	mCamera.SetParameters(60.f, float(window.Width) / float(window.Height), 1.0f, 10000.0f);
+	float aspectRatio = float(window.Width) / float(window.Height);
+	mCamera.SetParameters(60.0f, aspectRatio, 1.0f, 10000.0f);
 }
 
 Scene::~Scene()

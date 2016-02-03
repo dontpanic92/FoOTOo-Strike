@@ -21,7 +21,7 @@ namespace AGE{
 		OpenGLRenderer();
 		~OpenGLRenderer(){}
 
-		int StartUp(Window window);
+		int StartUp();
 
 		//void Render(Renderable* renderable);
 		void Render();

@@ -6,14 +6,6 @@ bool ModelViewLevel::StartUp()
 	mScene = new Scene();
 	mScene->StartUp();
 
-
-	mSceneObject = new StaticSceneObject("../Resources/Models/c.AMESH");
-
-	SceneNode* node = mScene->CreateSceneNode();
-	node->SetName("node");
-	node->Attach(mSceneObject);
-
-
 	SceneNode* CameraNode = mScene->CreateSceneNode();
 	CameraNode->SetName("cameraNode");
 	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, 50));
@@ -24,6 +16,31 @@ bool ModelViewLevel::StartUp()
 	l->Direction[0] = -1;
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
+
+	return true;
+}
+
+void ModelViewLevel::RotateCamera(int deltaX, int deltaY)
+{
+	Transform* t = mScene->GetCurrentCamera()->GetTransform();
+	float ratio = 0.02;
+	Matrix4x4f m = t->GetTransformMatrix();
+
+	t->RotateByRadian(-deltaX * ratio, m[1][0], m[1][1], m[1][2], Transform::World);
+	t->RotateByRadian(-deltaY * ratio, m[0][0], m[0][1], m[0][2], Transform::World);
+}
+
+bool ModelViewLevel::Load(const char* path)
+{
+	/*if (mSceneObject) {
+		mScene->GetRoot()->Detach(mSceneObject);
+		delete mSceneObject;
+	}*/
+
+	ShutDown();
+	StartUp();
+	mSceneObject = new StaticSceneObject(path);
+	mScene->GetRoot()->Attach(mSceneObject);
 
 	return true;
 }

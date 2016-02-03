@@ -45,7 +45,7 @@ void WindowsApplication::ShutDown()
 	ReleaseDC(mWindow.hWnd, mWindow.hDC);
 }
 
-Window WindowsApplication::GetMainWindow()
+Window& WindowsApplication::GetMainWindow()
 {
 	return mWindow;
 }
