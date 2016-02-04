@@ -6,12 +6,11 @@ bool ModelViewLevel::StartUp()
 	mScene = new Scene();
 	mScene->StartUp();
 
-	SceneNode* CameraNode = mScene->CreateSceneNode();
-	CameraNode->SetName("cameraNode");
-	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, 50));
+	Camera* c = mScene->GetCurrentCamera();
+	mScene->GetRoot()->Attach(c);
+	c->GetTransform()->SetPosition(Vector3f(0, 0, 50));
 	//CameraNode->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
 
-	CameraNode->Attach(mScene->GetCurrentCamera());
 	Light* l = mScene->CreateLight();
 	l->Direction[0] = -1;
 	l->Direction[1] = -1;
@@ -22,12 +21,27 @@ bool ModelViewLevel::StartUp()
 
 void ModelViewLevel::RotateCamera(int deltaX, int deltaY)
 {
-	Transform* t = mScene->GetCurrentCamera()->GetTransform();
-	float ratio = 0.02;
-	Matrix4x4f m = t->GetTransformMatrix();
+	auto f = [&](Transform* t){
+		float ratio = 0.005;
+		Matrix4x4f m = t->GetTransformMatrix();
 
-	t->RotateByRadian(-deltaX * ratio, m[1][0], m[1][1], m[1][2], Transform::World);
-	t->RotateByRadian(-deltaY * ratio, m[0][0], m[0][1], m[0][2], Transform::World);
+		t->RotateByRadian(-deltaX * ratio, m[1][0], m[1][1], m[1][2], Transform::World);
+		t->RotateByRadian(-deltaY * ratio, m[0][0], m[0][1], m[0][2], Transform::World);
+	};
+	f(mScene->GetCurrentCamera()->GetTransform());
+	//f(mScene->GetLights()[0]->GetTransform());
+}
+
+void ModelViewLevel::AdjustDistance(int adjust)
+{
+	
+	Camera* c = mScene->GetCurrentCamera();
+	Vector3 v = c->GetTransform()->GetPosition();
+	float len = v.GetLength() + -adjust / abs(adjust) * 5;
+
+	v.Normalize();
+	v = v * len;
+	c->GetTransform()->SetPosition(v);
 }
 
 bool ModelViewLevel::Load(const char* path)

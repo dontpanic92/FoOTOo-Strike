@@ -35,3 +35,8 @@ void RenderWidget::resizeEvent(QResizeEvent* e)
 {
 	emit onResize(e->size(), e->oldSize());
 }
+
+void RenderWidget::wheelEvent(QWheelEvent *e)
+{
+	emit onWheel(e->delta());
+}

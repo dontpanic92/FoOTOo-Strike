@@ -17,11 +17,13 @@ public:
 	void mouseMoveEvent(QMouseEvent *) override;
 	void mousePressEvent(QMouseEvent *) override;
 	void resizeEvent(QResizeEvent*) override;
+	void wheelEvent(QWheelEvent *) override;
 
 signals:
 	void onRefresh();
 	void onDrag(QPoint delta);
 	void onResize(QSize newSize, QSize oldSize);
+	void onWheel(int delta);
 
 private:
 	

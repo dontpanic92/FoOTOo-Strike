@@ -155,6 +155,10 @@ namespace AGE
 
 
 	Matrix4x4f MakeOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far);
+
+	typedef Matrix4x4f Matrix4;
+	typedef Matrix3x3f Matrix3;
+	typedef Vector3f Vector3;
 }
 
 #endif

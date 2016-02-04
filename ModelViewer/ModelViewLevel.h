@@ -19,6 +19,8 @@ public:
 
 	void RotateCamera(int deltaX, int deltaY);
 
+	void AdjustDistance(int adjust);
+
 	~ModelViewLevel() { ShutDown(); }
 
 private:
