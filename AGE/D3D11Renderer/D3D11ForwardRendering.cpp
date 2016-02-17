@@ -63,7 +63,7 @@ void D3D11ForwardRendering::ShadowMapPass()
 {
 	HLSLShader* shadowShader = (HLSLShader*)ResourceManager::GetInstance()->LoadShader("ShadowMap");
 
-	class ShadowMapShaderData
+	class ShadowMapShaderData : public ShaderData
 	{
 	public:
 		float* MVPMatrix;
@@ -74,15 +74,7 @@ void D3D11ForwardRendering::ShadowMapPass()
 				{ ShaderUniformParameter::Type::MATRIX4F, &MVPMatrix, "MVPMatrix" },
 			};
 		}
-
-		std::vector<ShaderUniformParameter>::const_iterator begin() const { return mParameters.begin(); }
-		std::vector<ShaderUniformParameter>::const_iterator end() const { return mParameters.end(); }
-
-		operator const ShaderUniforms& () { return mParameters; }
-
-	private:
-		std::vector<ShaderUniformParameter> mParameters;
-	}shaderData;
+	} shaderData;
 
 	mShadowMapTarget->SetRenderTarget(mD3DImmediateContext);
 	mD3DImmediateContext->RSSetState(mNoCullRasterizerState);
@@ -144,6 +136,61 @@ void D3D11ForwardRendering::ShadowMapPass()
 
 }
 
+void D3D11ForwardRendering::SkyBoxPass()
+{
+	SkyBox* skyBox = GetScene()->GetSkyBox();
+
+	if (!skyBox)
+		return;
+
+	HLSLShader* shadowShader = (HLSLShader*)ResourceManager::GetInstance()->LoadShader("sky");
+
+	class SkyBoxShaderData : public ShaderData
+	{
+	public:
+		float* MVPMatrix;
+		Texture* CubeTexture;
+
+		SkyBoxShaderData()
+		{
+			mParameters = {
+				{ ShaderUniformParameter::Type::MATRIX4F, &MVPMatrix, "gWorldViewProj" },
+				{ ShaderUniformParameter::Type::TEXTURE, &CubeTexture, "gCubeMap" }
+			};
+		}
+	} shaderData;
+
+	//mD3DImmediateContext->RSSetState(mNoCullRasterizerState);
+
+	Camera* camera = GetScene()->GetCurrentCamera();
+
+	Renderable* r = skyBox->GetRenderable();
+
+	for (int i = 0; i < r->GetNumberOfRenderObjects(); i++)
+	{
+		D3D11RenderObject* d3d11Object = (D3D11RenderObject*)r->GetRenderObject(i);
+		HLSLShader* shader = (HLSLShader*)d3d11Object->Shader;
+
+		Transform t = camera->GetWorldTransform();
+		t.ClearRotation();
+		Matrix4x4f NormalMatrix = t.GetTransformMatrix() * camera->GetWorldMatrix().Transpose().Inverse();
+		Matrix4x4f MVPMatrix = NormalMatrix * camera->GetProjectMatrix();
+		shaderData.MVPMatrix = MVPMatrix;
+		shaderData.CubeTexture = d3d11Object->Material->GetTexture();
+
+
+		shader->UpdateShaderData(shaderData);
+
+		mD3DImmediateContext->IASetInputLayout(shader->InputLayout);
+		shader->Technique->GetPassByIndex(0)->Apply(0, mD3DImmediateContext);
+
+		UINT offset = 0;
+		UINT stride = sizeof(Mesh::Vertex);
+
+		mD3DImmediateContext->IASetVertexBuffers(0, 1, &d3d11Object->VertexBuffer, &stride, &offset);
+		mD3DImmediateContext->Draw(d3d11Object->Mesh->GetNumberOfVertex(), 0);
+	}
+}
 
 int D3D11ForwardRendering::ExecuteRendering()
 {
@@ -166,8 +213,8 @@ int D3D11ForwardRendering::ExecuteRendering()
 	l.Direction = l.Direction * (Matrix3x3f)camera->GetWorldMatrix().Transpose().Inverse();//camera->CalcViewMatrix();//
 	shaderData.Light = &l;
 
-	D3D11Texture shadowTexture(mD3DDevice);
-	shadowTexture.TextureSRV = mShadowMapTarget->GetRenderTextureShaderResourceView();
+	D3D11Texture2D shadowTexture(mD3DDevice);
+	shadowTexture.SetTextureSRV(mShadowMapTarget->GetRenderTextureShaderResourceView());
 
 	shaderData.ShadowTextureUnit = &shadowTexture;
 
@@ -205,9 +252,10 @@ int D3D11ForwardRendering::ExecuteRendering()
 		}
 	}
 
+	SkyBoxPass();
 
-	//mD3DImmediateContext->RSSetState(0);
-	//mD3DImmediateContext->OMSetDepthStencilState(0, 0);
+	mD3DImmediateContext->RSSetState(0);
+	mD3DImmediateContext->OMSetDepthStencilState(0, 0);
 	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
 	mD3DImmediateContext->PSSetShaderResources(0, 16, nullSRV);
 	(mSwapChain->Present(0, 0));

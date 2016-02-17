@@ -6,16 +6,16 @@
 
 namespace AGE {
 
-	class OpenGLTexture : public Texture2D
+	class OpenGLTexture : public Texture
 	{
 	public:
 		GLuint mTexture;
 
 		GLint mComponents, mFormat;
 
-		OpenGLTexture() : mTexture(0) {}
+		OpenGLTexture() : Texture(TextureType::Texture2D), mTexture(0) {}
 
-		OpenGLTexture(const char* path) { Load(path); }
+		OpenGLTexture(const char* path) :Texture(TextureType::Texture2D) { Load(path); }
 
 		~OpenGLTexture()
 		{

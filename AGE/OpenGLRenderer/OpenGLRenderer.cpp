@@ -157,9 +157,10 @@ Shader* OpenGLRenderer::CreateShader(const char* shaderName)
 	return new GLSLShader(shaderName);
 }
 
-Texture2D* OpenGLRenderer::CreateTextrue2D(const char* path)
+Texture* OpenGLRenderer::CreateTexture(const char* path, TextureType type)
 { 
-	return new OpenGLTexture(path);
+	//return new OpenGLTexture(path);
+	return nullptr;
 }
 
 /*void OpenGLRenderer::Render(Renderable* renderable)

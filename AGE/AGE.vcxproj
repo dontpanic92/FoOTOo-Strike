@@ -119,8 +119,10 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderData.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="StaticSceneObject.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
@@ -166,7 +168,9 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderData.cpp" />
     <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="StaticSceneObject.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>

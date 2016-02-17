@@ -7,14 +7,14 @@
 
 using namespace AGE;
 
-Texture2D::Texture2D(){}
+Texture::Texture(TextureType type):mType(type) {}
 
-Texture2D::~Texture2D() 
+Texture::~Texture()
 {
 }
 
 
-char* Texture2D::LoadTexture(const char *path)
+char* Texture::LoadTexture(const char *path)
 {
 	char* pBits = NULL;
 	
@@ -29,6 +29,9 @@ char* Texture2D::LoadTexture(const char *path)
 		FIBITMAP *temp = FreeImage_ConvertTo32Bits(dib);
 		FreeImage_Unload(dib);
 		dib = temp;
+
+		if (!dib)
+			return nullptr;
 		
 		BITMAPINFOHEADER* header = FreeImage_GetInfoHeader(dib);
 		mDepth = header->biBitCount / 8;

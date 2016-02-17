@@ -25,7 +25,7 @@ namespace AGE
 
 		Shader* LoadShader(const char* name);
 
-		Material* LoadMaterial(const char* name);
+		Material* LoadMaterial(const char* name, TextureType type = TextureType::Texture2D);
 	private:
 
 		typedef std::map<std::string, Material*>	MaterialMap;

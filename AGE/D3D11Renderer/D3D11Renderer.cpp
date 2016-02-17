@@ -173,9 +173,24 @@ Shader* D3D11Renderer::CreateShader(const char* shaderName)
 	return new HLSLShader(shaderName);
 }
 
-Texture2D* D3D11Renderer::CreateTextrue2D(const char* path)
+Texture* D3D11Renderer::CreateTexture(const char* path, TextureType type)
 {
-	return new D3D11Texture(mD3DDevice, path);
+	D3D11Texture* pTex;
+
+	switch (type) {
+	case TextureType::Texture2D:
+		pTex = new D3D11Texture2D(mD3DDevice);
+		break;
+	case TextureType::CubeTexture:
+		pTex = new D3D11CubeTexture(mD3DDevice);
+	}
+
+	if (!pTex->Load(path)) {
+		delete pTex;
+		pTex = nullptr;
+	}
+
+	return pTex;
 }
 
 void D3D11Renderer::Render()

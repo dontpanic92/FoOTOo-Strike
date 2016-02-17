@@ -7,6 +7,7 @@
 #include "Renderable.h"
 #include "Camera.h"
 #include "Light.h"
+#include "SkyBox.h"
 #include "Def.h"
 using std::vector;
 
@@ -83,6 +84,9 @@ namespace AGE
 
 		vector<Light*>& GetLights() { return mLights; }
 
+		SkyBox* GetSkyBox() { return mSkyBox; }
+		void AddSkyBox() { if(!mSkyBox) mSkyBox = new SkyBox(); }
+
 		void UpdateCameraAspectRatio();
 
 		//Attachable* GetAttachable() { return mAttachable[0]; }
@@ -91,7 +95,7 @@ namespace AGE
 		vector<Light*> mLights;
 
 		Camera mCamera;
-
+		SkyBox* mSkyBox = nullptr;
 	};
 }
 

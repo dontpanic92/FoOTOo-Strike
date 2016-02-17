@@ -141,6 +141,10 @@ Scene::~Scene()
 	{
 		delete light;
 	}
+
+	if (mSkyBox) {
+		delete mSkyBox;
+	}
 }
 
 void Scene::AttachCameraOnNode(SceneNode* node)

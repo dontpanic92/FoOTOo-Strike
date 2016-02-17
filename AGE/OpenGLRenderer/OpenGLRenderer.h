@@ -32,7 +32,7 @@ namespace AGE{
 
 		Shader* CreateShader(const char* shaderName) override;
 
-		Texture2D* CreateTextrue2D(const char* path) override;
+		Texture* CreateTexture(const char* path, TextureType type) override;
 
 		void End();
 

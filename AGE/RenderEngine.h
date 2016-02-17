@@ -39,7 +39,7 @@ namespace AGE{
 
 		virtual Shader* CreateShader(const char* shaderName) { return NULL; }
 
-		virtual Texture2D* CreateTextrue2D(const char* path) { return NULL; }
+		virtual Texture* CreateTexture(const char* path, TextureType type) { return NULL; }
 		
 		virtual void ResizeToFit() {}
 

@@ -18,6 +18,30 @@ Mesh::Mesh()
 	//mTextureData = new float[vertexNum * 2];
 }
 
+Mesh::Mesh(Vertex* vertex, uint vertexNum)
+{
+	SetVertexData(vertex, vertexNum);
+}
+
+void Mesh::Vertex::SetPosition(float x, float y, float z)
+{
+	Position[0] = x;
+	Position[1] = y;
+	Position[2] = z;
+}
+void Mesh::Vertex::SetNormal(float x, float y, float z)
+{
+	Normal[0] = x;
+	Normal[1] = y;
+	Normal[2] = z;
+}
+
+void Mesh::Vertex::SetTexCoord(float u, float v)
+{
+	TextureCoord[0] = u;
+	TextureCoord[1] = v;
+}
+
 void Mesh::SetVertexData(Vertex* vertex, uint vertexNum)
 {
 	SetVertexDataPrivate([&](){

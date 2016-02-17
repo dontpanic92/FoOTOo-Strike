@@ -165,6 +165,12 @@
     <ClInclude Include="D3D11Renderer\D3D11ForwardRendering.h">
       <Filter>D3D11Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -289,6 +295,12 @@
     </ClCompile>
     <ClCompile Include="D3D11Renderer\D3D11ForwardRendering.cpp">
       <Filter>D3D11Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderData.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

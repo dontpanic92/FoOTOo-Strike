@@ -24,7 +24,7 @@ Mesh* ResourceManager::LoadMesh()
 	return NULL;//new Mesh();
 }
 
-Material* ResourceManager::LoadMaterial(const char* name)
+Material* ResourceManager::LoadMaterial(const char* name, TextureType type)
 {
 	MaterialMap::iterator it;
 	if ((it = mMaterials.find(name)) != mMaterials.end()) {
@@ -42,7 +42,7 @@ Material* ResourceManager::LoadMaterial(const char* name)
 
 		printf("%s\n", path);
 
-		Texture2D* texture2 = RenderEngine::GetInstance()->CreateTextrue2D(path);
+		Texture* texture2 = RenderEngine::GetInstance()->CreateTexture(path, type);
 		material->SetTexture(texture2);
 		mMaterials.insert(make_pair(name, material));
 		return material;

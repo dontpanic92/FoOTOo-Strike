@@ -16,8 +16,10 @@ bool ModelViewLevel::StartUp()
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
 
+	mScene->AddSkyBox();
+
 	mPlane = new Renderable();
-	Mesh* m = AGE::Primitive::CreateRectangleUnmanage(100, 100);
+	Mesh* m = Primitive::CreateRectangleUnmanage(100, 100);
 	Material* material = ResourceManager::GetInstance()->LoadMaterial("wood-texture.jpg");
 	Shader* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
 	mPlane->AddRenderObject(RenderEngine::GetInstance()->CreateRenderObject(mPlane, m, material, shader, true));

@@ -6,44 +6,21 @@
 #include "Singleton.h"
 #include "Texture.h"
 #include "Light.h"
+#include "ShaderData.h"
 
 
 namespace AGE
 {
 
-	struct ShaderUniformParameter
-	{
-		enum class Type
-		{
-			INT1,
-			INT2,
-			INT3,
-			INT4,
-			FLOAT1,
-			FLOAT2,
-			FLOAT3,
-			FLOAT4,
-			MATRIX4F,
-			TEXTURE,
-			LIGHT
-		};
-
-		Type ParameterType;
-		void* Parameter;
-		std::string Name;
-	};
-
-	typedef std::vector<ShaderUniformParameter> ShaderUniforms;
-
-	class DefaultShaderData
+	class DefaultShaderData : public ShaderData
 	{
 	public:
 		float* MVPMatrix;
 		float* NormalMatrix;
 		float* ColorVector;
 		float* ShadowMatrix;
-		Texture2D* TextureUnit;
-		Texture2D* ShadowTextureUnit;
+		Texture* TextureUnit;
+		Texture* ShadowTextureUnit;
 		Light* Light;
 
 		DefaultShaderData() { 
@@ -57,14 +34,6 @@ namespace AGE
 				{ ShaderUniformParameter::Type::LIGHT, &Light, "dirLight" }
 			}; 
 		}
-
-		std::vector<ShaderUniformParameter>::const_iterator begin() const { return mParameters.begin(); }
-		std::vector<ShaderUniformParameter>::const_iterator end() const { return mParameters.end(); }
-
-		operator const ShaderUniforms& () { return mParameters; }
-
-	private:
-		std::vector<ShaderUniformParameter> mParameters;
 	};
 
 	class Shader

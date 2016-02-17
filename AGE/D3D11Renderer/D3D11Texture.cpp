@@ -1,10 +1,27 @@
+#include <D3DX11tex.h>
 #include "D3D11Texture.h"
 
 using namespace AGE;
 
-bool D3D11Texture::Load(const char* path)
+
+void D3D11Texture::SetTextureSRV(ID3D11ShaderResourceView* view) 
 {
+	SafeRelease(mTextureSRV);
+	mTextureSRV = view; 
+	mTextureSRV->AddRef();
+}
+
+D3D11Texture2D::D3D11Texture2D(ID3D11Device* device) :D3D11Texture(device, TextureType::Texture2D)
+{
+}
+
+bool D3D11Texture2D::Load(const char* path)
+{
+	SafeRelease(mTextureSRV);
 	char* pBits = LoadTexture(path);
+
+	if (!pBits)
+		return false;
 
 	D3D11_TEXTURE2D_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -28,7 +45,7 @@ bool D3D11Texture::Load(const char* path)
 	data.SysMemPitch = mDepth * mWidth;
 
 	mDevice->CreateTexture2D(&desc, &data, &texture2d);
-	mDevice->CreateShaderResourceView(texture2d, 0, &TextureSRV);
+	mDevice->CreateShaderResourceView(texture2d, 0, &mTextureSRV);
 
 	texture2d->Release();
 
@@ -37,4 +54,15 @@ bool D3D11Texture::Load(const char* path)
 
 }
 
+D3D11CubeTexture::D3D11CubeTexture(ID3D11Device* device) :D3D11Texture(device, TextureType::CubeTexture)
+{
+}
 
+bool D3D11CubeTexture::Load(const char* path)
+{
+	SafeRelease(mTextureSRV);
+	if (FAILED(D3DX11CreateShaderResourceViewFromFileA(mDevice, path, 0, 0, &mTextureSRV, 0))) {
+		return false;
+	}
+	return true;
+}

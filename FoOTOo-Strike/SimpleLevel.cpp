@@ -43,6 +43,7 @@ bool SimpleLevel::StartUp()
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
 
+	mScene->AddSkyBox();
 
 	Enter();
 

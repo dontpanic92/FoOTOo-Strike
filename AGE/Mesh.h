@@ -17,13 +17,13 @@ namespace AGE
 
 		~Material();
 
-		void SetTexture(Texture2D* texture) { mTexture = texture; }
+		void SetTexture(Texture* texture) { mTexture = texture; }
 
-		Texture2D* GetTexture() const { return mTexture; }
+		Texture* GetTexture() const { return mTexture; }
 
 
 	private:
-		Texture2D* mTexture;
+		Texture* mTexture;
 	};
 
 	class Renderable;
@@ -36,6 +36,10 @@ namespace AGE
 			float Position[3];
 			float Normal[3];
 			float TextureCoord[2];
+
+			void SetPosition(float x, float y, float z);
+			void SetNormal(float x, float y, float z);
+			void SetTexCoord(float u, float v);
 		};
 
 		struct SkeletonData
@@ -45,22 +49,9 @@ namespace AGE
 		};
 
 		Mesh();
-
-		//Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum);
-		//Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent);
-
+		Mesh(Vertex* vertex, uint vertexNum);
 		~Mesh();
 
-		//void SetData(ushort* indexArray, float* normalArray, float* textureArray);
-
-		//void SetVertexByFace(uint nface, GLfloat* vertex9);
-		//void SetVertex(uint nvertex, GLfloat* vertex3);
-
-		//void SetIndexByFace(uint nface, ushort* index3);
-
-		//void SetNormalByFace(uint nface, float* normal9);
-
-		//void SetTexCoordByFace(uint nface, float* texCoord6);
 
 		Vertex* GetVertexData() { return mVertexData; }
 		const Vertex* GetVertexBindPose() const { return mBindposeVertexData; }

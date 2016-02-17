@@ -7,22 +7,29 @@
 
 namespace AGE
 {
+	enum class TextureType
+	{
+		Texture2D, CubeTexture
+	};
 
-	class AGE_EXPORT Texture2D
+	class AGE_EXPORT Texture
 	{
 	public:
 
-		Texture2D();
+		Texture(TextureType type);
 
-		virtual ~Texture2D();
+		virtual ~Texture();
 
 		virtual bool Load(const char* path) = 0;
+
+		TextureType GetType() { return mType; }
 
 	protected:
 
 		char* LoadTexture(const char* path);
 
 		int mWidth, mHeight, mDepth;
+		TextureType mType;
 	};
 }
 
