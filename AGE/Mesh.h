@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include <vector>
+#include <functional>
 
 namespace AGE
 {
@@ -43,7 +44,7 @@ namespace AGE
 			float weight[4];
 		};
 
-		Mesh(Renderable* parent);
+		Mesh();
 
 		//Mesh(GLfloat* vertexArray, GLfloat* normalArray, GLfloat* textureArray, int vertexNum);
 		//Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent);
@@ -66,6 +67,8 @@ namespace AGE
 
 		//Vertex* GetVertexData() { return mVertexData; }
 		void SetVertexData(Vertex* vertex, uint vertexNum);
+		void SetVertexData(float* vertexArray, float* normalArray, float* textureCoord, uint vertexNum);
+		void SetVertexData(float* vertexArray, std::function<uint(uint)> indexFunc, float* normalArray, float* textureCoord, uint vertexNum);
 
 		void SetSkeletonData(uint i, const SkeletonData& data)
 		{
@@ -91,13 +94,14 @@ namespace AGE
 
 	private:
 
+		void SetVertexDataPrivate(std::function<void()> callback, uint vertexNum);
+
 		int mVertexNum;
 		int mIndexNum;
 
-		Renderable* mParent;
-		Vertex* mBindposeVertexData;
-		Vertex* mVertexData;
-		SkeletonData* mSkeletonData;
+		Vertex* mBindposeVertexData = nullptr;
+		Vertex* mVertexData = nullptr;
+		SkeletonData* mSkeletonData = nullptr;
 		//float* mNormalData;
 		//float* mTextureData;
 		//GLushort* mIndexData;

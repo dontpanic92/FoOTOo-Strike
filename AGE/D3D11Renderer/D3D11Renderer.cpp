@@ -49,11 +49,11 @@ int D3D11Renderer::StartUp()
 	// Check 4X MSAA quality support for our back buffer format.
 	// All Direct3D 11 capable devices support 4X MSAA for all render 
 	// target formats, so we only need to check quality support.
-
-	/*HR(md3dDevice->CheckMultisampleQualityLevels(
+	UINT m4xMsaaQuality;
+	(mD3DDevice->CheckMultisampleQualityLevels(
 		DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m4xMsaaQuality));
-	assert(m4xMsaaQuality > 0);
-	*/
+	//assert(m4xMsaaQuality > 0);
+	
 	
 	// Fill out a DXGI_SWAP_CHAIN_DESC to describe our swap chain.
 
@@ -76,6 +76,7 @@ int D3D11Renderer::StartUp()
 	sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
 	//}
+
 
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
@@ -146,7 +147,7 @@ RenderObject* D3D11Renderer::CreateRenderObject(Renderable* renderable, Mesh* me
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	if (is_static)
 	{
-		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.CPUAccessFlags = 0;
 	}
 	else

@@ -28,7 +28,7 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename, bool is_static)
 	AM1MaterialHeader matHeader;
 	for (int i = 0; i < fileHeader.MaterialNum; i++) {
 		fread(&matHeader, 1, sizeof(matHeader), filp);
-		Mesh* mesh = new Mesh(renderable);
+		Mesh* mesh = new Mesh();
 		meshes[i] = mesh;
 		vertexIndices[i] = new uint32_t[matHeader.VertexNum];
 		float* normal = new float[matHeader.VertexNum * 3];
@@ -40,19 +40,8 @@ Renderable* AGEMeshImporter::LoadFromFile(const char* filename, bool is_static)
 		fread(textureCoord, sizeof(float), matHeader.VertexNum * 2, filp);
 		//memset(mesh->GetTextureData(), 0, sizeof(float)* matHeader.VertexNum * 2);
 
-		//GLushort* index = mesh->GetIndexData();
+		mesh->SetVertexData(vertex, [&](uint j){return vertexIndices[i][j];}, normal, textureCoord, matHeader.VertexNum);
 
-		Mesh::Vertex* meshVertex = new Mesh::Vertex[matHeader.VertexNum];
-
-		for (uint j = 0; j < matHeader.VertexNum; j++) {
-			//mesh->SetVertex(i, &vertex[matVertex[i] * 3]);
-			memcpy(meshVertex[j].Position, &vertex[vertexIndices[i][j] * 3], sizeof(float) * 3);
-			memcpy(meshVertex[j].Normal, &normal[j * 3], sizeof(float) * 3);
-			memcpy(meshVertex[j].TextureCoord, &textureCoord[j * 2], sizeof(float) * 2);
-		}
-		mesh->SetVertexData(meshVertex, matHeader.VertexNum);
-
-		delete[] meshVertex;
 		//mesh->UpdateVertex();
 
 		Material* material = ResourceManager::GetInstance()->LoadMaterial(matHeader.TextureName);

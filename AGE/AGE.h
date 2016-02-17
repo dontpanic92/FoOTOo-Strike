@@ -10,5 +10,7 @@
 #include "LevelManager.h"
 #include "StaticSceneObject.h"
 #include "Actor.h"
+#include "Primitive.h"
+#include "ResourceManager.h"
 
 #endif

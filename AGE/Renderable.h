@@ -11,7 +11,7 @@
 namespace AGE
 {
 	//class Renderable;
-	class RenderObject
+	class AGE_EXPORT RenderObject
 	{
 	public:
 		Renderable* Parent;
@@ -25,7 +25,7 @@ namespace AGE
 		virtual ~RenderObject() { Destroy(); }
 	};
 
-	class Renderable
+	class AGE_EXPORT Renderable
 	{
 	public:
 

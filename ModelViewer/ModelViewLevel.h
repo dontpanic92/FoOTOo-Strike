@@ -26,6 +26,8 @@ public:
 private:
 	Scene* mScene = nullptr;
 	SceneObject* mSceneObject = nullptr;
+	SceneObject* mPlaneObject = nullptr;
+	Renderable* mPlane = nullptr;
 
 	float mDistance = 10;
 };

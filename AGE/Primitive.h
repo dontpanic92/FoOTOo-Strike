@@ -7,13 +7,13 @@
 namespace AGE
 {
 
-	class Primitive : public Singleton<Primitive>
+	class AGE_EXPORT Primitive : public Singleton<Primitive>
 	{
 	public:
 
-		static Renderable* CreateTorusUnmanage();
+		static Mesh* CreateTorusUnmanage();
 
-		static Renderable* CreatePlaneUnmanage(Vector3f points[4]);
+		static Mesh* CreateRectangleUnmanage(float width, float height);
 	};
 }
 

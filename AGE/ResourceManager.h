@@ -9,7 +9,7 @@
 
 namespace AGE
 {
-	class ResourceManager : public Singleton<ResourceManager>
+	class AGE_EXPORT ResourceManager : public Singleton<ResourceManager>
 	{
 	public:
 		const static wchar_t* RootDirectory;

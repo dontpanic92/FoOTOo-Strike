@@ -10,30 +10,37 @@ Material::~Material()
 {
 }
 
-Mesh::Mesh(Renderable* parent) : mVertexData(0), mBindposeVertexData(0)
+Mesh::Mesh()
 {
 	//mVertexNum = vertexNum;
 
 	//mNormalData = new float[vertexNum * 3];
 	//mTextureData = new float[vertexNum * 2];
-
-	mParent = parent;
 }
 
 void Mesh::SetVertexData(Vertex* vertex, uint vertexNum)
 {
+	SetVertexDataPrivate([&](){
+		memcpy(mVertexData, vertex, sizeof(Vertex) * vertexNum);
+	}, vertexNum);
 
-	delete[] mVertexData;
-	delete[] mBindposeVertexData;
+}
 
-	mVertexNum = vertexNum;
-	mVertexData = new Vertex[vertexNum];
-	mBindposeVertexData = new Vertex[vertexNum];
-	mSkeletonData = new SkeletonData[vertexNum];
-	//mIndexData = new ushort[vertexNum];
+void Mesh::SetVertexData(float* vertexArray, float* normalArray, float* textureCoord, uint vertexNum)
+{
+	SetVertexData(vertexArray, [&](uint j){return j;}, normalArray, textureCoord, vertexNum);
+}
 
-	memcpy(mVertexData, vertex, sizeof(Vertex) * vertexNum);
-	memcpy(mBindposeVertexData, vertex, sizeof(Vertex) * vertexNum);
+void Mesh::SetVertexData(float* vertexArray, std::function<uint(uint)> indexFunc, float* normalArray, float* textureCoord, uint vertexNum)
+{
+	SetVertexDataPrivate([&]() {
+		for (uint j = 0; j < mVertexNum; j++) {
+			memcpy(mVertexData[j].Position, &vertexArray[indexFunc(j) * 3], sizeof(float) * 3);
+			memcpy(mVertexData[j].Normal, &normalArray[j * 3], sizeof(float) * 3);
+			memcpy(mVertexData[j].TextureCoord, &textureCoord[j * 2], sizeof(float) * 2);
+		}
+	}, vertexNum);
+	
 }
 
 /*Mesh::Mesh(ushort* indexArray, float* normalArray, float* textureArray, int vertexNum, Renderable* parent)
@@ -52,6 +59,22 @@ void Mesh::SetVertexData(Vertex* vertex, uint vertexNum)
 
 	UpdateVertex();
 }*/
+
+void Mesh::SetVertexDataPrivate(std::function<void()> callback, uint vertexNum)
+{
+	delete[] mVertexData;
+	delete[] mBindposeVertexData;
+	//delete[] mSkeletonData;
+
+	mVertexNum = vertexNum;
+	mVertexData = new Vertex[vertexNum];
+	mBindposeVertexData = new Vertex[vertexNum];
+	mSkeletonData = new SkeletonData[vertexNum];
+
+	callback();
+
+	memcpy(mBindposeVertexData, mVertexData, sizeof(Vertex) * vertexNum);
+}
 
 Mesh::~Mesh()
 {

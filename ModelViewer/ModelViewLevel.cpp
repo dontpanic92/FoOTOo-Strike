@@ -16,6 +16,17 @@ bool ModelViewLevel::StartUp()
 	l->Direction[1] = -1;
 	l->Direction[2] = -1;
 
+	mPlane = new Renderable();
+	Mesh* m = AGE::Primitive::CreateRectangleUnmanage(100, 100);
+	Material* material = ResourceManager::GetInstance()->LoadMaterial("wood-texture.jpg");
+	Shader* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
+	mPlane->AddRenderObject(RenderEngine::GetInstance()->CreateRenderObject(mPlane, m, material, shader, true));
+
+	mPlaneObject = new SceneObject();
+	mPlaneObject->SetRenderable(mPlane);
+
+	mScene->GetRoot()->Attach(mPlaneObject);
+
 	return true;
 }
 
@@ -25,8 +36,9 @@ void ModelViewLevel::RotateCamera(int deltaX, int deltaY)
 		float ratio = 0.005;
 		Matrix4x4f m = t->GetTransformMatrix();
 
-		t->RotateByRadian(-deltaX * ratio, m[1][0], m[1][1], m[1][2], Transform::World);
+		//t->RotateByRadian(-deltaX * ratio, m[1][0], m[1][1], m[1][2], Transform::World);
 		t->RotateByRadian(-deltaY * ratio, m[0][0], m[0][1], m[0][2], Transform::World);
+		t->RotateByRadian(-deltaX * ratio, 0, 1, 0, Transform::World);
 	};
 	f(mScene->GetCurrentCamera()->GetTransform());
 	//f(mScene->GetLights()[0]->GetTransform());

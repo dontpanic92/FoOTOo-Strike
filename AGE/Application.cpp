@@ -10,8 +10,14 @@ int WindowsApplication::MainLoop()
 	while (bRunning) {
 		MSG msg;
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0) {
-			if (msg.message == WM_QUIT) {
+			switch(msg.message){
+			case WM_QUIT:
 				bRunning = false;
+				break;
+			case WM_SIZE:
+			case WM_EXITSIZEMOVE:
+				//This won't work before we make DXGI not handle sys messages.
+				RenderEngine::GetInstance()->ResizeToFit();
 				break;
 			}
 			if (msg.message != WM_SYSKEYDOWN) {
