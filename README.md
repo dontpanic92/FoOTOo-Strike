@@ -1,3 +1,3 @@
-FoOTOo-Strike with selfmade engine.
+FoOTOo-Strike with a selfmade engine.
 
 ![screenshot](test.png)
