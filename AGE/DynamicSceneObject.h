@@ -1,11 +1,11 @@
 #ifndef __AGE_DYNAMICSCENEOBJECT_HEADER
 #define __AGE_DYNAMICSCENEOBJECT_HEADER
 
-#include "SceneObject.h"
+#include "SceneNode.h"
 
 namespace AGE
 {
-	class AGE_EXPORT DynamicSceneObject : public SceneObject
+	class AGE_EXPORT DynamicSceneObject : public SceneNode
 	{
 	public:
 		DynamicSceneObject() {}

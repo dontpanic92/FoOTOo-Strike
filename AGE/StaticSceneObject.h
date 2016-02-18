@@ -4,11 +4,11 @@
 #include "Renderable.h"
 #include "AGEMeshImporter.h"
 #include "PhysicsEngine.h"
-#include "SceneObject.h"
+#include "SceneNode.h"
 
 namespace AGE
 {
-	class AGE_EXPORT StaticSceneObject : public SceneObject
+	class AGE_EXPORT StaticSceneObject : public SceneNode
 	{
 	public:
 		StaticSceneObject(const char* rp)

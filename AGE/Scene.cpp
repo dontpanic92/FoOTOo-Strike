@@ -8,55 +8,8 @@
 
 using namespace AGE;
 
-SceneNode::SceneNode() : mParent(0)
-{
-}
-
-SceneNode::~SceneNode()
-{
-}
-
-void SceneNode::Attach(SceneObject* object)
-{
-	if (object->GetParent())
-		object->GetParent()->Detach(object);
-	object->SetParent(this);
-	mObjects.push_back(object);
-}
-
-void SceneNode::Attach(SceneNode* attach)
-{
-	if (attach->mParent)
-		attach->mParent->Detach(attach);
-	attach->mParent = this;
-	mNodes.push_back(attach);
-}
-
-void SceneNode::Detach(SceneObject* object)
-{
-	for (auto it = mObjects.begin(); it != mObjects.end();) {
-		if (*it == object) {
-			(*it)->SetParent(nullptr);
-			it = mObjects.erase(it);
-		} else {
-			it++;
-		}
-	}
-}
-
-void SceneNode::Detach(SceneNode* node)
-{
-	for (auto it = mNodes.begin(); it != mNodes.end(); it++) {
-		if (*it == node) {
-			(*it)->SetParent(nullptr);
-			mNodes.erase(it);
-			break;
-		}
-	}
-}
-
-void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix)
-{
+//void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix)
+//{
 
 	//const vector<Attachable*>& attachable = mRoot.GetAttachable();
 	/*Matrix4x4f currentMatrix = mTransform.GetTransformMatrix() * parentMatrix;
@@ -82,25 +35,8 @@ void SceneNode::Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMa
 	for (uint i = 0; i < mNodes.size(); i++) {
 		mNodes[i]->Render(currentMatrix, viewMatrix);
 	}*/
-}
+//}
 
-void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
-{
-	mWorldTransform = mTransform.GetTransformMatrix() * parentMatrix;
-	for each(auto obj in mObjects)
-	{
-		obj->UpdateWorldMatrix(mWorldTransform);
-		//printf("scenenode: %p, attachable: %p\n", this, attachable);
-		
-		if (Renderable* r = obj->GetRenderable())
-			RenderQueue::GetInstance()->PushRenderable(r);
-	}
-
-	for each(auto node in mNodes)
-	{
-		node->UpdateAndCulling(mWorldTransform);
-	}
-}
 
 /*Matrix4x4f SceneNode::CalcWorldTransformMatrix()
 {
@@ -121,7 +57,7 @@ void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
 	return matrix;
 }*/
 
-Scene::Scene() {}
+Scene::Scene():mRoot(nullptr) {}
 
 void Scene::StartUp()
 {
@@ -176,7 +112,7 @@ void Scene::Render()
 		RenderEngine::GetInstance()->Render(dynamic_cast<Renderable*>(mAttachable[i]));
 		}
 		*/
-	mRoot.Render(Matrix4x4f::MakeIdentity(), viewMatrix);
+	//mRoot.Render(Matrix4x4f::MakeIdentity(), viewMatrix);
 
 	//RenderEngine::GetInstance()->End();
 }

@@ -2,11 +2,11 @@
 #define __AGE_CAMERA_HEADER__
 
 #include "LinearMath.h"
-#include "SceneObject.h"
+#include "SceneNode.h"
 
 namespace AGE
 {
-	class Camera : public SceneObject
+	class Camera : public SceneNode
 	{
 	public:
 		Camera() {}

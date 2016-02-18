@@ -87,7 +87,7 @@ void ActorLogicShoot1::Enter()
 	if (record.Body != nullptr) {
 		Actor* p = (Actor*)NewtonBodyGetUserData(record.Body);
 		if (p) {
-			printf("hitted! %s\n", p->GetRepr());
+			printf("hitted! %s\n", p->GetName());
 		}
 	}
 }

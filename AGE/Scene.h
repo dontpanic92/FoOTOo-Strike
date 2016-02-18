@@ -9,57 +9,11 @@
 #include "Light.h"
 #include "SkyBox.h"
 #include "Def.h"
+#include "SceneNode.h"
 using std::vector;
 
 namespace AGE
 {
-
-	class AGE_EXPORT SceneNode
-	{
-	public:
-		SceneNode();
-		~SceneNode();
-
-		void Attach(SceneObject* object);
-		void Attach(SceneNode* node);
-		void Detach(SceneObject* object); 
-		void Detach(SceneNode* node);
-
-		SceneNode* GetParent() { return mParent; }
-		const vector<SceneNode*>& GetChildren() { return mNodes; }
-		const vector<SceneObject*>& GetObjects() { return mObjects; }
-
-		void Render(const Matrix4x4f& parentMatrix, const Matrix4x4f & viewMatrix);
-		void UpdateAndCulling(const Matrix4x4f& parentMatrix);
-
-		Transform* GetTransform() { return &mTransform; }
-		const Matrix4x4f& GetWorldTransform() { return mWorldTransform; }
-		//Matrix4x4f CalcWorldTransformMatrix();
-
-		void SetName(const char* name)
-		{
-#ifdef _DEBUG
-			mNodeName = name;
-#endif
-		}
-
-	private:
-		void SetParent(SceneNode* parent) { mParent = parent; }
-
-		vector<SceneNode*> mNodes;
-		vector<SceneObject*> mObjects;
-
-		SceneNode* mParent;
-
-		Transform mTransform;
-
-		Matrix4x4f mWorldTransform;
-#ifdef _DEBUG
-		std::string mNodeName;
-#endif
-
-		friend class Scene;
-	};
 
 	class AGE_EXPORT Scene
 	{

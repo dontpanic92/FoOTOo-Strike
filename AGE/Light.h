@@ -1,11 +1,11 @@
 #ifndef __AGE_LIGHT_HEADER__
 #define __AGE_LIGHT_HEADER__
 
-#include "SceneObject.h"
+#include "SceneNode.h"
 
 namespace AGE {
 
-	class Light : public SceneObject
+	class Light : public SceneNode
 	{
 	public:
 		enum class LightType { Directional };

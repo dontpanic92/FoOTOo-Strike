@@ -38,17 +38,16 @@ namespace AGE
 		}
 	};
 
-	class AGE_EXPORT Actor : public SceneObject
+	class AGE_EXPORT Actor : public SceneNode
 	{
 	public:
 		Actor()
 		{
 			InitPhysics();
+			SetName("Actor");
 		}
 
 		virtual ~Actor();
-
-		virtual const char* GetRepr();
 
 		void InitPhysics();
 

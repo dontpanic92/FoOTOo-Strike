@@ -43,11 +43,11 @@ public:
 		SoundClipout.SetParent(this);
 		SoundShoot.Load("../Resources/Sounds/deagle-1.wav", false);
 		SoundShoot.SetParent(this);
+
+		SetName("FootooActor");
 	}
 
 	Skeleton* GetSkeleton() { return mSkeleton; }
-
-	const char* GetRepr() override { return "FootooActor"; }
 
 	void Update(float deltaTime)
 	{

@@ -117,7 +117,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RtInformation.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="Singleton.h" />
@@ -166,7 +166,7 @@
     <ClCompile Include="RenderQueue.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneObject.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderData.cpp" />
     <ClCompile Include="Skeleton.cpp" />

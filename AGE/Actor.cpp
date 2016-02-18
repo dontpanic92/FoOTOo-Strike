@@ -70,11 +70,6 @@ void Actor::SetPosition(Vector3f position)
 	NewtonBodySetMatrix(mController->GetBody(), m);
 }
 
-const char* Actor::GetRepr()
-{
-	return "Actor";
-}
-
 Actor::~Actor()
 {
 }

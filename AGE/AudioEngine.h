@@ -4,7 +4,7 @@
 #include "Singleton.h"
 
 #include "../3rd/include/yse/yse.hpp"
-#include "SceneObject.h"
+#include "SceneNode.h"
 #include "Def.h"
 
 namespace AGE{
@@ -15,7 +15,7 @@ namespace AGE{
 		Sound3D();
 		//Sound3D(const char* filename, bool loop, Attachable* parent);
 
-		void SetParent(SceneObject* parent);
+		void SetParent(SceneNode* parent);
 		void Load(const char* filename, bool loop);
 
 		void Play() { mSound.play(); }
@@ -26,7 +26,7 @@ namespace AGE{
 
 		void Update();
 	private:
-		SceneObject* mAttachable;
+		SceneNode* mAttachable;
 		YSE::sound mSound;
 	};
 
