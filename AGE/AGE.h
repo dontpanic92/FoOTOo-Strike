@@ -8,7 +8,7 @@
 #include "InputEngine.h"
 #include "PhysicsEngine.h"
 #include "LevelManager.h"
-#include "StaticSceneObject.h"
+#include "PhysicsNode.h"
 #include "Actor.h"
 #include "Primitive.h"
 #include "ResourceManager.h"

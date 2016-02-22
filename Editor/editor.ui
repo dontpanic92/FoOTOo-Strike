@@ -220,7 +220,7 @@ display:none;
   <customwidget>
    <class>RenderWidget</class>
    <extends>QWidget</extends>
-   <header>../ModelViewer/renderwidget.h</header>
+   <header>renderwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

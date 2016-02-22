@@ -31,8 +31,7 @@ bool SimpleLevel::StartUp()
 	Shader* shader = ResourceManager::GetInstance()->LoadShader("DefaultLight");
 	mPlane->AddRenderObject(RenderEngine::GetInstance()->CreateRenderObject(mPlane, m, material, shader, true));
 
-	mPlaneObject = new SceneNode();
-	mPlaneObject->SetRenderable(mPlane);
+	mPlaneObject = new PhysicsNode(mPlane);
 
 	mScene->GetRoot()->Attach(mPlaneObject);
 

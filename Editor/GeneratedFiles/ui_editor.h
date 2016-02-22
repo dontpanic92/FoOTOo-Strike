@@ -25,7 +25,7 @@
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include "../ModelViewer/renderwidget.h"
+#include "renderwidget.h"
 
 QT_BEGIN_NAMESPACE
 

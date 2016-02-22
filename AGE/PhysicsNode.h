@@ -8,17 +8,10 @@
 
 namespace AGE
 {
-	class AGE_EXPORT StaticSceneObject : public SceneNode
+	class AGE_EXPORT PhysicsNode : public SceneNode
 	{
 	public:
-		StaticSceneObject(const char* rp)
-		{
-
-			AGEMeshImporter importer;
-			Renderable* r = importer.LoadFromFile(rp, true);
-			this->SetRenderable(r);
-			InitPhysics();
-		}
+		PhysicsNode(Renderable* r);
 
 	protected:
 		void InitPhysics();

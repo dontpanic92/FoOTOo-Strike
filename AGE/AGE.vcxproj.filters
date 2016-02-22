@@ -144,9 +144,6 @@
     <ClInclude Include="LevelManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="StaticSceneObject.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="RtInformation.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -169,6 +166,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SceneNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsNode.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -284,9 +284,6 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="StaticSceneObject.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -300,6 +297,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SceneNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -24,6 +24,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent* e)
 void RenderWidget::mousePressEvent(QMouseEvent *e)
 {
 	mDragStartPoint = e->pos();
+	emit onMousePress(mDragStartPoint);
 }
 
 void RenderWidget::paintEvent(QPaintEvent *e)

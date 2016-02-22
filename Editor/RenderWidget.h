@@ -21,6 +21,7 @@ public:
 
 signals:
 	void onRefresh();
+	void onMousePress(QPoint point);
 	void onDrag(QPoint delta);
 	void onResize(QSize newSize, QSize oldSize);
 	void onWheel(int delta);

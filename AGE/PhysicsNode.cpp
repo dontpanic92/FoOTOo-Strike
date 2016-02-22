@@ -1,9 +1,15 @@
-#include "StaticSceneObject.h"
+#include "PhysicsNode.h"
 #include "PhysicsEngine.h"
 
 using namespace AGE;
 
-void StaticSceneObject::InitPhysics()
+PhysicsNode::PhysicsNode(Renderable* r)
+{
+	SetRenderable(r);
+	InitPhysics();
+}
+
+void PhysicsNode::InitPhysics()
 {
 	int materialID = 0;
 	bool optimize = true;
@@ -25,7 +31,7 @@ void StaticSceneObject::InitPhysics()
 	NewtonTreeCollisionEndBuild(collision, optimize ? 1 : 0);
 
 	NewtonBody* const body = NewtonCreateDynamicBody(GetPhysicsWorld(), collision, this->GetWorldMatrix());
-	NewtonBodySetUserData(body, nullptr/*this*/);
+	NewtonBodySetUserData(body, this);
 
 	NewtonDestroyCollision(collision);
 }

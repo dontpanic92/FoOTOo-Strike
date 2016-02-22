@@ -123,7 +123,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkyBox.h" />
-    <ClInclude Include="StaticSceneObject.h" />
+    <ClInclude Include="PhysicsNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIEngine.h" />
@@ -171,7 +171,7 @@
     <ClCompile Include="ShaderData.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SkyBox.cpp" />
-    <ClCompile Include="StaticSceneObject.cpp" />
+    <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>

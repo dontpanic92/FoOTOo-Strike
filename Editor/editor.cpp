@@ -19,19 +19,30 @@ Editor::Editor(QWidget *parent)
 
 	connect(ui.widget, SIGNAL(onRefresh()), this, SLOT(UpdateEngine()));
 
+	connect(ui.widget, &RenderWidget::onMousePress, [this](QPoint point){
+		if (GetScene()) {
+			SceneNode* node = GetScene()->GetCurrentCamera()->PickAt(point.x(), point.y());
+			printf("pick %p\n", node);
+		}
+	});
+
 	connect(ui.widget, &RenderWidget::onResize, [this](QSize newSize, QSize oldSize){
 		RenderEngine::GetInstance()->ResizeToFit();
 		ui.widget->update();
 	});
 
 	connect(ui.widget, &RenderWidget::onDrag, [this](QPoint delta){
-		GetLevel<SimpleLevel>()->RotateCamera(delta.x(), delta.y());
-		ui.widget->update();
+		if (GetLevel<SimpleLevel>()) {
+			GetLevel<SimpleLevel>()->RotateCamera(delta.x(), delta.y());
+			ui.widget->update();
+		}
 	});
 
 	connect(ui.widget, &RenderWidget::onWheel, [this](int delta){
-		GetLevel<SimpleLevel>()->AdjustDistance(delta);
-		ui.widget->update();
+		if (GetLevel<SimpleLevel>()) {
+			GetLevel<SimpleLevel>()->AdjustDistance(delta);
+			ui.widget->update();
+		}
 	});
 
 	connect(ui.actionCS, &QAction::triggered, [](){

@@ -59,8 +59,6 @@ namespace AGE
 	private:
 		void SetParent(SceneNode* parent) { mParent = parent; }
 
-		//Mesh::Vertex* mVertex;
-		//Mesh::Vertex* mVertexBindPose;
 		uint mNumberOfVertex;
 
 		std::vector<RenderObject*> mRenderObjects;
