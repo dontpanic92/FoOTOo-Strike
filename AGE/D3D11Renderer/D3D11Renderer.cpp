@@ -202,7 +202,7 @@ void D3D11Renderer::ResizeToFit()
 {
 	Window& window = Engine::GetInstance()->GetMainWindow();
 	window.Recalc();
-	
+
 	SafeRelease(mSwapChain);
 
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -255,6 +255,7 @@ void D3D11Renderer::ResizeToFit()
 	//printf("resize: %X\n", h);
 	delete mRenderPath;
 	mRenderPath = new D3D11ForwardRendering(mD3DDevice, mD3DImmediateContext, mSwapChain, window);
-
-	GetScene()->UpdateCameraAspectRatio();
+	if (GetScene()) {
+		GetScene()->UpdateCameraAspectRatio();
+	}
 }

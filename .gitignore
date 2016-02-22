@@ -6,6 +6,7 @@
 *.user
 *.sln.docstates
 
+3rd/
 3rd/lib/
 *.lib
 

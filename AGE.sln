@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AGE", "AGE\AGE.vcxproj", "{EA592AF3-4A79-455C-9CA0-56D69042578F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F0E5A620-7818-423F-960A-1A346A0ADAC4}"
-	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FoOTOo-Strike", "FoOTOo-Strike\FoOTOo-Strike.vcxproj", "{A7DC556D-162F-4E63-BF59-3CB952F422E5}"
 	ProjectSection(ProjectDependencies) = postProject

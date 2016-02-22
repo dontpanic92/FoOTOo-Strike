@@ -6,57 +6,38 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>622</width>
-    <height>400</height>
+    <width>645</width>
+    <height>502</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Editor</string>
+   <string>AGE Editor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="RenderWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>411</width>
-      <height>291</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
     </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>100</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
+    <property name="topMargin">
+     <number>0</number>
     </property>
-    <property name="text">
-     <string>Button1</string>
+    <property name="rightMargin">
+     <number>0</number>
     </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>140</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
+    <property name="bottomMargin">
+     <number>0</number>
     </property>
-    <property name="text">
-     <string>Button2</string>
-    </property>
-   </widget>
+    <item row="0" column="0">
+     <widget class="RenderWidget" name="widget" native="true"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>622</width>
+     <width>645</width>
      <height>23</height>
     </rect>
    </property>
@@ -64,6 +45,10 @@
     <property name="title">
      <string>文件(&amp;F)</string>
     </property>
+    <addaction name="action_N"/>
+    <addaction name="action_O"/>
+    <addaction name="actionTest"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_I">
@@ -78,7 +63,14 @@
     </widget>
     <addaction name="menu"/>
    </widget>
+   <widget class="QMenu" name="menu_P">
+    <property name="title">
+     <string>工程(&amp;P)</string>
+    </property>
+    <addaction name="action_S"/>
+   </widget>
    <addaction name="menuAaa"/>
+   <addaction name="menu_P"/>
    <addaction name="menu_I"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -90,6 +82,108 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="projectDock">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDockWidget::title
+{
+display:none;
+}</string>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Project</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="projectTree">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="columnCount">
+        <number>1</number>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="headerDefaultSectionSize">
+        <number>100</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="primitiveDock">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Primitive</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <widget class="QPushButton" name="planeButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Plane</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="icosphereButton">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IcoSphere</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
   <action name="actionExit">
    <property name="text">
     <string>退出(&amp;E)</string>
@@ -100,13 +194,33 @@
     <string>CS 1.6 MDL文件 ...</string>
    </property>
   </action>
+  <action name="action_N">
+   <property name="text">
+    <string>新建工程(&amp;N)...</string>
+   </property>
+  </action>
+  <action name="action_O">
+   <property name="text">
+    <string>打开工程(&amp;O)...</string>
+   </property>
+  </action>
+  <action name="actionTest">
+   <property name="text">
+    <string>test</string>
+   </property>
+  </action>
+  <action name="action_S">
+   <property name="text">
+    <string>添加场景(&amp;S)...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>RenderWidget</class>
    <extends>QWidget</extends>
-   <header location="global">renderwidget.h</header>
+   <header>../ModelViewer/renderwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

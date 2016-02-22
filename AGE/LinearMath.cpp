@@ -40,6 +40,11 @@ const float Matrix3x3f::ZeroFloat[3][3] = {
 
 const Vector3f Vector3f::Zero(0.0f, 0.0f, 0.0f);
 
+Vector3f Vector3f::operator + (const Vector3f& v)
+{
+	return Vector3f(mVector[0] + v.mVector[0], mVector[1] + v.mVector[1], mVector[2] + v.mVector[2]);
+}
+
 Vector3f Vector3f::operator* (const Matrix3x3f& mul)
 {
 	Vector3f tmp;

@@ -32,10 +32,6 @@ bool SimpleLevel::StartUp()
 	ActorNode->Attach(CameraNode);
 
 	CameraNode->GetTransform()->SetPosition(Vector3f(0, 0, -5));
-	
-	//node2->GetTransform()->Translate(Vector3f(0, 0, -5));
-	CameraNode->GetTransform()->RotateByRadian(Deg2Rad(180), 0.0f, 1.0f, 0.0f);
-	//Engine::GetInstance()->GetScene()->GetRoot()->Attach(node2);
 
 	CameraNode->Attach(mScene->GetCurrentCamera());
 	Light* l = mScene->CreateLight();

@@ -13,6 +13,8 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -20,8 +22,10 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include <../ModelViewer/RenderWidget.h>
+#include "../ModelViewer/renderwidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -30,47 +34,70 @@ class Ui_EditorClass
 public:
     QAction *actionExit;
     QAction *actionCS;
+    QAction *action_N;
+    QAction *action_O;
+    QAction *actionTest;
+    QAction *action_S;
     QWidget *centralWidget;
+    QGridLayout *gridLayout;
     RenderWidget *widget;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QMenu *menuAaa;
     QMenu *menu_I;
     QMenu *menu;
+    QMenu *menu_P;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
+    QDockWidget *projectDock;
+    QWidget *dockWidgetContents_2;
+    QVBoxLayout *verticalLayout;
+    QTreeWidget *projectTree;
+    QDockWidget *primitiveDock;
+    QWidget *dockWidgetContents;
+    QPushButton *planeButton;
+    QPushButton *icosphereButton;
 
     void setupUi(QMainWindow *EditorClass)
     {
         if (EditorClass->objectName().isEmpty())
             EditorClass->setObjectName(QStringLiteral("EditorClass"));
-        EditorClass->resize(622, 400);
+        EditorClass->resize(645, 502);
         actionExit = new QAction(EditorClass);
         actionExit->setObjectName(QStringLiteral("actionExit"));
         actionCS = new QAction(EditorClass);
         actionCS->setObjectName(QStringLiteral("actionCS"));
+        action_N = new QAction(EditorClass);
+        action_N->setObjectName(QStringLiteral("action_N"));
+        action_O = new QAction(EditorClass);
+        action_O->setObjectName(QStringLiteral("action_O"));
+        actionTest = new QAction(EditorClass);
+        actionTest->setObjectName(QStringLiteral("actionTest"));
+        action_S = new QAction(EditorClass);
+        action_S->setObjectName(QStringLiteral("action_S"));
         centralWidget = new QWidget(EditorClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        gridLayout = new QGridLayout(centralWidget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
         widget = new RenderWidget(centralWidget);
         widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(10, 10, 411, 291));
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(440, 100, 75, 23));
-        pushButton_2 = new QPushButton(centralWidget);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(440, 140, 75, 23));
+
+        gridLayout->addWidget(widget, 0, 0, 1, 1);
+
         EditorClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(EditorClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 622, 23));
+        menuBar->setGeometry(QRect(0, 0, 645, 23));
         menuAaa = new QMenu(menuBar);
         menuAaa->setObjectName(QStringLiteral("menuAaa"));
         menu_I = new QMenu(menuBar);
         menu_I->setObjectName(QStringLiteral("menu_I"));
         menu = new QMenu(menu_I);
         menu->setObjectName(QStringLiteral("menu"));
+        menu_P = new QMenu(menuBar);
+        menu_P->setObjectName(QStringLiteral("menu_P"));
         EditorClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(EditorClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -78,12 +105,62 @@ public:
         statusBar = new QStatusBar(EditorClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         EditorClass->setStatusBar(statusBar);
+        projectDock = new QDockWidget(EditorClass);
+        projectDock->setObjectName(QStringLiteral("projectDock"));
+        projectDock->setEnabled(true);
+        projectDock->setStyleSheet(QLatin1String("QDockWidget::title\n"
+"{\n"
+"display:none;\n"
+"}"));
+        projectDock->setFloating(false);
+        projectDock->setFeatures(QDockWidget::DockWidgetFloatable);
+        dockWidgetContents_2 = new QWidget();
+        dockWidgetContents_2->setObjectName(QStringLiteral("dockWidgetContents_2"));
+        verticalLayout = new QVBoxLayout(dockWidgetContents_2);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        projectTree = new QTreeWidget(dockWidgetContents_2);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QStringLiteral("1"));
+        projectTree->setHeaderItem(__qtreewidgetitem);
+        projectTree->setObjectName(QStringLiteral("projectTree"));
+        projectTree->setStyleSheet(QStringLiteral(""));
+        projectTree->setFrameShape(QFrame::StyledPanel);
+        projectTree->setColumnCount(1);
+        projectTree->header()->setVisible(false);
+        projectTree->header()->setDefaultSectionSize(100);
+
+        verticalLayout->addWidget(projectTree);
+
+        projectDock->setWidget(dockWidgetContents_2);
+        EditorClass->addDockWidget(static_cast<Qt::DockWidgetArea>(2), projectDock);
+        primitiveDock = new QDockWidget(EditorClass);
+        primitiveDock->setObjectName(QStringLiteral("primitiveDock"));
+        primitiveDock->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable);
+        dockWidgetContents = new QWidget();
+        dockWidgetContents->setObjectName(QStringLiteral("dockWidgetContents"));
+        planeButton = new QPushButton(dockWidgetContents);
+        planeButton->setObjectName(QStringLiteral("planeButton"));
+        planeButton->setGeometry(QRect(20, 20, 75, 23));
+        icosphereButton = new QPushButton(dockWidgetContents);
+        icosphereButton->setObjectName(QStringLiteral("icosphereButton"));
+        icosphereButton->setGeometry(QRect(120, 20, 75, 23));
+        primitiveDock->setWidget(dockWidgetContents);
+        EditorClass->addDockWidget(static_cast<Qt::DockWidgetArea>(2), primitiveDock);
 
         menuBar->addAction(menuAaa->menuAction());
+        menuBar->addAction(menu_P->menuAction());
         menuBar->addAction(menu_I->menuAction());
+        menuAaa->addAction(action_N);
+        menuAaa->addAction(action_O);
+        menuAaa->addAction(actionTest);
+        menuAaa->addSeparator();
         menuAaa->addAction(actionExit);
         menu_I->addAction(menu->menuAction());
         menu->addAction(actionCS);
+        menu_P->addAction(action_S);
 
         retranslateUi(EditorClass);
         QObject::connect(actionExit, SIGNAL(triggered()), EditorClass, SLOT(close()));
@@ -93,14 +170,21 @@ public:
 
     void retranslateUi(QMainWindow *EditorClass)
     {
-        EditorClass->setWindowTitle(QApplication::translate("EditorClass", "Editor", 0));
+        EditorClass->setWindowTitle(QApplication::translate("EditorClass", "AGE Editor", 0));
         actionExit->setText(QApplication::translate("EditorClass", "\351\200\200\345\207\272(&E)", 0));
         actionCS->setText(QApplication::translate("EditorClass", "CS 1.6 MDL\346\226\207\344\273\266 ...", 0));
-        pushButton->setText(QApplication::translate("EditorClass", "Button1", 0));
-        pushButton_2->setText(QApplication::translate("EditorClass", "Button2", 0));
+        action_N->setText(QApplication::translate("EditorClass", "\346\226\260\345\273\272\345\267\245\347\250\213(&N)...", 0));
+        action_O->setText(QApplication::translate("EditorClass", "\346\211\223\345\274\200\345\267\245\347\250\213(&O)...", 0));
+        actionTest->setText(QApplication::translate("EditorClass", "test", 0));
+        action_S->setText(QApplication::translate("EditorClass", "\346\267\273\345\212\240\345\234\272\346\231\257(&S)...", 0));
         menuAaa->setTitle(QApplication::translate("EditorClass", "\346\226\207\344\273\266(&F)", 0));
         menu_I->setTitle(QApplication::translate("EditorClass", "\350\265\204\346\272\220(&R)", 0));
         menu->setTitle(QApplication::translate("EditorClass", "\345\257\274\345\205\245", 0));
+        menu_P->setTitle(QApplication::translate("EditorClass", "\345\267\245\347\250\213(&P)", 0));
+        projectDock->setWindowTitle(QApplication::translate("EditorClass", "Project", 0));
+        primitiveDock->setWindowTitle(QApplication::translate("EditorClass", "Primitive", 0));
+        planeButton->setText(QApplication::translate("EditorClass", "Plane", 0));
+        icosphereButton->setText(QApplication::translate("EditorClass", "IcoSphere", 0));
     } // retranslateUi
 
 };

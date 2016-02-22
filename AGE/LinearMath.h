@@ -54,8 +54,14 @@ namespace AGE
 
 		float& operator[](int index) { return mVector[index]; }
 		float operator[](int index) const { return mVector[index]; }
+		Vector3f operator +(const Vector3f& v);
+
+		//As Vector
 		Vector3f operator *(const Matrix3x3f& mul);
+
+		//As Point.
 		Vector3f operator *(const Matrix4x4f& mul);
+
 		Vector3f operator *(float mul);
 		operator float*() { return mVector; }
 		operator const float*() const { return mVector; }

@@ -2,8 +2,11 @@
 #define EDITOR_H
 
 #include <QtWidgets/QMainWindow>
-#include "ui_editor.h"
 #include <AGE.h>
+#include "ui_editor.h"
+#include "Project.h"
+
+#pragma execution_character_set("utf-8")
 
 class Editor : public QMainWindow
 {
@@ -13,16 +16,22 @@ public:
 	Editor(QWidget *parent = 0);
 	~Editor();
 
-public slots:
-	
-	void OnButton1Clicked();
+	void OpenScene(const QString& name);
 
-	void OnButton2Clicked();
+public slots:
+	void OnActionNewProject();
+	void UpdateEngine();
 
 private:
-	Ui::EditorClass ui;
+	void ProjectContentChanged();
+	void UpdateTitle();
+	void UpdateProjectView();
 
+	void UIInitHelper();
+
+	Ui::EditorClass ui;
 	AGE::Engine* mEngine;
+	shared_ptr<Project> mProject;
 };
 
 #endif // EDITOR_H

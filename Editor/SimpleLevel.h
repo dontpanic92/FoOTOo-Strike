@@ -3,25 +3,38 @@
 
 #include <AGE.h>
 
-using namespace AGE;
+enum class PrimitiveType
+{
+	Plane,
+	IcoSphere
+};
 
-class SimpleLevel : public Level
+class RenderWidget;
+class SimpleLevel : public AGE::Level
 {
 public:
+	SimpleLevel(RenderWidget* widget);
+
 	bool StartUp() override;
 	void ShutDown() override;
 
-	Scene* GetScene() override { return mScene; }
+	AGE::Scene* GetScene() override { return mScene; }
 
 	bool Update(float time) override;
 
+	void RotateCamera(int deltaX, int deltaY);
+	void AdjustDistance(int adjust);
+
+	void AddPrimitive(PrimitiveType type);
 
 	~SimpleLevel(){ ShutDown(); }
 
 private:
-	Scene* mScene = 0;
-	SceneNode* ActorNode = 0;
-	StaticSceneObject* ground = 0;
+	AGE::Scene* mScene = 0;
+
+	AGE::SceneNode* mPlaneObject = nullptr;
+	AGE::Renderable* mPlane = nullptr;
+	RenderWidget* mWidget = nullptr;
 };
 
 
