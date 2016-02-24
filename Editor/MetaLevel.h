@@ -1,5 +1,5 @@
-#ifndef __FOOTOOSTRIKE_SIMPLELEVEL_HEADER__
-#define __FOOTOOSTRIKE_SIMPLELEVEL_HEADER__
+#ifndef __EDITOR_LEVEL_HEADER__
+#define __EDITOR_LEVEL_HEADER__
 
 #include <AGE.h>
 
@@ -10,13 +10,18 @@ enum class PrimitiveType
 };
 
 class RenderWidget;
-class SimpleLevel : public AGE::Level
+class EScene;
+class MetaLevel : public AGE::Level
 {
 public:
-	SimpleLevel(RenderWidget* widget);
+	MetaLevel(RenderWidget* widget);
+	~MetaLevel() { ShutDown(); }
 
 	bool StartUp() override;
 	void ShutDown() override;
+
+	void LoadScene(EScene* scene);
+	void UnloadScene();
 
 	AGE::Scene* GetScene() override { return mScene; }
 
@@ -27,8 +32,6 @@ public:
 
 	void AddPrimitive(PrimitiveType type);
 
-	~SimpleLevel(){ ShutDown(); }
-
 private:
 	AGE::Scene* mScene = 0;
 
@@ -37,5 +40,9 @@ private:
 	RenderWidget* mWidget = nullptr;
 };
 
+inline MetaLevel* GetMetaLevel()
+{
+	return AGE::GetLevel<MetaLevel>();
+}
 
 #endif

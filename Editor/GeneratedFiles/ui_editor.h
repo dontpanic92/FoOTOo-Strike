@@ -25,6 +25,7 @@
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <qtpropertybrowser/qttreepropertybrowser.h>
 #include "renderwidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -38,6 +39,7 @@ public:
     QAction *action_O;
     QAction *actionTest;
     QAction *action_S;
+    QAction *actionSave;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     RenderWidget *widget;
@@ -56,6 +58,10 @@ public:
     QWidget *dockWidgetContents;
     QPushButton *planeButton;
     QPushButton *icosphereButton;
+    QDockWidget *propertyDock;
+    QWidget *dockWidgetContents_3;
+    QVBoxLayout *verticalLayout_2;
+    QtTreePropertyBrowser *propertyWidget;
 
     void setupUi(QMainWindow *EditorClass)
     {
@@ -74,6 +80,8 @@ public:
         actionTest->setObjectName(QStringLiteral("actionTest"));
         action_S = new QAction(EditorClass);
         action_S->setObjectName(QStringLiteral("action_S"));
+        actionSave = new QAction(EditorClass);
+        actionSave->setObjectName(QStringLiteral("actionSave"));
         centralWidget = new QWidget(EditorClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -149,12 +157,30 @@ public:
         icosphereButton->setGeometry(QRect(120, 20, 75, 23));
         primitiveDock->setWidget(dockWidgetContents);
         EditorClass->addDockWidget(static_cast<Qt::DockWidgetArea>(2), primitiveDock);
+        propertyDock = new QDockWidget(EditorClass);
+        propertyDock->setObjectName(QStringLiteral("propertyDock"));
+        propertyDock->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable);
+        dockWidgetContents_3 = new QWidget();
+        dockWidgetContents_3->setObjectName(QStringLiteral("dockWidgetContents_3"));
+        verticalLayout_2 = new QVBoxLayout(dockWidgetContents_3);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
+        propertyWidget = new QtTreePropertyBrowser(dockWidgetContents_3);
+        propertyWidget->setObjectName(QStringLiteral("propertyWidget"));
+
+        verticalLayout_2->addWidget(propertyWidget);
+
+        propertyDock->setWidget(dockWidgetContents_3);
+        EditorClass->addDockWidget(static_cast<Qt::DockWidgetArea>(2), propertyDock);
 
         menuBar->addAction(menuAaa->menuAction());
         menuBar->addAction(menu_P->menuAction());
         menuBar->addAction(menu_I->menuAction());
         menuAaa->addAction(action_N);
         menuAaa->addAction(action_O);
+        menuAaa->addAction(actionSave);
         menuAaa->addAction(actionTest);
         menuAaa->addSeparator();
         menuAaa->addAction(actionExit);
@@ -177,6 +203,7 @@ public:
         action_O->setText(QApplication::translate("EditorClass", "\346\211\223\345\274\200\345\267\245\347\250\213(&O)...", 0));
         actionTest->setText(QApplication::translate("EditorClass", "test", 0));
         action_S->setText(QApplication::translate("EditorClass", "\346\267\273\345\212\240\345\234\272\346\231\257(&S)...", 0));
+        actionSave->setText(QApplication::translate("EditorClass", "\344\277\235\345\255\230(&S)", 0));
         menuAaa->setTitle(QApplication::translate("EditorClass", "\346\226\207\344\273\266(&F)", 0));
         menu_I->setTitle(QApplication::translate("EditorClass", "\350\265\204\346\272\220(&R)", 0));
         menu->setTitle(QApplication::translate("EditorClass", "\345\257\274\345\205\245", 0));
@@ -185,6 +212,7 @@ public:
         primitiveDock->setWindowTitle(QApplication::translate("EditorClass", "Primitive", 0));
         planeButton->setText(QApplication::translate("EditorClass", "Plane", 0));
         icosphereButton->setText(QApplication::translate("EditorClass", "IcoSphere", 0));
+        propertyDock->setWindowTitle(QApplication::translate("EditorClass", "Property", 0));
     } // retranslateUi
 
 };

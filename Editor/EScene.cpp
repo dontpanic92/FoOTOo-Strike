@@ -45,14 +45,15 @@ bool EScenePrivate::Load(const QString& name)
 bool EScenePrivate::Save()
 {
 	QString path = GetSceneFilePath();
+	printf("%s\n", path.toStdString().c_str());
 	try {
 		wptree pt;
+		pt.put(L"test", L"hahaha");
 		write_xml(path.toStdString(), pt);
 
 	} catch (exception&) {
 		return false;
 	}
-	return true;
 	return true;
 }
 

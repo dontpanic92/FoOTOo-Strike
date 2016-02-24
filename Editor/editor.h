@@ -32,6 +32,9 @@ private:
 	Ui::EditorClass ui;
 	AGE::Engine* mEngine;
 	shared_ptr<Project> mProject;
+
+	QTreeWidgetItem* mProjectTreeNode;
+	QTreeWidgetItem* mScenesTreeNode;
 };
 
 #endif // EDITOR_H

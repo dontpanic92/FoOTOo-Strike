@@ -2,7 +2,7 @@
 #include <boost/property_tree/xml_parser.hpp>
 #include <qfileinfo.h>
 #include <qdir.h>
-#include <map>
+#include <vector>
 #include "Project.h"
 #include "EScene.h"
 
@@ -13,16 +13,25 @@ using namespace std;
 type name;\
 const wchar_t* key_##name = L"project."L#name
 
+#define PROP_DECL_CONTAINER(type, name) \
+type name;\
+const wchar_t* key_load_##name = L"project."L#name;\
+const wchar_t* key_save_##name = L"project."L#name L".item"
+
 const char* SCENES_FOLDER = "Scenes";
 
 struct ProjectPrivate
 {
-	typedef map<QString, shared_ptr<EScene>> ScenesType;
+	typedef vector<QString> ScenesType;
 
 	Project* p;
+	shared_ptr<EScene> currentScene;
+
+
+	// Properties that will be saved in project file.
 
 	PROP_DECL(QString, name);
-	PROP_DECL(ScenesType, scenes);
+	PROP_DECL_CONTAINER(ScenesType, scenes);
 
 	QString dirPath;
 	QString fileName;
@@ -42,6 +51,13 @@ bool ProjectPrivate::Load(const QString& filePath)
 		read_xml(filePath.toStdString(), pt);
 
 		name = QString::fromStdWString(pt.get<wstring>(key_name));
+
+		auto s = pt.get_child_optional(key_load_scenes);
+		if (s) {
+			for (wptree::value_type &v : s.get()) {
+				scenes.push_back(QString::fromStdWString(v.second.data()));
+			}
+		}
 
 		fileName = QFileInfo(filePath).fileName();
 		dirPath = QFileInfo(filePath).absolutePath();
@@ -63,9 +79,15 @@ bool ProjectPrivate::Save()
 {
 	try {
 		wptree pt;
+
 		pt.put(key_name, name.toStdWString());
+		for (auto& v : scenes) {
+			pt.add(key_save_scenes, v.toStdWString());
+		}
 
 		write_xml(p->GetProjectFilePath().toStdString(), pt);
+
+		p->GetDir().mkpath(SCENES_FOLDER);
 	} catch (exception&) {
 		return false;
 	}
@@ -126,29 +148,40 @@ QString Project::GetProjectFileName()
 	return d->fileName;
 }
 
-bool Project::AddScene(const QString& name)
+EResult Project::AddScene(const QString& name)
 {
-	if (d->scenes.find(name) != d->scenes.end())
-		return false;
+	if (find(d->scenes.begin(), d->scenes.end(), name) != d->scenes.end())
+		return EResult::EXIST;
 
-	d->scenes.insert(make_pair(name, EScene::New(name, this)));
+	auto p = EScene::New(name, this);
+	if (!p)
+		return EResult::FAILED;
+	p->Save();
+	d->scenes.push_back(name);
+	return EResult::OK;
 }
 
-shared_ptr<EScene> Project::GetScene(const QString& name)
+EResult Project::OpenScene(const QString& name)
 {
-	return d->scenes.find(name)->second;
+	if (find(d->scenes.begin(), d->scenes.end(), name) == d->scenes.end())
+		return EResult::NOT_FOUND;
+
+	d->currentScene = EScene::Load(name, this);
+
+	return EResult::OK;
 }
 
 vector<QString> Project::GetSceneNames()
 {
-	vector<QString> v;
-	for (auto& k : d->scenes) {
-		v.push_back(k.first);
-	}
-	return v;
+	return d->scenes;
 }
 
 QDir Project::GetScenesDir()
 {
 	return QDir(GetDir().filePath(SCENES_FOLDER));
+}
+
+EScene* Project::GetCurrentScene()
+{
+	return d->currentScene.get();
 }

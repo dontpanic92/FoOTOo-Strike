@@ -6,7 +6,7 @@
 #include "PhysicsEngine.h"
 using namespace AGE;
 
-const float PI = 3.1415926;
+const float PI = 3.1415926f;
 
 void Camera::SetParameters(float fov, float aspectRatio, float nearClip, float farClip)
 {

@@ -47,6 +47,7 @@
     </property>
     <addaction name="action_N"/>
     <addaction name="action_O"/>
+    <addaction name="actionSave"/>
     <addaction name="actionTest"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -184,6 +185,36 @@ display:none;
     </widget>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="propertyDock">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Property</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QtTreePropertyBrowser" name="propertyWidget" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionExit">
    <property name="text">
     <string>退出(&amp;E)</string>
@@ -214,6 +245,11 @@ display:none;
     <string>添加场景(&amp;S)...</string>
    </property>
   </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>保存(&amp;S)</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -221,6 +257,12 @@ display:none;
    <class>RenderWidget</class>
    <extends>QWidget</extends>
    <header>renderwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QtTreePropertyBrowser</class>
+   <extends>QWidget</extends>
+   <header location="global">qtpropertybrowser/qttreepropertybrowser.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

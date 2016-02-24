@@ -6,6 +6,14 @@
 #include <memory>
 using namespace std;
 
+enum class EResult
+{
+	OK,
+	EXIST,
+	NOT_FOUND,
+	FAILED
+};
+
 class EScene;
 class ProjectPrivate;
 class Project
@@ -26,8 +34,9 @@ public:
 
 	QDir GetScenesDir();
 
-	bool AddScene(const QString& name);
-	shared_ptr<EScene> GetScene(const QString& name);
+	EResult AddScene(const QString& name);
+	EResult OpenScene(const QString& name);
+	EScene* GetCurrentScene();
 	vector<QString> GetSceneNames();
 
 private:
