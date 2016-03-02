@@ -14,7 +14,10 @@ namespace AGE
 		PhysicsNode(Renderable* r);
 
 	protected:
+		static void NewtonSetTransformCallback(const NewtonBody* const body, const dFloat* const matrix, int threadIndex);
 		void InitPhysics();
+
+		NewtonBody* mBody = nullptr;
 	};
 }
 

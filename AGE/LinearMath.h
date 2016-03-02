@@ -2,6 +2,8 @@
 #define __AGE_MATH_HEADER__
 
 #include <cstring>
+#include <vector>
+#include <functional>
 #include "Def.h"
 
 namespace AGE
@@ -79,7 +81,7 @@ namespace AGE
 	{
 	public:
 		Matrix4x4f() { SetAsIdentity(); }
-		Matrix4x4f(float* m) { memcpy(mMatrix, m, sizeof(mMatrix)); }
+		Matrix4x4f(const float const* m) { memcpy(mMatrix, m, sizeof(mMatrix)); }
 		Matrix4x4f(const Matrix3x3f& matrix, const Vector3f& vector);
 
 		float* operator[](int index) { return mMatrix[index]; }
@@ -112,27 +114,36 @@ namespace AGE
 	class AGE_EXPORT Transform
 	{
 	public:
-		enum CoordSpace { World, Local };
+		enum CoordSpace { World, Relative };
+
+		typedef void ValueChangedCallback(Transform* newValue);
 
 		Transform() {}
 		Transform(const Matrix4x4f& matrix) :mTransformMatrix(matrix) {}
 
-		void Translate(const Vector3f& translation, CoordSpace coordSpace = Local);
+		void AddValueChangedCallback(std::function<ValueChangedCallback> f);
+
+		void Translate(const Vector3f& translation, CoordSpace coordSpace = Relative);
 		void SetPosition(const Vector3f& position);
 		Vector3f GetPosition() const;
-		void RotateByRadian(float radian, float x, float y, float z, CoordSpace coordSpace = Local);
+		void RotateByRadian(float radian, float x, float y, float z, CoordSpace coordSpace = Relative);
 		void ClearRotation();
 
-		void Multiply(const Matrix4x4f& matrix, CoordSpace coordSpace = Local);
+		void Multiply(const Matrix4x4f& matrix, CoordSpace coordSpace = Relative);
 
-		bool operator != (const Transform& tran) { return mTransformMatrix != tran.mTransformMatrix; }
+		bool operator != (const Transform& tran) const { return mTransformMatrix != tran.mTransformMatrix; }
 
 		Matrix4x4f GetTransformMatrix() const { return mTransformMatrix; }
-		void SetTransformMatrix(const Matrix4x4f& matrix) { mTransformMatrix = matrix; }
+		void SetTransformMatrix(const Matrix4x4f& matrix) { mTransformMatrix = matrix; TriggerCallbacks(); }
+		void SetTransformMatrixNoCallback(const Matrix4x4f& matrix) { mTransformMatrix = matrix; }
 
-		Matrix4x4f GetInverseTransformMatrix();
+		Matrix4x4f GetInverseTransformMatrix() const;
 	private:
+		void TriggerCallbacks();
+
 		Matrix4x4f mTransformMatrix;
+
+		std::vector<std::function<ValueChangedCallback> > mCallbacks;
 	};
 
 

@@ -65,7 +65,7 @@ namespace AGE
 
 		void UpdateAndCulling(const Matrix4x4f& parentMatrix);
 
-		void UpdateWorldMatrix(const Matrix4x4f& parentMatrix)
+		virtual void UpdateWorldMatrix(const Matrix4x4f& parentMatrix)
 		{
 			mWorldTransform = mTransform;
 			mWorldTransform.Multiply(parentMatrix);

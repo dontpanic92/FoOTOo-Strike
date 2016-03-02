@@ -1,6 +1,7 @@
-#include "LinearMath.h"
 #include <cmath>
 #include <cstdio>
+#include <algorithm>
+#include "LinearMath.h"
 using namespace AGE;
 
 
@@ -212,6 +213,8 @@ void Transform::SetPosition(const Vector3f& position)
 	mTransformMatrix[3][0] = position[0];
 	mTransformMatrix[3][1] = position[1];
 	mTransformMatrix[3][2] = position[2];
+
+	TriggerCallbacks();
 }
 
 Vector3f Transform::GetPosition() const
@@ -271,17 +274,21 @@ void Transform::ClearRotation()
 	mTransformMatrix[0][0] = mTransformMatrix[1][1] = mTransformMatrix[2][2] = 1.0f;
 	mTransformMatrix[0][1] = mTransformMatrix[0][2] = mTransformMatrix[1][0]
 		= mTransformMatrix[1][2] = mTransformMatrix[2][0] = mTransformMatrix[2][1] = 0.0f;
+
+	TriggerCallbacks();
 }
 
 void Transform::Multiply(const Matrix4x4f& matrix, CoordSpace coordSpace)
 {
-	if (coordSpace == Local)
+	if (coordSpace == Relative)
 		mTransformMatrix = matrix * mTransformMatrix;
 	else
 		mTransformMatrix = mTransformMatrix * matrix;
+
+	TriggerCallbacks();
 }
 
-Matrix4x4f Transform::GetInverseTransformMatrix()
+Matrix4x4f Transform::GetInverseTransformMatrix() const
 {
 	/*
 	 * http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche53.html
@@ -298,6 +305,22 @@ Matrix4x4f Transform::GetInverseTransformMatrix()
 	vec.Set(-vec[0], -vec[1], -vec[2]);
 
 	return Matrix4x4f(inverseMatrix, vec);
+}
+
+void Transform::AddValueChangedCallback(std::function<ValueChangedCallback> f)
+{
+	if (std::find_if(mCallbacks.begin(), mCallbacks.end(), [&](std::function<ValueChangedCallback>& t){
+			return t.target<ValueChangedCallback>() == f.target<ValueChangedCallback>();
+		}) == mCallbacks.end()) {
+		mCallbacks.push_back(f);
+	}
+}
+
+void Transform::TriggerCallbacks()
+{
+	for (auto& v : mCallbacks) {
+		v(this);
+	}
 }
 
 Matrix4x4f Quaternion::ToRotationMatrix()

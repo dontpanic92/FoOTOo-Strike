@@ -6,6 +6,9 @@ using namespace AGE;
 PhysicsNode::PhysicsNode(Renderable* r) :SceneNode(r)
 {
 	InitPhysics();
+	mTransform.AddValueChangedCallback([this](Transform*){
+		NewtonBodySetMatrix(mBody, GetParent()->GetWorldMatrix() * mTransform.GetTransformMatrix());
+	});
 }
 
 void PhysicsNode::InitPhysics()
@@ -29,8 +32,16 @@ void PhysicsNode::InitPhysics()
 	}
 	NewtonTreeCollisionEndBuild(collision, optimize ? 1 : 0);
 
-	NewtonBody* const body = NewtonCreateDynamicBody(GetPhysicsWorld(), collision, this->GetWorldMatrix());
-	NewtonBodySetUserData(body, this);
+	mBody = NewtonCreateDynamicBody(GetPhysicsWorld(), collision, this->GetWorldMatrix());
+	NewtonBodySetUserData(mBody, this);
+	NewtonBodySetTransformCallback(mBody, &PhysicsNode::NewtonSetTransformCallback);
 
 	NewtonDestroyCollision(collision);
+}
+
+void PhysicsNode::NewtonSetTransformCallback(const NewtonBody* const body, const dFloat* const matrix, int threadIndex)
+{
+	PhysicsNode* p = (PhysicsNode*)NewtonBodyGetUserData(body);
+	Matrix4 parentMatrix = p->GetParent()->GetWorldMatrix();
+	p->mTransform.SetTransformMatrixNoCallback(parentMatrix.Inverse() * Matrix4(matrix));
 }

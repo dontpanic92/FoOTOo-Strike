@@ -32,12 +32,11 @@ Editor::Editor(QWidget *parent)
 		if (AGE::GetScene()) {
 			AGE::SceneNode* node = AGE::GetScene()->GetCurrentCamera()->PickAt(point.x(), point.y());
 			printf("pick %p\n", node);
+			ui.propertyWidget->clear();
 			if (!node)
 				return;
 
 			if (auto p = node->GetUserData<PropertySceneNode>(0)) {
-				printf("good\n");
-				ui.propertyWidget->clear();
 				QtVariantPropertyManager *variantManager = new QtVariantPropertyManager();
 				QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory();
 				ui.propertyWidget->setFactoryForManager(variantManager, variantFactory);
