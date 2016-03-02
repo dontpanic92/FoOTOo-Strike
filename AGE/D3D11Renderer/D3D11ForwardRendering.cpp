@@ -61,6 +61,9 @@ Matrix4x4f tMatrix;
 
 void D3D11ForwardRendering::ShadowMapPass()
 {
+	if (!GetScene())
+		return;
+
 	HLSLShader* shadowShader = (HLSLShader*)ResourceManager::GetInstance()->LoadShader("ShadowMap");
 
 	class ShadowMapShaderData : public ShaderData
@@ -79,7 +82,10 @@ void D3D11ForwardRendering::ShadowMapPass()
 	mShadowMapTarget->SetRenderTarget(mD3DImmediateContext);
 	mD3DImmediateContext->RSSetState(mNoCullRasterizerState);
 
-	Light l = *GetScene()->GetLights()[0];
+	auto v = GetScene()->GetLights();
+	if (!v.size())
+		return;
+	Light l = *v[0];
 	Transform tran;
 	Vector3f lightDir = l.Direction;
 	lightDir.Normalize();
@@ -138,6 +144,9 @@ void D3D11ForwardRendering::ShadowMapPass()
 
 void D3D11ForwardRendering::SkyBoxPass()
 {
+	if (!GetScene())
+		return;
+
 	SkyBox* skyBox = GetScene()->GetSkyBox();
 
 	if (!skyBox)
@@ -192,15 +201,15 @@ void D3D11ForwardRendering::SkyBoxPass()
 	}
 }
 
-int D3D11ForwardRendering::ExecuteRendering()
+void D3D11ForwardRendering::RenderPass()
 {
-
-	ShadowMapPass();
-	//mD3DImmediateContext->RSSetState(0);
 	mNormalTarget->SetRenderTarget(mD3DImmediateContext);
 	mNormalTarget->ClearView(mD3DImmediateContext);
 	mD3DImmediateContext->RSSetState(mRasterizerState);
 	mD3DImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	if (!GetScene())
+		return;
 
 	const RenderQueue::RenderQueueMap& map = RenderQueue::GetInstance()->GetQueue();
 
@@ -251,7 +260,13 @@ int D3D11ForwardRendering::ExecuteRendering()
 			RtInformation::GetInstance()->MoreTriangles(object->Mesh->GetNumberOfVertex() / 3);
 		}
 	}
+}
 
+int D3D11ForwardRendering::ExecuteRendering()
+{
+
+	ShadowMapPass();
+	RenderPass();
 	SkyBoxPass();
 
 	mD3DImmediateContext->RSSetState(0);

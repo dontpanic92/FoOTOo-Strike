@@ -2,6 +2,7 @@
 #define __EDITOR_LEVEL_HEADER__
 
 #include <AGE.h>
+#include "EScene.h"
 
 enum class PrimitiveType
 {
@@ -10,20 +11,18 @@ enum class PrimitiveType
 };
 
 class RenderWidget;
-class EScene;
-class MetaLevel : public AGE::Level
+class EditorLevel : public AGE::Level
 {
 public:
-	MetaLevel(RenderWidget* widget);
-	~MetaLevel() { ShutDown(); }
+	EditorLevel(RenderWidget* widget);
+	~EditorLevel() { ShutDown(); }
 
 	bool StartUp() override;
 	void ShutDown() override;
 
-	void LoadScene(EScene* scene);
-	void UnloadScene();
+	void SetScene(EScene* scene);
 
-	AGE::Scene* GetScene() override { return mScene; }
+	EScene* GetScene() override { return mScene; }
 
 	bool Update(float time) override;
 
@@ -31,18 +30,20 @@ public:
 	void AdjustDistance(int adjust);
 
 	void AddPrimitive(PrimitiveType type);
+	void AddSceneNode(AGE::Renderable* r);
+	void AddPhysicsNode(AGE::Renderable* r);
 
 private:
-	AGE::Scene* mScene = 0;
+	EScene* mScene = nullptr;
 
 	AGE::SceneNode* mPlaneObject = nullptr;
 	AGE::Renderable* mPlane = nullptr;
 	RenderWidget* mWidget = nullptr;
 };
 
-inline MetaLevel* GetMetaLevel()
+inline EditorLevel* GetEditorLevel()
 {
-	return AGE::GetLevel<MetaLevel>();
+	return AGE::GetLevel<EditorLevel>();
 }
 
 #endif

@@ -118,6 +118,7 @@
     <ClInclude Include="RtInformation.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneNode.h" />
+    <ClInclude Include="ScenePrivate.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="Singleton.h" />

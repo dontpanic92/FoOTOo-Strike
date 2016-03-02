@@ -7,6 +7,8 @@
 #	define AGE_EXPORT  __declspec(dllimport)
 #endif
 
+#pragma warning (disable: 4251)
+
 namespace AGE
 {
 	typedef unsigned int uint;

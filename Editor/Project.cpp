@@ -154,8 +154,6 @@ EResult Project::AddScene(const QString& name)
 		return EResult::EXIST;
 
 	auto p = EScene::New(name, this);
-	if (!p)
-		return EResult::FAILED;
 	p->Save();
 	d->scenes.push_back(name);
 	return EResult::OK;

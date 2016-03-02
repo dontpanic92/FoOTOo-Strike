@@ -3,9 +3,8 @@
 
 using namespace AGE;
 
-PhysicsNode::PhysicsNode(Renderable* r)
+PhysicsNode::PhysicsNode(Renderable* r) :SceneNode(r)
 {
-	SetRenderable(r);
 	InitPhysics();
 }
 

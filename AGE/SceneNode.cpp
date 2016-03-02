@@ -4,9 +4,13 @@
 #include "RenderQueue.h"
 using namespace AGE;
 
-SceneNode::SceneNode(SceneNode* parent)
+SceneNode::SceneNode()
 {
-	mParent = parent;
+}
+
+SceneNode::SceneNode(Renderable* r)
+{
+	SetRenderable(r);
 }
 
 void SceneNode::Attach(SceneNode* object)
@@ -58,5 +62,23 @@ void SceneNode::UpdateAndCulling(const Matrix4x4f& parentMatrix)
 	for each(auto node in mChildren)
 	{
 		node->UpdateAndCulling(mWorldTransform.GetTransformMatrix());
+	}
+}
+
+void SceneNode::SetUserData(int id, std::shared_ptr<void> userdata)
+{
+	if (mUserData.find(id) == mUserData.end()) {
+		mUserData.insert(std::make_pair(id, userdata));
+	} else {
+		mUserData[id] = userdata;
+	}
+}
+
+std::shared_ptr<void> SceneNode::GetUserData(int id)
+{
+	if (mUserData.find(id) == mUserData.end()) {
+		return nullptr;
+	} else {
+		return mUserData[id];
 	}
 }

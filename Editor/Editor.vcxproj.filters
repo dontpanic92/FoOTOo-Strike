@@ -91,8 +91,20 @@
     <ClCompile Include="GeneratedFiles\Release\moc_RenderWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="MetaLevel.cpp">
+    <ClCompile Include="EditorLevel.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Property.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertySceneNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_PropertySceneNode.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_PropertySceneNode.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +130,9 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="RenderWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PropertySceneNode.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -151,7 +166,10 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MetaLevel.h">
+    <ClInclude Include="Property.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -40,6 +40,8 @@ public:
     QAction *actionTest;
     QAction *action_S;
     QAction *actionSave;
+    QAction *actionNewSceneNode;
+    QAction *actionNewPhysicsNode;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     RenderWidget *widget;
@@ -48,6 +50,7 @@ public:
     QMenu *menu_I;
     QMenu *menu;
     QMenu *menu_P;
+    QMenu *menu_S;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
     QDockWidget *projectDock;
@@ -82,6 +85,10 @@ public:
         action_S->setObjectName(QStringLiteral("action_S"));
         actionSave = new QAction(EditorClass);
         actionSave->setObjectName(QStringLiteral("actionSave"));
+        actionNewSceneNode = new QAction(EditorClass);
+        actionNewSceneNode->setObjectName(QStringLiteral("actionNewSceneNode"));
+        actionNewPhysicsNode = new QAction(EditorClass);
+        actionNewPhysicsNode->setObjectName(QStringLiteral("actionNewPhysicsNode"));
         centralWidget = new QWidget(EditorClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -106,6 +113,8 @@ public:
         menu->setObjectName(QStringLiteral("menu"));
         menu_P = new QMenu(menuBar);
         menu_P->setObjectName(QStringLiteral("menu_P"));
+        menu_S = new QMenu(menuBar);
+        menu_S->setObjectName(QStringLiteral("menu_S"));
         EditorClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(EditorClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -177,6 +186,7 @@ public:
 
         menuBar->addAction(menuAaa->menuAction());
         menuBar->addAction(menu_P->menuAction());
+        menuBar->addAction(menu_S->menuAction());
         menuBar->addAction(menu_I->menuAction());
         menuAaa->addAction(action_N);
         menuAaa->addAction(action_O);
@@ -187,6 +197,8 @@ public:
         menu_I->addAction(menu->menuAction());
         menu->addAction(actionCS);
         menu_P->addAction(action_S);
+        menu_S->addAction(actionNewSceneNode);
+        menu_S->addAction(actionNewPhysicsNode);
 
         retranslateUi(EditorClass);
         QObject::connect(actionExit, SIGNAL(triggered()), EditorClass, SLOT(close()));
@@ -204,10 +216,13 @@ public:
         actionTest->setText(QApplication::translate("EditorClass", "test", 0));
         action_S->setText(QApplication::translate("EditorClass", "\346\267\273\345\212\240\345\234\272\346\231\257(&S)...", 0));
         actionSave->setText(QApplication::translate("EditorClass", "\344\277\235\345\255\230(&S)", 0));
+        actionNewSceneNode->setText(QApplication::translate("EditorClass", "\346\267\273\345\212\240\345\234\272\346\231\257\350\212\202\347\202\271(&N)...", 0));
+        actionNewPhysicsNode->setText(QApplication::translate("EditorClass", "\346\267\273\345\212\240\347\211\251\347\220\206\350\212\202\347\202\271(&P)...", 0));
         menuAaa->setTitle(QApplication::translate("EditorClass", "\346\226\207\344\273\266(&F)", 0));
         menu_I->setTitle(QApplication::translate("EditorClass", "\350\265\204\346\272\220(&R)", 0));
         menu->setTitle(QApplication::translate("EditorClass", "\345\257\274\345\205\245", 0));
         menu_P->setTitle(QApplication::translate("EditorClass", "\345\267\245\347\250\213(&P)", 0));
+        menu_S->setTitle(QApplication::translate("EditorClass", "\345\234\272\346\231\257(&S)", 0));
         projectDock->setWindowTitle(QApplication::translate("EditorClass", "Project", 0));
         primitiveDock->setWindowTitle(QApplication::translate("EditorClass", "Primitive", 0));
         planeButton->setText(QApplication::translate("EditorClass", "Plane", 0));

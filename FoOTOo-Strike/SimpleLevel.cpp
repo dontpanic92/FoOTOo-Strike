@@ -4,12 +4,13 @@ bool SimpleLevel::StartUp()
 {
 	ShutDown();
 	mScene = new Scene();
-	mScene->StartUp();
 
 	InputEngine::GetInstance()->RegisterMouseListener(this);
 	InputEngine::GetInstance()->RegisterKeyListener(this);
 
-	ground = new StaticSceneObject("../Resources/Models/a.AMESH");
+	AGEMeshImporter importer;
+
+	ground = new PhysicsNode(importer.LoadFromFile("../Resources/Models/a.AMESH", true));
 	actor = new FootooActor;
 	leet = new AIActor;
 

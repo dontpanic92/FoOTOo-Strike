@@ -19,6 +19,7 @@ namespace AGE
 	protected:
 
 		void ShadowMapPass();
+		void RenderPass();
 		void SkyBoxPass();
 
 		D3D11NormalTarget* mNormalTarget;

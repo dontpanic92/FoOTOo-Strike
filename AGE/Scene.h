@@ -14,42 +14,40 @@ using std::vector;
 
 namespace AGE
 {
-
+	class ScenePrivate;
 	class AGE_EXPORT Scene
 	{
 	public:
-		Scene();
+		Scene(std::wstring name = L"");
 		~Scene();
 
-		void StartUp();
-		SceneNode* GetRoot() { return &mRoot; }
-		Renderable* LoadMesh();
+		void Load(const char* sceneFilePath = nullptr);
+		//bool Save(const char* path);
+		SceneNode* GetRoot();
 
-		void Render();
 		void UpdateAndCulling();
 
 		void AttachCameraOnNode(SceneNode* node);
 
-		Camera* GetCurrentCamera() { return &mCamera; }
+		Camera* GetCurrentCamera();
 
 		SceneNode* CreateSceneNode(SceneNode* parent = NULL);
 
 		Light* CreateLight(SceneNode* parent = NULL);
 
-		vector<Light*>& GetLights() { return mLights; }
+		vector<Light*>& GetLights();
 
-		SkyBox* GetSkyBox() { return mSkyBox; }
-		void AddSkyBox() { if(!mSkyBox) mSkyBox = new SkyBox(); }
+		SkyBox* GetSkyBox();
+		void AddSkyBox();
 
 		void UpdateCameraAspectRatio();
 
-		//Attachable* GetAttachable() { return mAttachable[0]; }
-	private:
-		SceneNode mRoot;
-		vector<Light*> mLights;
+	protected:
+		Scene(ScenePrivate* d);
+		ScenePrivate* dptr();
 
-		Camera mCamera;
-		SkyBox* mSkyBox = nullptr;
+	private:
+		ScenePrivate* d;
 	};
 }
 

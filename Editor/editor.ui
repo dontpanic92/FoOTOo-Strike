@@ -70,8 +70,16 @@
     </property>
     <addaction name="action_S"/>
    </widget>
+   <widget class="QMenu" name="menu_S">
+    <property name="title">
+     <string>场景(&amp;S)</string>
+    </property>
+    <addaction name="actionNewSceneNode"/>
+    <addaction name="actionNewPhysicsNode"/>
+   </widget>
    <addaction name="menuAaa"/>
    <addaction name="menu_P"/>
+   <addaction name="menu_S"/>
    <addaction name="menu_I"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -248,6 +256,16 @@ display:none;
   <action name="actionSave">
    <property name="text">
     <string>保存(&amp;S)</string>
+   </property>
+  </action>
+  <action name="actionNewSceneNode">
+   <property name="text">
+    <string>添加场景节点(&amp;N)...</string>
+   </property>
+  </action>
+  <action name="actionNewPhysicsNode">
+   <property name="text">
+    <string>添加物理节点(&amp;P)...</string>
    </property>
   </action>
  </widget>

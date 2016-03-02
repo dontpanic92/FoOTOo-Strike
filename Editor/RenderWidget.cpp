@@ -1,6 +1,7 @@
 #include "RenderWidget.h"
 #include <qmessagebox.h>
 #include <qevent.h>
+#include <qpainter.h>
 
 RenderWidget::RenderWidget(QWidget *parent)
 	: QWidget(parent)

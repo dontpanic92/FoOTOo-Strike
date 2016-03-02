@@ -1,7 +1,9 @@
-#ifndef __AGE_SceneNode_HEADER__
-#define __AGE_SceneNode_HEADER__
+#ifndef __AGE_SCENENODE_HEADER__
+#define __AGE_SCENENODE_HEADER__
 
 #include <vector>
+#include <map>
+#include <memory>
 #include "Def.h"
 #include "LinearMath.h"
 
@@ -13,7 +15,8 @@ namespace AGE
 	class AGE_EXPORT SceneNode
 	{
 	public:
-		SceneNode(SceneNode* parent = nullptr);
+		SceneNode();
+		SceneNode(Renderable* r);
 
 		void Attach(SceneNode* object);
 		void Detach(SceneNode* object);
@@ -47,6 +50,16 @@ namespace AGE
 			return mNodeName.c_str();
 		}
 
+
+		void SetUserData(int id, std::shared_ptr<void> userdata);
+		std::shared_ptr<void> GetUserData(int id);
+
+		template <class T>
+		std::shared_ptr<T> GetUserData(int id)
+		{
+			return std::static_pointer_cast<T>(GetUserData(id));
+		}
+
 	protected:
 		void SetParent(SceneNode* parent) { mParent = parent; }
 
@@ -64,6 +77,7 @@ namespace AGE
 		Renderable* mRenderable = nullptr;
 
 		std::vector<SceneNode*> mChildren;
+		std::map<int, std::shared_ptr<void>> mUserData;
 
 		std::string mNodeName;
 

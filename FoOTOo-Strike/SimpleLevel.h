@@ -38,7 +38,7 @@ private:
 
 	AIActor* leet = 0;
 
-	StaticSceneObject* ground = 0;
+	PhysicsNode* ground = 0;
 };
 
 

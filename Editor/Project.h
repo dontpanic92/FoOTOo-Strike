@@ -4,6 +4,7 @@
 #include <qstring.h>
 #include <qdir.h>
 #include <memory>
+#include <AGE.h>
 using namespace std;
 
 enum class EResult

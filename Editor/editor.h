@@ -20,7 +20,7 @@ public:
 
 public slots:
 	void OnActionNewProject();
-	void UpdateEngine();
+	void RenderWidgetUpdate();
 
 private:
 	void ProjectContentChanged();

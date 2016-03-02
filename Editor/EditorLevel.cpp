@@ -1,36 +1,41 @@
-#include "MetaLevel.h"
+#include "EditorLevel.h"
 #include "RenderWidget.h"
+#include "EScene.h"
+#include "PropertySceneNode.h"
 
-using namespace AGE;
-
-MetaLevel::MetaLevel(RenderWidget* widget) :mWidget(widget)
+EditorLevel::EditorLevel(RenderWidget* widget) :mWidget(widget)
 {
 }
 
-bool MetaLevel::StartUp()
+bool EditorLevel::StartUp()
 {
 	ShutDown();
-	mScene = new Scene();
-	mScene->StartUp();
-	Light* l = mScene->CreateLight();
-	l->Direction[0] = -1;
-	l->Direction[1] = -1;
-	l->Direction[2] = -1;
+	mScene = nullptr;
 	return true;
 }
 
-void MetaLevel::ShutDown()
+void EditorLevel::ShutDown()
 {
-	UnloadScene();
+	mScene = nullptr;
+
+	delete mPlaneObject;
+	mPlaneObject = nullptr;
+	delete mPlane;
+	mPlane = nullptr;
 }
 
-bool MetaLevel::Update(float time)
+bool EditorLevel::Update(float time)
 {
 	return true;
 }
 
-void MetaLevel::RotateCamera(int deltaX, int deltaY)
+void EditorLevel::RotateCamera(int deltaX, int deltaY)
 {
+	using namespace AGE;
+
+	if (!mScene)
+		return;
+
 	auto f = [&](Transform* t){
 		float ratio = 0.005;
 		Matrix4x4f m = t->GetTransformMatrix();
@@ -39,10 +44,17 @@ void MetaLevel::RotateCamera(int deltaX, int deltaY)
 		t->RotateByRadian(-deltaX * ratio, 0, 1, 0, Transform::World);
 	};
 	f(mScene->GetCurrentCamera()->GetTransform());
+
+	mWidget->update();
 }
 
-void MetaLevel::AdjustDistance(int adjust)
+void EditorLevel::AdjustDistance(int adjust)
 {
+	using namespace AGE;
+
+	if (!mScene)
+		return;
+
 	Camera* c = mScene->GetCurrentCamera();
 	Vector3 v = c->GetTransform()->GetPosition();
 	float len = v.GetLength() + -adjust / abs(adjust) * 5;
@@ -50,10 +62,14 @@ void MetaLevel::AdjustDistance(int adjust)
 	v.Normalize();
 	v = v * len;
 	c->GetTransform()->SetPosition(v);
+
+	mWidget->update();
 }
 
-void MetaLevel::AddPrimitive(PrimitiveType type)
+void EditorLevel::AddPrimitive(PrimitiveType type)
 {
+	using namespace AGE;
+
 	AGE::Mesh* mesh = nullptr;
 	switch (type) {
 	case PrimitiveType::Plane:
@@ -78,10 +94,13 @@ void MetaLevel::AddPrimitive(PrimitiveType type)
 	mWidget->update();
 }
 
-void MetaLevel::LoadScene(EScene* scene)
+void EditorLevel::SetScene(EScene* scene)
 {
-	mScene = new Scene();
-	mScene->StartUp();
+	using namespace AGE;
+
+	mScene = scene;
+	if (!mScene)
+		return;
 
 	Camera* c = mScene->GetCurrentCamera();
 	mScene->GetRoot()->Attach(c);
@@ -104,10 +123,25 @@ void MetaLevel::LoadScene(EScene* scene)
 	mPlaneObject = new PhysicsNode(mPlane);
 
 	mScene->GetRoot()->Attach(mPlaneObject);
+
+	mWidget->update();
 }
 
-void MetaLevel::UnloadScene()
+void EditorLevel::AddSceneNode(AGE::Renderable* r)
 {
-	delete mScene;
-	mScene = 0;
+	using namespace AGE;
+
+	PhysicsNode* node = new PhysicsNode(r);
+	node->SetUserData(0, make_shared<PropertySceneNode>(mWidget, node));
+	mScene->GetRoot()->Attach(node);
+	mWidget->update();
+}
+
+void EditorLevel::AddPhysicsNode(AGE::Renderable* r)
+{
+	using namespace AGE;
+
+	PhysicsNode* node = new PhysicsNode(r);
+	mScene->GetRoot()->Attach(node);
+	mWidget->update();
 }

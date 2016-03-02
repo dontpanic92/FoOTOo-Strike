@@ -3,11 +3,12 @@
 
 #include <qstring.h>
 #include <memory>
+#include <AGE.h>
 using namespace std;
 
 class Project;
 class EScenePrivate;
-class EScene
+class EScene : public AGE::Scene
 {
 public:
 	~EScene();
@@ -18,7 +19,7 @@ public:
 
 private:
 	EScene(Project* project);
-	EScenePrivate* d;
+	EScenePrivate* dptr();
 };
 
 #endif
